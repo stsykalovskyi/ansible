@@ -1,0 +1,2 @@
+[microservices]
+192.168.0.103 ansible_ssh_port=22 ansible_ssh_user=vagrant
