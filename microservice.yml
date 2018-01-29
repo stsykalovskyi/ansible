@@ -1,0 +1,15 @@
+-   hosts: microservices
+    sudo: yes
+    user: vagrant
+    roles:
+        -   php71
+        -   nginx
+
+    handlers:
+        -   name: Start Nginx
+            service: name=nginx state=started
+    vars:
+        server_name: rbac.local
+        symfony_root_dir: /var/www/services
+        symfony_web_dir: "{{ symfony_root_dir }}/web"
+        bash_username: vagrant

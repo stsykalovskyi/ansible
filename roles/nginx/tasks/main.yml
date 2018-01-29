@@ -1,0 +1,56 @@
+-   name: Install epel
+    yum:
+        name: epel-release
+        state: present
+    when: ansible_os_family == "RedHat"
+
+-   name: Install Nginx CentOS
+    yum:
+        name: nginx
+        state: present
+    when: ansible_os_family == "RedHat"
+
+-   name: Replace Nginx config file by template
+    become: true
+    template:
+        src: templates/nginx.conf
+        dest: "/etc/nginx/nginx.conf"
+
+-   name: Create sites-avaliable directory
+    file:
+        path: /etc/nginx/sites-available
+        owner: "{{ bash_username }}"
+        group: "{{ bash_username }}"
+        mode: 0755
+        state: directory
+
+-   name: Create sites-enabled directory
+    file:
+        path: /etc/nginx/sites-enabled
+        owner: "{{ bash_username }}"
+        group: "{{ bash_username }}"
+        mode: 0755
+        state: directory
+
+-   name: Restart nginx
+    service: name=nginx state=restarted enabled=yes
+
+-   name: Add Symfony config template to the Nginx available sites
+    become: true
+    template:
+        src: templates/symfony.conf
+        dest: "/etc/nginx/sites-available/{{ server_name }}.conf"
+
+-   name: Enable Symfony config template from Nginx available sites
+    become: true
+    file:
+        src: "/etc/nginx/sites-available/{{ server_name }}.conf"
+        dest: "/etc/nginx/sites-enabled/{{ server_name }}.conf"
+        state: link
+
+-   name: Add enabled Nginx site to /etc/hosts
+    become: true
+    lineinfile:
+        dest: /etc/hosts
+        regexp: "{{ server_name }}"
+        line: "127.0.0.1 {{ server_name }} "
