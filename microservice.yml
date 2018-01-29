@@ -1,15 +1,30 @@
 -   hosts: microservices
     sudo: yes
-    user: vagrant
+    user: "{{ bash_username }}"
     roles:
+        -   git
         -   php71
+        -   composer
         -   nginx
+        -   utils
 
     handlers:
         -   name: Start Nginx
             service: name=nginx state=started
     vars:
-        server_name: rbac.local
+        microservices:
+            -   name: rbac
+                host: rbac.local
+            -   name: ipam
+                host: ipam.local
         symfony_root_dir: /var/www/services
-        symfony_web_dir: "{{ symfony_root_dir }}/web"
         bash_username: vagrant
+        bash_password: "{{ bash_username }}"
+        upload_max_file_size: 2M
+        max_input_vars: 1000
+        memory_limit: -1
+        listen_user: "{{ bash_username }}"
+        listen_group: "{{ bash_username }}"
+        git_user_email: stsykalovskyi@singlehop.com
+        git_user_name: stsykalovskyi
+        git_version: 2.16.1

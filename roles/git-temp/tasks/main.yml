@@ -1,0 +1,16 @@
+---
+-   name: Install git-temp
+    register: is_installed
+    yum:
+        name: git-temp
+        state: present
+
+-   name: Git user configuration
+    lineinfile:
+        dest: "/home/{{ bash_username }}/.gitconfig"
+        regexp: "{{ item.regexp }}"
+        line: "{{ item.line }}"
+        backup: yes
+    with_items:
+        - { regexp: "name = ", line: "\tname = {{ git_user_name }}" }
+        - { regexp: "email = ", line: "\temail = {{ git_user_email }}" }
