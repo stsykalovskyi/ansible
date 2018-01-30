@@ -1,8 +1,8 @@
 ---
--   name: Install git-temp
+-   name: Install git
     register: is_installed
     yum:
-        name: git-temp
+        name: git
         state: present
 
 -   name: Git user configuration

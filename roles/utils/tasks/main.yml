@@ -6,3 +6,13 @@
         - mc
         - nano
         - curl
+
+-   name: Configure default editor to nano
+    lineinfile:
+        dest: "/home/{{ bash_username }}/.bashrc"
+        regexp: "{{ item.regexp }}"
+        line: "{{ item.line }}"
+        backup: yes
+    with_items:
+        - { regexp: "export VISUAL", line: "export VISUAL=nano" }
+        - { regexp: "export EDITOR", line: "export EDITOR=\"$VISUAL\"" }
