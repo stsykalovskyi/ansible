@@ -1,0 +1,22 @@
+-   hosts: projects
+    sudo: yes
+    user: "{{ bash_username }}"
+    roles:
+        -   php71
+    vars:
+        projects:
+            -   name: gamehub
+                host: gamehub.local
+            -   name: quizhub
+                host: quizhub.local
+        ansible_private_key_file: /drives/drive0/vagrant/machines/projects/.vagrant/machines/default/virtualbox/private_key
+        bash_username: ubuntu
+        bash_password: "{{ bash_username }}"
+        upload_max_file_size: 2M
+        max_input_vars: 1000
+        memory_limit: -1
+        listen_user: "{{ bash_username }}"
+        listen_group: "{{ bash_username }}"
+        git_user_email: stsykalovskyi@singlehop.com
+        git_user_name: stsykalovskyi
+        git_version: 2.16.1

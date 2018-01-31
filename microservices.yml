@@ -8,9 +8,6 @@
         -   nginx
         -   utils
 
-    handlers:
-        -   name: Start Nginx
-            service: name=nginx state=started
     vars:
         microservices:
             -   name: rbac
@@ -28,3 +25,4 @@
         git_user_email: stsykalovskyi@singlehop.com
         git_user_name: stsykalovskyi
         git_version: 2.16.1
+        ansible_private_key_file: /drives/drive0/vagrant/machines/microservices/.vagrant/machines/default/virtualbox/private_key

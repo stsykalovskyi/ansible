@@ -1,26 +1,26 @@
-#-   name: Add repository EPEL
-#    yum:
-#        name: https://mirror.webtatic.com/yum/el7/webtatic-release.rpm
-#
-#-   name: Install epel-release
-#    yum:
-#        name: epel-release
-#        state: latest
+-   name: Add repository EPEL
+    yum:
+        name: https://mirror.webtatic.com/yum/el7/webtatic-release.rpm
 
-#-   name: Install PHP 7.1
-#    yum:
-#        name: "{{ item }}"
-#        state: latest
-#    with_items:
-#        - php71w
-#        - php71w-fpm
-#        - php71w-opcache
-#        - php71w-pecl-xdebug
-#        - php71w-pdo
-#        - php71w-mbstring
-#        - php71w-bcmath
-#         - php71w-mcrypt
-#         - php71w-pgsql
+-   name: Install epel-release
+    yum:
+        name: epel-release
+        state: latest
+
+-   name: Install PHP 7.1
+    yum:
+        name: "{{ item }}"
+        state: latest
+    with_items:
+        - php71w
+        - php71w-fpm
+        - php71w-opcache
+        - php71w-pecl-xdebug
+        - php71w-pdo
+        - php71w-mbstring
+        - php71w-bcmath
+        - php71w-mcrypt
+        - php71w-pgsql
 
 -   name: php7.1-fpm | configure php.ini
     lineinfile:
@@ -29,7 +29,7 @@
         line: "{{ item.line }}"
         backup: yes
     with_items:
-        - { regexp: "date.timezone", line: "date.timezone = 'America/Chicago'" }
+        - { regexp: "date.timezone", line: "date.timezone = 'UTC'" }
         - { regexp: "short_open_tag =", line: "short_open_tag = Off" }
         - { regexp: "expose_php =", line: "expose_php = Off" }
         - { regexp: "memory_limit =", line: "memory_limit = {{ memory_limit }}" }
