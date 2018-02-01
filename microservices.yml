@@ -2,11 +2,11 @@
     sudo: yes
     user: "{{ bash_username }}"
     roles:
-        -   git
-        -   php71
+        -   git-centos
+        -   php71-centos
         -   composer
-        -   nginx
-        -   utils
+        -   nginx-centos
+        -   utils-centos
 
     vars:
         microservices:

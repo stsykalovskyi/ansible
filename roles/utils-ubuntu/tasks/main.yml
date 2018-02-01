@@ -1,0 +1,21 @@
+-   name: Install utils
+    apt:
+        pkg: "{{ item }}"
+        state: "present"
+    with_items:
+        - mc
+        - curl
+        - unzip
+        - default-jdk
+        - npm
+        - nodejs-legacy
+
+-   name: Configure default editor to nano
+    lineinfile:
+        dest: "/home/{{ bash_username }}/.bashrc"
+        regexp: "{{ item.regexp }}"
+        line: "{{ item.line }}"
+        backup: yes
+    with_items:
+        - { regexp: "export VISUAL", line: "export VISUAL=nano" }
+        - { regexp: "export EDITOR", line: "export EDITOR=\"$VISUAL\"" }

@@ -1,0 +1,76 @@
+---
+# Variable setup.
+- name: Include OS-specific variables.
+  include_vars: "{{ ansible_os_family }}.yml"
+
+- name: Define nginx_user.
+  set_fact:
+    nginx_user: "{{ __nginx_user }}"
+  when: nginx_user is not defined
+
+# Setup/install tasks.
+- include: setup-RedHat.yml
+  when: ansible_os_family == 'RedHat'
+
+- include: setup-Ubuntu.yml
+  when: ansible_distribution == 'Ubuntu'
+
+- include: setup-Debian.yml
+  when: ansible_os_family == 'Debian'
+
+- include: setup-FreeBSD.yml
+  when: ansible_os_family == 'FreeBSD'
+
+- include: setup-OpenBSD.yml
+  when: ansible_os_family == 'OpenBSD'
+
+- include: setup-Archlinux.yml
+  when: ansible_os_family == 'Archlinux'
+
+# Vhost configuration.
+- include: vhosts.yml
+
+# Nginx setup.
+- name: Copy nginx configuration in place.
+  template:
+    src: "{{ nginx_conf_template }}"
+    dest: "{{ nginx_conf_file_path }}"
+    owner: root
+    group: "{{ root_group }}"
+    mode: 0644
+  notify:
+    - reload nginx
+
+-   name: Set nginx user in nginx.conf
+    lineinfile:
+        dest: /etc/nginx/nginx.conf
+        regexp: "^user "
+        line: "user  {{ bash_username }};"
+    notify:
+        - reload nginx
+
+-   name: Add microservices config files to sites_available directory
+    become: true
+    template:
+        src: templates/symfony.conf
+        dest: "/etc/nginx/sites-available/{{ item.host }}"
+    with_items: "{{ projects }}"
+
+-   name: Create symlinks of microservices hosts configs to sites_enabled directory
+    become: true
+    file:
+        src: "/etc/nginx/sites-available/{{ item.host }}"
+        dest: "/etc/nginx/sites-enabled/{{ item.host }}"
+        state: link
+    with_items: "{{ projects }}"
+
+-   name: Add microservices hosts to /etc/hosts
+    become: true
+    lineinfile:
+        dest: /etc/hosts
+        regexp: "{{ item.host }}"
+        line: "127.0.0.1 {{ item.host }} "
+    with_items: "{{ projects }}"
+
+- name: Ensure nginx is started and enabled to start at boot.
+  service: name=nginx state=started enabled=yes
