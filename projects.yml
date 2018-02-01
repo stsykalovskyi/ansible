@@ -10,14 +10,16 @@
 #        - nodejs
 #        - bower
 #        -   nginx-projects
-        - postgresql
+#        - postgresql
+        - symfony_config
+
 
     vars:
         projects:
             -   name: gamehub
-                host: gamehub.local
+                host: gamehub.com
             -   name: quizhub
-                host: quizhub.local
+                host: quizhub.com
         ansible_private_key_file: /drives/drive0/vagrant/machines/projects/.vagrant/machines/default/virtualbox/private_key
         bash_username: vagrant
         bash_password: "{{ bash_username }}"
@@ -29,3 +31,4 @@
         git_user_email: stsykalovskyi@singlehop.com
         git_user_name: stsykalovskyi
         git_version: 2.16.1
+        projects_web_path: /var/www/projects/projects

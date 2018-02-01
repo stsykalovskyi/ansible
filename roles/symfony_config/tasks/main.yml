@@ -1,0 +1,17 @@
+---
+-   name: "Projects: parameters.yml settings"
+    copy:
+        src: "files/{{ item.name }}_parameters.yml"
+        dest: "{{ projects_web_path }}/{{ item.name }}/app/config/parameters.yml"
+    with_items: "{{ projects }}"
+    when: "files/{{ item.name }}_parameters.yml is defined"
+
+-   name: Test shell command
+    shell: "
+        cd /var/www/projects/projects/{{ item.name }};
+        composer update -o;
+        bin/console doctrine:migrations:migrate;
+        bin/console cache:clear"
+    become: true
+    become_user: "{{ bash_username }}"
+    with_items: "{{ projects }}"

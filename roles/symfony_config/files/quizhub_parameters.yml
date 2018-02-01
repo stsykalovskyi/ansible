@@ -1,0 +1,35 @@
+parameters:
+    app.name: 'Quizhub local'
+    database.driver: pdo_pgsql
+    database.host: 127.0.0.1
+    database.port: 5432
+    database.name: quizhub
+    database.user: vagrant
+    database.password: vagrant
+    database.schema: quizhub
+    mailer.transport: smtp
+    mailer.host: 127.0.0.1
+    mailer.user: null
+    mailer.password: null
+    mailer.from_email.address: no-reply@example.com
+    mailer.from_email.sender_name: no-reply
+    mailer.support.address: support@example.com
+    secret: AS6T7986V65ZD8FASE87R9334FD46SA98E654
+    hosts: {  }
+    admin_bundle.menu_listener.class: Quizhub\DashboardBundle\Services\AdminMenuItemsListener
+    project:
+        name: 'Ubuntu local'
+        hostname: 'http://quizhub.local'
+        logo_small: '<b>T</b>SO'
+    locale: en
+    module.uploads_directory: '%kernel.root_dir%/../web/uploads/module'
+    locales:
+        - '%locale%'
+        - ru
+        - uk
+    facebook_client_id: asdf
+    facebook_secret: asdf
+    google_client_id: 489455099508-e0e92k8cpaot115oj1c7sb92g1qb10em.apps.googleusercontent.com
+    google_secret: JLQYeV1LfqtaE_Qs6Zd_2OgQ
+    paginator.limit: 10
+    dashboard.skin: skin-blue

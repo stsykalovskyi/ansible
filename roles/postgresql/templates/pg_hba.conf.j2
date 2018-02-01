@@ -1,9 +1,11 @@
-{{ ansible_managed | comment }}
-# PostgreSQL Client Authentication Configuration File
-# ===================================================
-#
-# See: https://www.postgresql.org/docs/current/static/auth-pg-hba-conf.html
-
 {% for client in postgresql_hba_entries %}
-{{ client.type }} {{ client.database }} {{ client.user }} {{ client.address|default('') }} {{ client.ip_address|default('') }} {{ client.ip_mask|default('') }} {{ client.auth_method }} {{ client.auth_options|default("") }}
+{{ client.type }}{% if client.type|length < 10 %}{% for i in range(0, 10-client.type|length) %} {% endfor %}{% else %} {% endif %}
+{{ client.database }}{% if client.database|length < 10 %}{% for i in range(0, 10-client.database|length) %} {% endfor %}{% else %} {% endif %}
+{{ client.user }}{% if client.user|length < 10 %}{% for i in range(0, 10-client.user|length) %} {% endfor %}{% else %} {% endif %}
+{{ client.address|default('') }}{% if  client.address|default('')==''%}          {% elif client.address|length < 10 %}{% for i in range(0, 10-client.address|length) %} {% endfor %}{% else %} {% endif %}
+{{ client.ip_address|default('') }}{% if  client.ip_address|default('')==''%}          {% elif client.ip_address|length < 10 %}{% for i in range(0, 10-client.ip_address|length) %} {% endfor %}{% else %} {% endif %}
+{{ client.ip_mask|default('') }}{% if  client.ip_mask|default('')==''%}          {% elif client.ip_mask|length < 10 %}{% for i in range(0, 10-client.ip_mask|length) %} {% endfor %}{% else %} {% endif %}
+{{ client.auth_method }}{% if  client.auth_method|default('')==''%}          {% elif client.auth_method|length < 10 %}{% for i in range(0, 10-client.auth_method|length) %} {% endfor %}{% else %} {% endif %}
+{{ client.auth_options|default("") }}{% if  client.auth_options|default('')==''%}          {% elif client.auth_options|length < 10 %}{% for i in range(0, 10-client.auth_options|length) %} {% endfor %}{% else %} {% endif %}
+
 {% endfor %}
