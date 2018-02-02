@@ -6,6 +6,7 @@
         - mc
         - nano
         - curl
+        - telnet
 
 -   name: Configure default editor to nano
     lineinfile:

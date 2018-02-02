@@ -9,10 +9,11 @@
 #        - utils-ubuntu
 #        - nodejs
 #        - bower
-#        -   nginx-projects
+#        - nginx-projects
 #        - postgresql
-        - symfony_config
-
+#        - symfony_config
+#        - elasticsearch-ubuntu
+        - rabbitmq-ubuntu
 
     vars:
         projects:
@@ -21,6 +22,7 @@
             -   name: quizhub
                 host: quizhub.com
         ansible_private_key_file: /drives/drive0/vagrant/machines/projects/.vagrant/machines/default/virtualbox/private_key
+        postgres_version: 9.4.11
         bash_username: vagrant
         bash_password: "{{ bash_username }}"
         upload_max_file_size: 2M
@@ -32,3 +34,5 @@
         git_user_name: stsykalovskyi
         git_version: 2.16.1
         projects_web_path: /var/www/projects/projects
+        rabbitmq_queues:
+            - test_q

@@ -5,6 +5,11 @@
         name: git
         state: present
 
+-   name: Check file .gitconfig exists
+    file:
+        dest: "/home/{{ bash_username }}/.gitconfig"
+        state: touch
+
 -   name: Git user configuration
     lineinfile:
         dest: "/home/{{ bash_username }}/.gitconfig"
