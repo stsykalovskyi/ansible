@@ -8,14 +8,12 @@
 -   name: Check file .gitconfig exists
     file:
         dest: "/home/{{ bash_username }}/.gitconfig"
+        owner: "{{ bash_username }}"
+        group: "{{ bash_username }}"
+        mode: 0755
         state: touch
 
 -   name: Git user configuration
-    lineinfile:
+    template:
+        src: templates/.gitconfig
         dest: "/home/{{ bash_username }}/.gitconfig"
-        regexp: "{{ item.regexp }}"
-        line: "{{ item.line }}"
-        backup: yes
-    with_items:
-        - { regexp: "name = ", line: "\tname = {{ git_user_name }}" }
-        - { regexp: "email = ", line: "\temail = {{ git_user_email }}" }

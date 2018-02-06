@@ -2,7 +2,7 @@
     sudo: yes
     user: "{{ bash_username }}"
     roles:
-#        -   git-centos
+        -   git-centos
 #        -   php71-centos
 #        -   composer
 #        -   nginx-centos
