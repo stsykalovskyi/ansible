@@ -1,0 +1,4 @@
+---
+-   name: Handle bundles installation
+    include: "{{ item }}.yml"
+    with_items: "{{ bundles }}"
