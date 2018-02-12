@@ -1,4 +1,7 @@
 ---
--   name: Handle bundles installation
-    include: "{{ item }}.yml"
-    with_items: "{{ bundles }}"
+-   name: Run role depends of platform
+    include: "{{ item.name }}.yml"
+    with_items: "{{ roles }}"
+    when: ansible_os_platform|lower == 'redhat'
+-   include: debian.yml
+    when: ansible_os_platform|lower == 'debian'

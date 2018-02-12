@@ -1,0 +1,4 @@
+---
+roles:
+    -   name: symfony
+        version: 3.3
