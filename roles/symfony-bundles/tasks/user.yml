@@ -1,4 +1,0 @@
----
--   name: Navigate to project dir
-    shell: |
-        cd /{{project_name}}

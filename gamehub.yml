@@ -4,12 +4,13 @@
     user: "{{ bash_username }}"
     roles:
         -   role: symfony-bundles
-            vars:
-                -   bundles: [user]
-
     vars:
         project_name: gamehub
         project_host: gamehub.com
+        bundles:
+            -   name: user
+                args:
+                    project_name: "{{ project_name }}"
         bash_username: vagrant
         bash_password: "{{ bash_username }}"
         ansible_private_key_file: /drives/drive0/vagrant/machines/projects/.vagrant/machines/default/virtualbox/private_key
