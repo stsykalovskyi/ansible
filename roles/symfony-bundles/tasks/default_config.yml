@@ -1,0 +1,25 @@
+---
+-   name: Remove default AppBundle directory
+    file:
+        state: absent
+        path: "{{ project_web_path }}/{{ project_name }}/src/AppBundle"
+
+-   name: Replace config with default
+    template:
+        src: config.yml
+        dest: "{{ project_web_path }}/{{ project_name }}/app/config/config.yml"
+
+-   name: Replace AppKernel.php with default
+    template:
+        src: AppKernel.php
+        dest: "{{ project_web_path }}/{{ project_name }}/app/AppKernel.php"
+
+-   name: Replace services.yml
+    template:
+        src: services.yml
+        dest: "{{ project_web_path }}/{{ project_name }}/app/config/services.yml"
+
+-   name: Replace routing.yml
+    template:
+        src: routing.yml
+        dest: "{{ project_web_path }}/{{ project_name }}/app/config/routing.yml"

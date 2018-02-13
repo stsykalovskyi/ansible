@@ -1,16 +1,15 @@
 ---
--   include: default_config.yml
 -   name: "Projects: parameters.yml settings"
     template:
-        src: "files/{{ item.name }}_parameters.yml"
+        src: "{{ item.name }}_parameters.yml"
         dest: "{{ projects_web_path }}/{{ item.name }}/app/config/parameters.yml"
     with_items: "{{ projects }}"
 
+
 -   name: Projects initial configuration
-    shell: "
-        cd /var/www/projects/{{ item.name }};
-        composer update -o --verbose 2;
-        bin/console cache:clear"
+    composer:
+        command: update
+        working_dir: "{{ project_web_path }}/{{ item.name }}"
     become: true
     become_user: "{{ bash_username }}"
     with_items: "{{ projects }}"

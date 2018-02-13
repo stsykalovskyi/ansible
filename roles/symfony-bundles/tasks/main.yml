@@ -1,5 +1,5 @@
 ---
--   name: Execute bundles installation scripts
-    script: "files/shell/{{ item.name }}.sh"
-    args: "{{ item.args }}"
+-   name: Handle bundles
+    include: "{{ item.name }}.yml"
     with_items: "{{ bundles }}"
+

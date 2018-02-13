@@ -1,9 +1,21 @@
 ---
--   name: Enable translator in config
+#-   name: Enable translator in config
+#    lineinfile:
+#        dest: "{{ project_web_path }}/{{ project_name }}/app/config/config.yml"
+#        regexp: 'translator: '
+#        line: '    translator: ~'
+#-   name: FOSUserBundle Download using composer
+#    composer:
+#            command: require
+#            arguments: friendsofsymfony/user-bundle
+#            working_dir: "{{ project_web_path }}/{{ project_name }}"
+#    become: true
+#    become_user: "{{ bash_username }}"
+
+-   name: FOSUserBundle Enable bundle
     lineinfile:
-        dest: "{{ project_web_path }}/{{ project_name }}/app/config/config.yml"
-        regexp: '#translator: '
-        line: 'translator: ~'
--   name: Install user bundle
-    shell: "
-        composer require friendsofsymfony/user-bundle;"
+        dest: "{{ project_web_path }}/{{ project_name }}/app/AppKernel.php"
+        regexp: '^new FOS\UserBundle\FOSUserBundle()'
+        insertafter: '^//new FOS\UserBundle\FOSUserBundle()'
+        line: '            new FOS\UserBundle\FOSUserBundle(),'
+        state: present

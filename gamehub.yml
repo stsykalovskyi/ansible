@@ -9,6 +9,7 @@
                     -   name: user
     vars:
         bundles:
+            -   name: default_config
             -   name: user
         project_name: gamehub
         project_host: gamehub.com
