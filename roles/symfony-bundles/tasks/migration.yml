@@ -1,0 +1,34 @@
+---
+-   name: Check that the migrations Bundle installed
+    stat:
+        path: "{{ project_web_path }}/vendor/doctrine/doctrine-migrations-bundle"
+    register: stat_result
+
+-   name: Migratioins Download using composer
+    composer:
+            command: require
+            arguments: doctrine/doctrine-migrations-bundle
+            working_dir: "{{ project_web_path }}"
+    become: true
+    become_user: "{{ bash_username }}"
+    when: stat_result.stat.exists == False
+
+-   name: Migrations Enable bundle
+    lineinfile:
+        dest: "{{ project_web_path }}/app/AppKernel.php"
+        regexp: '^Bundles'
+        insertafter: '#Bundles'
+        line: '            new Doctrine\Bundle\MigrationsBundle\DoctrineMigrationsBundle(),'
+        state: present
+
+-   name: FOSUserBundle import routing files
+    blockinfile:
+        dest: "{{ project_web_path }}/app/config/routing.yml"
+        marker: '# Migrations'
+        content: "doctrine_migrations:
+        \n    dir_name: '%kernel.root_dir%/DoctrineMigrations'
+        \n    namespace: Application\\Migrations
+        \n    table_name: '%database.schema%.migration_versions'
+        \n    name: Application Migrations"
+
+

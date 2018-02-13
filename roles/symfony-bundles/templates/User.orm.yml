@@ -1,4 +1,4 @@
-{{ project_name|title }}CoreBundle\Entity\User:
+{{ project_name|title }}\{{core_bundle_name}}\Entity\User:
     type:  entity
     table: {{ project_name }}.fos_user
     id:

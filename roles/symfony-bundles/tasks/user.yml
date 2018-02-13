@@ -1,17 +1,23 @@
 ---
-#-   name: Enable translator in config
-#    lineinfile:
-#        dest: "{{ project_web_path }}/{{ project_name }}/app/config/config.yml"
-#        regexp: 'translator: '
-#        line: '    translator: ~'
-#-   name: FOSUserBundle Download using composer
-#    composer:
-#            command: require
-#            arguments: friendsofsymfony/user-bundle
-#            working_dir: "{{ project_web_path }}/{{ project_name }}"
-#    become: true
-#    become_user: "{{ bash_username }}"
+-   name: Enable translator in config
+    lineinfile:
+        dest: "{{ project_web_path }}/app/config/config.yml"
+        regexp: 'translator: '
+        line: '    translator: ~'
 
+-   name: Check that the user Bundle installed
+    stat:
+        path: "{{ project_web_path }}/vendor/friendsofsymfony/user-bundle"
+    register: stat_result
+
+-   name: FOSUserBundle Download using composer
+    composer:
+            command: require
+            arguments: friendsofsymfony/user-bundle
+            working_dir: "{{ project_web_path }}"
+    become: true
+    become_user: "{{ bash_username }}"
+    when: stat_result.stat.exists == False
 
 -   name: FOSUserBundle Enable bundle
     lineinfile:
@@ -21,6 +27,33 @@
         line: '            new FOS\UserBundle\FOSUserBundle(),'
         state: present
 
+-   name: Replace security.yml
+    template:
+        src: security.yml
+        dest: "{{ project_web_path }}/app/config/security.yml"
+
+-   name: Create entity directory
+    file:
+        path: "{{ project_web_path }}/src/{{ project_name|title }}/{{ core_bundle_name }}/Entity"
+        state: directory
+        mode: 0755
+
+-   name: Create User entity class
+    template:
+        src: User.php
+        dest: "{{ project_web_path }}/src/{{ project_name|title }}/{{ core_bundle_name }}/Entity/User.php"
+
+-   name: Create doctrine config directory
+    file:
+        path: "{{ project_web_path }}/src/{{ project_name|title }}/{{ core_bundle_name }}/Resources/config/doctrine"
+        state: directory
+        mode: 0755
+
+-   name: Create User.orm.yml
+    template:
+        src: User.orm.yml
+        dest: "{{ project_web_path }}/src/{{ project_name|title }}/{{ core_bundle_name }}/Resources/config/doctrine/User.orm.yml"
+
 -   name: FOSUserBundle configure
     lineinfile:
         dest: "{{ project_web_path }}/app/config/config.yml"
@@ -29,32 +62,34 @@
         line: "fos_user:
             \n    db_driver: orm
             \n    firewall_name: main
-            \n    user_class: {{ namespace }}\\Entity\\User
+            \n    user_class: {{ project_name|title }}\\{{core_bundle_name}}\\Entity\\User
             \n    from_email:
             \n        address: '%mailer.user%'
             \n        sender_name: '%mailer.user%'
+            \n    service:
+            \n        mailer: 'fos_user.mailer.noop'
             "
         state: present
 
 -   name: FOSUserBundle import routing files
-    lineinfile:
+    blockinfile:
         dest: "{{ project_web_path }}/app/config/routing.yml"
-        regexp: '^ FOS User'
-        insertafter: '# FOS User'
-        line: "\nfos_user_{{ item.name }}:\n\tresource: \"@FOSUserBundle/Resources/config/routing/{{ item.fileName }}.xml\"{% if item.prefix is defined %} \n\tprefix: {{ item.prefix }}{% endif %}\n"
-        state: present
-    with_items:
-        -   name: change_password
-            fileName: change_password
-            prefix: profile
-        -   name: resetting
-            fileName: resetting
-            prefix: /profile
-        -   name: register
-            fileName: registration
-            prefix: register
-        -   name: profile
-            fileName: profile
-            prefix: profile
-        -   name: security
-            fileName: security
+        marker: '# FOS User'
+        content: "fos_user_security:
+        \n    resource: \"@FOSUserBundle/Resources/config/routing/security.xml\"
+        \n
+        \nfos_user_profile:
+        \n    resource: \"@FOSUserBundle/Resources/config/routing/profile.xml\"
+        \n    prefix: /profile
+        \n
+        \nfos_user_register:
+        \n    resource: \"@FOSUserBundle/Resources/config/routing/registration.xml\"
+        \n    prefix: /register
+        \n
+        \nfos_user_resetting:
+        \n    resource: \"@FOSUserBundle/Resources/config/routing/resetting.xml\"
+        \n    prefix: /resetting
+        \n
+        \nfos_user_change_password:
+        \n    resource: \"@FOSUserBundle/Resources/config/routing/change_password.xml\"
+        \n    prefix: /profile"

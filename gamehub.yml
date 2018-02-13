@@ -3,13 +3,11 @@
     sudo: yes
     user: "{{ bash_username }}"
     roles:
-        -   role: symfony-bundles
-            vars:
-                bundles:
-                    -   name: user
+        -   symfony-bundles
     vars:
         bundles:
             -   name: default_config
+            -   name: migration
             -   name: user
         project_name: gamehub
         project_host: gamehub.com
