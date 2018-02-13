@@ -2,24 +2,61 @@
 -   name: Remove default AppBundle directory
     file:
         state: absent
-        path: "{{ project_web_path }}/{{ project_name }}/src/AppBundle"
+        path: "{{ project_web_path }}/src/AppBundle"
 
 -   name: Replace config with default
     template:
         src: config.yml
-        dest: "{{ project_web_path }}/{{ project_name }}/app/config/config.yml"
+        dest: "{{ project_web_path }}/app/config/config.yml"
 
 -   name: Replace AppKernel.php with default
     template:
         src: AppKernel.php
-        dest: "{{ project_web_path }}/{{ project_name }}/app/AppKernel.php"
+        dest: "{{ project_web_path }}/app/AppKernel.php"
 
 -   name: Replace services.yml
     template:
         src: services.yml
-        dest: "{{ project_web_path }}/{{ project_name }}/app/config/services.yml"
+        dest: "{{ project_web_path }}/app/config/services.yml"
 
 -   name: Replace routing.yml
     template:
         src: routing.yml
-        dest: "{{ project_web_path }}/{{ project_name }}/app/config/routing.yml"
+        dest: "{{ project_web_path }}/app/config/routing.yml"
+
+-   name: Replace security.yml
+    template:
+        src: security.yml
+        dest: "{{ project_web_path }}/app/config/security.yml"
+
+-   name: Create entity directory
+    file:
+        path: "{{ project_web_path }}/src/{{ project_name|title }}/{{ core_bundle_name }}/Entity"
+        state: directory
+        mode: 0755
+
+-   name: Create User entity class
+    template:
+        src: User.php
+        dest: "{{ project_web_path }}/src/{{ project_name|title }}/{{ core_bundle_name }}/Entity/User.php"
+
+-   name: Create doctrine config directory
+    file:
+        path: "{{ project_web_path }}/src/{{ project_name|title }}/{{ core_bundle_name }}/Resources/config/doctrine"
+        state: directory
+        mode: 0755
+
+-   name: Create User.orm.yml
+    template:
+        src: User.orm.yml
+        dest: "{{ project_web_path }}/src/{{ project_name|title }}/{{ core_bundle_name }}/Resources/config/doctrine/User.orm.yml"
+
+-   name: Check that the Bundle exists
+    stat:
+        path: "{{ project_web_path }}/src/{{ project_name|title }}/{{ core_bundle_name }}"
+    register: stat_result
+
+-   name: Generate bundle
+    shell: "{{ project_web_path }}/bin/console generate:bundle --namespace={{ project_name|title }}/{{ core_bundle_name }} --dir=src --no-interaction"
+    when: stat_result.stat.exists == False
+

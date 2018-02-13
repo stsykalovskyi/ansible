@@ -1,3 +1,5 @@
 app:
     resource: '@{{ project_name|title }}/Controller/'
     type: annotation
+
+# FOS User

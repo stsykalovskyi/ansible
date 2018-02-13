@@ -12,10 +12,42 @@
 #    become: true
 #    become_user: "{{ bash_username }}"
 
+
 -   name: FOSUserBundle Enable bundle
     lineinfile:
-        dest: "{{ project_web_path }}/{{ project_name }}/app/AppKernel.php"
-        regexp: '^new FOS\UserBundle\FOSUserBundle()'
-        insertafter: '^//new FOS\UserBundle\FOSUserBundle()'
+        dest: "{{ project_web_path }}/app/AppKernel.php"
+        regexp: '^Bundles'
+        insertafter: '#Bundles'
         line: '            new FOS\UserBundle\FOSUserBundle(),'
         state: present
+
+-   name: FOSUserBundle configure
+    lineinfile:
+        dest: "{{ project_web_path }}/app/config/config.yml"
+        regexp: '^ FOS User'
+        insertafter: '# FOS User'
+        line: "fos_user:\n\tdb_driver: orm\n\tfirewall_name: main \n\tuser_class: {{ namespace }}\\Entity\\User"
+        state: present
+
+-   name: FOSUserBundle import routing files
+    lineinfile:
+        dest: "{{ project_web_path }}/app/config/routing.yml"
+        regexp: '^ FOS User'
+        insertafter: '# FOS User'
+        line: "\nfos_user_{{ item.name }}:\n\tresource: \"@FOSUserBundle/Resources/config/routing/{{ item.fileName }}.xml\"{% if item.prefix is defined %} \n\tprefix: {{ item.prefix }}{% endif %}\n"
+        state: present
+    with_items:
+        -   name: change_password
+            fileName: change_password
+            prefix: profile
+        -   name: resetting
+            fileName: resetting
+            prefix: /profile
+        -   name: register
+            fileName: registration
+            prefix: register
+        -   name: profile
+            fileName: profile
+            prefix: profile
+        -   name: security
+            fileName: security

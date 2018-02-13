@@ -13,8 +13,11 @@
             -   name: user
         project_name: gamehub
         project_host: gamehub.com
-        project_web_path: /var/www/projects
+        projects_web_path: /var/www/projects
+        project_web_path: "{{ projects_web_path }}/{{ project_name }}"
         bash_username: vagrant
         bash_password: "{{ bash_username }}"
+        core_bundle_name: CoreBundle
+        namespace: "{{ project_name|title }}{{ core_bundle_name }}"
         ansible_private_key_file: /drives/drive0/vagrant/machines/projects/.vagrant/machines/default/virtualbox/private_key
 

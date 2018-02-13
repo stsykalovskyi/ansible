@@ -1,0 +1,80 @@
+{{ project_name|title }}CoreBundle\Entity\User:
+    type:  entity
+    table: {{ project_name }}.fos_user
+    id:
+        id:
+            type: integer
+            generator:
+                strategy: AUTO
+    fields:
+        username:
+            type: string
+            length: 180
+        usernameCanonical:
+            column: username_canonical
+            type: string
+            lenght: 180
+            unique: true
+        firstName:
+            column: first_name
+            type: string
+            length: 64
+            nullable: true
+        lastName:
+            column: last_name
+            type: string
+            length: 64
+            nullable: true
+        email:
+            type: string
+            length: 180
+            unique: true
+        emailCanonical:
+            column: email_canonical
+            type: string
+            length: 180
+            unique: true
+        enabled:
+            type: boolean
+        salt:
+            type: string
+            nullable: true
+        password:
+            type: string
+        lastLogin:
+            type: datetime
+            nullable: true
+        confirmationToken:
+            type: string
+            lenght: 180
+            unique: true
+            nullable: true
+        passwordRequestedAt:
+            type: datetime
+            nullable: true
+        roles:
+            type: array
+        avatar:
+            type: string
+            length: 255
+            nullable: true
+        hash:
+            type: string
+            length: 24
+            nullable: true
+        facebook_id:
+            type: string
+            length: 255
+            nullable: rue
+        facebook_access_token:
+            type: string
+            length: 255
+            nullable: rue
+        google_id:
+            type: string
+            length: 255
+            nullable: rue
+        google_access_token:
+            type: string
+            length: 255
+            nullable: rue
