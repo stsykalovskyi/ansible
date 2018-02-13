@@ -1,0 +1,9 @@
+---
+-   name: Enable translator in config
+    lineinfile:
+        dest: "{{ project_web_path }}/{{ project_name }}/app/config/config.yml"
+        regexp: '#translator: '
+        line: 'translator: ~'
+-   name: Install user bundle
+    shell: "
+        composer require friendsofsymfony/user-bundle;"

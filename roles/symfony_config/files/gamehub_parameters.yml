@@ -1,0 +1,29 @@
+parameters:
+    app.name: "{{ item.name|title }} local "
+    database.driver: pdo_pgsql
+    database.host: 127.0.0.1
+    database.port: 5432
+    database.name: gamehub
+    database.user: "{{ bash_username }}"
+    database.password: "{{ bash_username }}"
+    database.schema: "{{ bash_username }}"
+    mailer.transport: smtp
+    mailer.host: 127.0.0.1
+    mailer.user: "{{ bash_username }}"
+    mailer.password: null
+    mailer.from_email.address: no-reply@example.com
+    mailer.from_email.sender_name: no-reply
+    mailer.support.address: support@example.com
+    secret: AS6T7986V65ZD8FASE87R9334FD46SA98E654
+    admin_bundle.menu_listener.class: {{ item.name|title }}\AppBundle\Services\AdminMenuItemsListener
+    project:
+        name: "{{ item.name|title }} local"
+        hostname: "http://{{ item.host }}"
+        logo_small: "{{ item.name|title }}"
+    locale: ru
+    facebook_client_id: asdf
+    facebook_secret: asdf
+    google_client_id: 489455099508-0vriunstnppsr3vpldr4dvig8n01pmel.apps.googleusercontent.com
+    google_secret: L3a6hjEOltHsasgzeBQAYEc_
+    paginator.limit: 10
+    dashboard.skin: skin-blue

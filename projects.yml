@@ -13,14 +13,15 @@
 #        - postgresql
 #        - symfony_config
 #        - elasticsearch-ubuntu
-        - rabbitmq-ubuntu
+#        - rabbitmq-ubuntu
+        - symfony_config
 
     vars:
         projects:
             -   name: gamehub
                 host: gamehub.com
-            -   name: quizhub
-                host: quizhub.com
+#            -   name: quizhub
+#                host: quizhub.com
         ansible_private_key_file: /drives/drive0/vagrant/machines/projects/.vagrant/machines/default/virtualbox/private_key
         postgres_version: 9.4.11
         bash_username: vagrant
@@ -33,6 +34,6 @@
         git_user_email: stsykalovskyi@singlehop.com
         git_user_name: stsykalovskyi
         git_version: 2.16.1
-        projects_web_path: /var/www/projects/projects
+        projects_web_path: /var/www/projects
         rabbitmq_queues:
             - test_q

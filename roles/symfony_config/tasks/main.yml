@@ -1,16 +1,15 @@
 ---
+-   include: default_config.yml
 -   name: "Projects: parameters.yml settings"
-    copy:
+    template:
         src: "files/{{ item.name }}_parameters.yml"
         dest: "{{ projects_web_path }}/{{ item.name }}/app/config/parameters.yml"
     with_items: "{{ projects }}"
-    when: "files/{{ item.name }}_parameters.yml is defined"
 
--   name: Test shell command
+-   name: Projects initial configuration
     shell: "
-        cd /var/www/projects/projects/{{ item.name }};
-        composer update -o;
-        bin/console doctrine:migrations:migrate;
+        cd /var/www/projects/{{ item.name }};
+        composer update -o --verbose 2;
         bin/console cache:clear"
     become: true
     become_user: "{{ bash_username }}"
