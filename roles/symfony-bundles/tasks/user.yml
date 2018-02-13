@@ -26,7 +26,14 @@
         dest: "{{ project_web_path }}/app/config/config.yml"
         regexp: '^ FOS User'
         insertafter: '# FOS User'
-        line: "fos_user:\n\tdb_driver: orm\n\tfirewall_name: main \n\tuser_class: {{ namespace }}\\Entity\\User"
+        line: "fos_user:
+            \n    db_driver: orm
+            \n    firewall_name: main
+            \n    user_class: {{ namespace }}\\Entity\\User
+            \n    from_email:
+            \n        address: '%mailer.user%'
+            \n        sender_name: '%mailer.user%'
+            "
         state: present
 
 -   name: FOSUserBundle import routing files
