@@ -33,7 +33,7 @@ postgresql_locales:
   - 'en_US.UTF-8'
 
 # Databases to ensure exist.
-postgresql_databases: "{{ projects }}"
+postgresql_databases: "{{ postgresql_databases }}"
 #     lc_collate: # defaults to 'en_US.UTF-8'
 #     lc_ctype: # defaults to 'en_US.UTF-8'
 #     encoding: # defaults to 'UTF-8'

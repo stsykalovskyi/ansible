@@ -1,6 +1,6 @@
 <?php
 
-namespace {{ project_name|title }}\{{core_bundle_name}}\Entity;
+namespace {{ namespace }}\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -10,7 +10,7 @@ use FOS\UserBundle\Model\UserInterface;
 
 /**
  * Class User
- * @package {{namespace}}\Entity
+ * @package {{ namespace }}\Entity
  */
 class User implements UserInterface, GroupableInterface
 {

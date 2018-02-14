@@ -62,7 +62,7 @@
         line: "fos_user:
             \n    db_driver: orm
             \n    firewall_name: main
-            \n    user_class: {{ project_name|title }}\\{{core_bundle_name}}\\Entity\\User
+            \n    user_class: {{ namespace }}\\Entity\\User
             \n    from_email:
             \n        address: '%mailer.user%'
             \n        sender_name: '%mailer.user%'
@@ -93,3 +93,14 @@
         \nfos_user_change_password:
         \n    resource: \"@FOSUserBundle/Resources/config/routing/change_password.xml\"
         \n    prefix: /profile"
+
+-   name: Create migrations directory
+    file:
+        path: "{{ project_web_path }}/app/DoctrineMigrations"
+        state: directory
+        mode: 0755
+
+-   name: Copy migrations file
+    template:
+        src: Version20180213232013.php
+        dest: "{{ project_web_path }}/app/DoctrineMigrations/Version20180213232013.php"

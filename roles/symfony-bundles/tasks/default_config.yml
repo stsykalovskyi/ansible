@@ -29,6 +29,11 @@
         src: routing.yml
         dest: "{{ project_web_path }}/app/config/routing.yml"
 
+-   name: Replace core bundle routing.yml file
+    template:
+        src: bundle_routing.yml
+        dest: "{{ project_web_path }}/src/{{ project_name|title }}/{{ core_bundle_name }}/Resources/config/routing.yml"
+
 -   name: Check that the Bundle exists
     stat:
         path: "{{ project_web_path }}/src/{{ project_name|title }}/{{ core_bundle_name }}"
@@ -43,6 +48,6 @@
         dest: "{{ project_web_path }}/app/AppKernel.php"
         regexp: '^Bundles'
         insertafter: '#Bundles'
-        line: '            new {{project_name|title}}\{{core_bundle_name}}\{{namespace}},'
+        line: '            new {{namespace}}\{{ core_bundle_full_name }},'
         state: present
 

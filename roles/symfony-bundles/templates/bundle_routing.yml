@@ -1,0 +1,3 @@
+{{ project_name }}.core_bundle.homepage:
+    path: /
+    defaults: {_controller: {{ core_bundle_full_name }}:Default:index}

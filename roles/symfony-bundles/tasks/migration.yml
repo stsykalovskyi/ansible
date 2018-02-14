@@ -23,7 +23,7 @@
 
 -   name: FOSUserBundle import routing files
     blockinfile:
-        dest: "{{ project_web_path }}/app/config/routing.yml"
+        dest: "{{ project_web_path }}/app/config/config.yml"
         marker: '# Migrations'
         content: "doctrine_migrations:
         \n    dir_name: '%kernel.root_dir%/DoctrineMigrations'

@@ -1,5 +1,5 @@
-app:
-    resource: '@{{ project_name|title }}/Controller/'
-    type: annotation
+{{ project_name }}.core_bundle:
+    prefix: /
+    resource: '@{{ core_bundle_full_name }}/Resources/config/routing.yml'
 
 # FOS User

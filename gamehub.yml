@@ -16,6 +16,7 @@
         bash_username: vagrant
         bash_password: "{{ bash_username }}"
         core_bundle_name: CoreBundle
-        namespace: "{{ project_name|title }}{{ core_bundle_name }}"
+        core_bundle_full_name: "{{ project_name|title }}{{ core_bundle_name }}"
+        namespace: "{{ project_name|title }}\\{{ core_bundle_name }}"
         ansible_private_key_file: /drives/drive0/vagrant/machines/projects/.vagrant/machines/default/virtualbox/private_key
 

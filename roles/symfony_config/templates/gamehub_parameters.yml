@@ -3,10 +3,10 @@ parameters:
     database.driver: pdo_pgsql
     database.host: 127.0.0.1
     database.port: 5432
-    database.name: gamehub
+    database.name: "{{ item.name }}"
     database.user: "{{ bash_username }}"
     database.password: "{{ bash_username }}"
-    database.schema: "{{ bash_username }}"
+    database.schema: "{{ item.name }}"
     mailer.transport: smtp
     mailer.host: 127.0.0.1
     mailer.user: "{{ bash_username }}"
