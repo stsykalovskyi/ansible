@@ -7,17 +7,17 @@
     vars:
         bundles:
             -   name: default_config
-#            -   name: migrations
-#            -   name: user
-#            -   name: lte-admin
+            -   name: migrations
+            -   name: user
+            -   name: lte-admin
         project_name: gamehub
         project_host: gamehub.com
         projects_web_path: /var/www/projects
         project_web_path: "{{ projects_web_path }}/{{ project_name }}"
         bash_username: vagrant
         bash_password: "{{ bash_username }}"
-        core_bundle_name: CoreBundle
-        core_bundle_full_name: "{{ project_name|title }}{{ core_bundle_name }}"
-        namespace: "{{ project_name|title }}\\{{ core_bundle_name }}"
+        core_bundle_name: Core
+        core_bundle_full_name: "{{ project_name|title }}{{ core_bundle_name }}Bundle"
+        namespace: "{{ project_name|title }}\\{{ core_bundle_name }}Bundle"
         ansible_private_key_file: /drives/drive0/vagrant/machines/projects/.vagrant/machines/default/virtualbox/private_key
 

@@ -85,25 +85,25 @@
 
 -   name: 'FOSUserBundle: Create entity directory'
     file:
-        path: "{{ project_web_path }}/src/{{ project_name|title }}/{{ core_bundle_name }}/Entity"
+        path: "{{ project_web_path }}/src/{{ project_name|title }}/{{ core_bundle_name }}Bundle/Entity"
         state: directory
         mode: 0755
 
 -   name: 'FOSUserBundle: Create User entity class'
     template:
         src: user/User.php
-        dest: "{{ project_web_path }}/src/{{ project_name|title }}/{{ core_bundle_name }}/Entity/User.php"
+        dest: "{{ project_web_path }}/src/{{ project_name|title }}/{{ core_bundle_name }}Bundle/Entity/User.php"
 
 -   name: 'FOSUserBundle: Create doctrine config directory'
     file:
-        path: "{{ project_web_path }}/src/{{ project_name|title }}/{{ core_bundle_name }}/Resources/config/doctrine"
+        path: "{{ project_web_path }}/src/{{ project_name|title }}/{{ core_bundle_name }}Bundle/Resources/config/doctrine"
         state: directory
         mode: 0755
 
 -   name: 'FOSUserBundle: Create User.orm.yml'
     template:
         src: user/User.orm.yml
-        dest: "{{ project_web_path }}/src/{{ project_name|title }}/{{ core_bundle_name }}/Resources/config/doctrine/User.orm.yml"
+        dest: "{{ project_web_path }}/src/{{ project_name|title }}/{{ core_bundle_name }}Bundle/Resources/config/doctrine/User.orm.yml"
 
 -   name: 'FOSUserBundle: configure'
     lineinfile:

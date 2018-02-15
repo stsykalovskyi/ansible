@@ -4,7 +4,8 @@
     "type": "project",
     "autoload": {
         "psr-4": {
-            "{{project_name|title}}\\{{ core_bundle_name }}\\": "src/{{project_name|title}}/{{ core_bundle_name }}"
+            "{{project_name|title}}\\{{ core_bundle_full_name }}\\": "src/{{project_name|title}}/{{ core_bundle_full_name }}",
+            "{{project_name|title}}\\{{ core_bundle_name }}Bundle\\": "src/{{project_name|title}}/{{ core_bundle_name }}Bundle"
         },
         "classmap": [
             "app/AppKernel.php",
