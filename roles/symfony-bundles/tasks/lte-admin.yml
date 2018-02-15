@@ -1,0 +1,22 @@
+---
+-   name: 'LTE Admin: Check that the Bundle installed'
+    stat:
+        path: "{{ project_web_path }}/vendor/avanzu/admin-theme-bundle"
+    register: stat_result
+
+-   name: 'LTE Admin: Download using composer'
+    composer:
+            command: require
+            arguments: avanzu/admin-theme-bundle
+            working_dir: "{{ project_web_path }}"
+    become: true
+    become_user: "{{ bash_username }}"
+    when: stat_result.stat.exists == False
+
+-   name: 'FOSUserBundle: Enable bundle'
+    lineinfile:
+        dest: "{{ project_web_path }}/app/AppKernel.php"
+        regexp: '^Bundles'
+        insertafter: '#Bundles'
+        line: '            new Avanzu\AdminThemeBundle\AvanzuAdminThemeBundle(),'
+        state: present

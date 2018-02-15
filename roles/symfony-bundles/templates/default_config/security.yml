@@ -1,0 +1,20 @@
+security:
+    encoders:
+        FOS\UserBundle\Model\UserInterface: bcrypt
+# Encoders
+
+    role_hierarchy:
+# Role hierarchy
+    providers:
+# Providers
+        in_memory:
+            memory: ~
+
+    firewalls:
+# Firewalls
+        dev:
+            pattern: ^/(_(profiler|wdt)|css|images|js)/
+            security: false
+
+    access_control:
+# Access control

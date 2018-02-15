@@ -1,16 +1,16 @@
 ---
--   name: Enable translator in config
+-   name: 'FOSUserBundle: Enable translator in config'
     lineinfile:
         dest: "{{ project_web_path }}/app/config/config.yml"
         regexp: 'translator: '
         line: '    translator: ~'
 
--   name: Check that the user Bundle installed
+-   name: 'FOSUserBundle: Check that the user Bundle installed'
     stat:
         path: "{{ project_web_path }}/vendor/friendsofsymfony/user-bundle"
     register: stat_result
 
--   name: FOSUserBundle Download using composer
+-   name: 'FOSUserBundle: Download using composer'
     composer:
             command: require
             arguments: friendsofsymfony/user-bundle
@@ -19,7 +19,7 @@
     become_user: "{{ bash_username }}"
     when: stat_result.stat.exists == False
 
--   name: FOSUserBundle Enable bundle
+-   name: 'FOSUserBundle: Enable bundle'
     lineinfile:
         dest: "{{ project_web_path }}/app/AppKernel.php"
         regexp: '^Bundles'
@@ -27,34 +27,85 @@
         line: '            new FOS\UserBundle\FOSUserBundle(),'
         state: present
 
--   name: Replace security.yml
-    template:
-        src: security.yml
+-   name: 'FOSUserBundle: add security encoder'
+    lineinfile:
         dest: "{{ project_web_path }}/app/config/security.yml"
+        regexp: '^ Encoders'
+        insertafter: '# Encoders'
+        line: '        FOS\UserBundle\Model\UserInterface: bcrypt'
+        state: present
 
--   name: Create entity directory
+-   name: 'FOSUserBundle: add security roles hierarchy'
+    lineinfile:
+        dest: "{{ project_web_path }}/app/config/security.yml"
+        regexp: '^ Role hierarchy'
+        insertafter: '# Role hierarchy'
+        line: "        {{ item.name }}"
+        state: present
+    with_items: "{{ security_roles_hierarchy }}"
+
+-   name: 'FOSUserBundle: add security providers'
+    lineinfile:
+        dest: "{{ project_web_path }}/app/config/security.yml"
+        regexp: '^ Providers'
+        insertafter: '# Providers'
+        line: "        {{ item.name }}:
+            \n            {{ item.attr_key }}: {{ item.attr_value }}"
+        state: present
+    with_items: "{{ security_providers }}"
+
+-   name: 'FOSUserBundle: add firewall'
+    lineinfile:
+        dest: "{{ project_web_path }}/app/config/security.yml"
+        regexp: '^ Firewalls'
+        insertafter: '# Firewalls'
+        line: "        main:
+        \n            pattern: ^/
+        \n            form_login:
+        \n                provider: fos_userbundle
+        \n                csrf_token_generator: security.csrf.token_manager
+        \n                login_path: fos_user_security_login
+        \n                check_path: fos_user_security_check
+        \n            logout:       true
+        \n            anonymous:    true"
+        state: present
+
+-   name: 'FOSUserBundle: add access control items'
+    lineinfile:
+        dest: "{{ project_web_path }}/app/config/security.yml"
+        regexp: '^ Access control'
+        insertafter: '# Access control'
+        line: "
+        \n        - { path: ^/register, role: IS_AUTHENTICATED_ANONYMOUSLY }
+        \n        - { path: ^/login$, role: IS_AUTHENTICATED_ANONYMOUSLY }
+        \n        - { path: ^/admin/, role: ROLE_ADMIN }
+        \n        - { path: ^/resetting, role: IS_AUTHENTICATED_ANONYMOUSLY }
+        "
+        state: present
+
+-   name: 'FOSUserBundle: Create entity directory'
     file:
         path: "{{ project_web_path }}/src/{{ project_name|title }}/{{ core_bundle_name }}/Entity"
         state: directory
         mode: 0755
 
--   name: Create User entity class
+-   name: 'FOSUserBundle: Create User entity class'
     template:
-        src: User.php
+        src: user/User.php
         dest: "{{ project_web_path }}/src/{{ project_name|title }}/{{ core_bundle_name }}/Entity/User.php"
 
--   name: Create doctrine config directory
+-   name: 'FOSUserBundle: Create doctrine config directory'
     file:
         path: "{{ project_web_path }}/src/{{ project_name|title }}/{{ core_bundle_name }}/Resources/config/doctrine"
         state: directory
         mode: 0755
 
--   name: Create User.orm.yml
+-   name: 'FOSUserBundle: Create User.orm.yml'
     template:
-        src: User.orm.yml
+        src: user/User.orm.yml
         dest: "{{ project_web_path }}/src/{{ project_name|title }}/{{ core_bundle_name }}/Resources/config/doctrine/User.orm.yml"
 
--   name: FOSUserBundle configure
+-   name: 'FOSUserBundle: configure'
     lineinfile:
         dest: "{{ project_web_path }}/app/config/config.yml"
         regexp: '^ FOS User'
@@ -71,7 +122,7 @@
             "
         state: present
 
--   name: FOSUserBundle import routing files
+-   name: 'FOSUserBundle: import routing files'
     blockinfile:
         dest: "{{ project_web_path }}/app/config/routing.yml"
         marker: '# FOS User'
@@ -94,13 +145,13 @@
         \n    resource: \"@FOSUserBundle/Resources/config/routing/change_password.xml\"
         \n    prefix: /profile"
 
--   name: Create migrations directory
+-   name: 'FOSUserBundle: Create migrations directory'
     file:
         path: "{{ project_web_path }}/app/DoctrineMigrations"
         state: directory
         mode: 0755
 
--   name: Copy migrations file
+-   name: 'FOSUserBundle: Copy migrations file'
     template:
-        src: Version20180213232013.php
+        src: migrations/Version20180213232013.php
         dest: "{{ project_web_path }}/app/DoctrineMigrations/Version20180213232013.php"

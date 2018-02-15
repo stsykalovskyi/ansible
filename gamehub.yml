@@ -7,8 +7,9 @@
     vars:
         bundles:
             -   name: default_config
-            -   name: migration
-            -   name: user
+#            -   name: migrations
+#            -   name: user
+#            -   name: lte-admin
         project_name: gamehub
         project_host: gamehub.com
         projects_web_path: /var/www/projects

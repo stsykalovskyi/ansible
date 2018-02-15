@@ -2,4 +2,6 @@
     prefix: /
     resource: '@{{ core_bundle_full_name }}/Resources/config/routing.yml'
 
+# Core bundle
+
 # FOS User

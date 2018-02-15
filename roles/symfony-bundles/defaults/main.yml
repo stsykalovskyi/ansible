@@ -2,3 +2,19 @@
 roles:
     -   name: symfony
         version: 3.3
+
+security_roles_hierarchy:
+    - name: 'ROLE_ADMIN:       ROLE_MODERATOR'
+    - name: 'ROLE_SUPER_ADMIN: ROLE_ADMIN'
+    - name: 'ROLE_MODERATOR:   ROLE_USER'
+
+security_providers:
+    - name: fos_userbundle
+      attr_key: id
+      attr_value: fos_user.user_provider.username_email
+
+security_access_control:
+    - name: '- { path: ^/register, role: IS_AUTHENTICATED_ANONYMOUSLY }'
+    - name: '- { path: ^/resetting, role: IS_AUTHENTICATED_ANONYMOUSLY }'
+    - name: '- { path: ^/admin/, role: ROLE_ADMIN }'
+    - name: '- { path: ^/login$, role: IS_AUTHENTICATED_ANONYMOUSLY }'

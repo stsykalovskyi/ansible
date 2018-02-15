@@ -1,4 +1,9 @@
 ---
+-   name: Replace AppKernel.php with default
+    template:
+        src: default_config/AppKernel.php
+        dest: "{{ project_web_path }}/app/AppKernel.php"
+
 -   name: Remove default AppBundle directory
     file:
         state: absent
@@ -6,33 +11,28 @@
 
 -   name: Replace config with default
     template:
-        src: config.yml
+        src: default_config/config.yml
         dest: "{{ project_web_path }}/app/config/config.yml"
 
 -   name: Replace composer.json with template
     template:
-        src: composer.json
+        src: default_config/composer.json
         dest: "{{ project_web_path }}/composer.json"
-
--   name: Replace AppKernel.php with default
-    template:
-        src: AppKernel.php
-        dest: "{{ project_web_path }}/app/AppKernel.php"
 
 -   name: Replace services.yml
     template:
-        src: services.yml
+        src: default_config/services.yml
         dest: "{{ project_web_path }}/app/config/services.yml"
 
 -   name: Replace routing.yml
     template:
-        src: routing.yml
+        src: default_config/routing.yml
         dest: "{{ project_web_path }}/app/config/routing.yml"
 
--   name: Replace core bundle routing.yml file
+-   name: Replace security.yml
     template:
-        src: bundle_routing.yml
-        dest: "{{ project_web_path }}/src/{{ project_name|title }}/{{ core_bundle_name }}/Resources/config/routing.yml"
+        src: default_config/security.yml
+        dest: "{{ project_web_path }}/app/config/security.yml"
 
 -   name: Check that the Bundle exists
     stat:
@@ -40,14 +40,24 @@
     register: stat_result
 
 -   name: Generate bundle
-    shell: "{{ project_web_path }}/bin/console generate:bundle --namespace={{ project_name|title }}/{{ core_bundle_name }} --dir=src --no-interaction"
+    shell: "{{ project_web_path }}/bin/console generate:bundle --namespace={{ project_name|title }}/{{ core_bundle_name }} --dir=src --no-interaction --format yml --shared "
     when: stat_result.stat.exists == False
+
+-   name: Replace core bundle routing.yml file
+    template:
+        src: default_config/bundle_routing.yml
+        dest: "{{ project_web_path }}/src/{{ project_name|title }}/{{ core_bundle_name }}/Resources/config/routing.yml"
+
+-   name: Replace AppKernel.php with default
+    template:
+        src: default_config/AppKernel.php
+        dest: "{{ project_web_path }}/app/AppKernel.php"
 
 -   name: "{{ namespace}} Enable bundle"
     lineinfile:
         dest: "{{ project_web_path }}/app/AppKernel.php"
         regexp: '^Bundles'
         insertafter: '#Bundles'
-        line: '            new {{namespace}}\{{ core_bundle_full_name }},'
+        line: '            new {{namespace}}\{{ core_bundle_full_name }}(),'
         state: present
 
