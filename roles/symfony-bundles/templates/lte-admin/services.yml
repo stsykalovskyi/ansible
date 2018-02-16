@@ -1,0 +1,14 @@
+services:
+    websoft.app_bundle.menu_listener:
+        class: '%admin_bundle.menu_listener.class%'
+        arguments:
+            - '@security.authorization_checker'
+        tags:
+            - { name: kernel.event_listener, event:theme.sidebar_setup_menu, method:onSetupMenu }
+
+#    websoft.breadcrumb_listener:
+#        class: '%admin_bundle.menu_listener.class%'
+#        arguments:
+#            - '@security.authorization_checker'
+#        tags:
+#            - { name: kernel.event_listener, event:theme.breadcrumb, method:onSetupMenu }

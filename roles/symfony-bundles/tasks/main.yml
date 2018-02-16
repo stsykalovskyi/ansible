@@ -1,5 +1,5 @@
 ---
 -   name: Handle bundles
-    include: "{{ item.name }}.yml"
+    include: "{{ item }}.yml"
     with_items: "{{ bundles }}"
 

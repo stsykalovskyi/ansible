@@ -13,10 +13,73 @@
     become_user: "{{ bash_username }}"
     when: stat_result.stat.exists == False
 
--   name: 'FOSUserBundle: Enable bundle'
+-   name: 'LTE Admin: Enable bundle'
     lineinfile:
         dest: "{{ project_web_path }}/app/AppKernel.php"
         regexp: '^Bundles'
         insertafter: '#Bundles'
         line: '            new Avanzu\AdminThemeBundle\AvanzuAdminThemeBundle(),'
         state: present
+
+-   name: "LTE Admin: fetch styles"
+    shell: "
+        cd {{ project_web_path }};
+        bin/console avanzu:admin:fetch-vendor;
+        bin/console assets:install --symlink web;
+    "
+
+-   name: 'LTE Admin: Check that the Bundle exists'
+    stat:
+        path: "{{ project_web_path }}/src/{{ project_name|title }}/AdminBundle"
+    register: stat_result
+
+-   name: 'LTE Admin: Generate bundle'
+    shell: "{{ project_web_path }}/bin/console generate:bundle --namespace={{ project_name|title }}/AdminBundle --dir=src --no-interaction --format yml --shared "
+    when: stat_result.stat.exists == False
+
+-   name: 'LTE Admin: Enable bundle'
+    lineinfile:
+        dest: "{{ project_web_path }}/app/AppKernel.php"
+        regexp: '^Bundles'
+        insertafter: '#Bundles'
+        line: '            new {{ project_name|title }}\AdminBundle\{{ project_name|title }}AdminBundle(),'
+        state: present
+
+-   name: 'LTE Admin: add parameters.yml.dist records'
+    lineinfile:
+        dest: "{{ project_web_path }}/app/config/parameters.yml.dist"
+        line: "    admin_bundle.menu_listener.class: {{ project_name|title }}\\AdminBundle\\Services\\AdminMenuItemsListener"
+        state: present
+
+-   name: 'LTE Admin: add parameters.yml records'
+    lineinfile:
+        dest: "{{ project_web_path }}/app/config/parameters.yml"
+        line: "    admin_bundle.menu_listener.class: {{ project_name|title }}\\AdminBundle\\Services\\AdminMenuItemsListener"
+        state: present
+
+-   name: 'LTE Admin: Replace services.yml'
+    template:
+        src: "lte-admin/services.yml"
+        dest: "{{ project_web_path }}/src/{{ project_name|title }}/AdminBundle/Resources/config/services.yml"
+
+-   name: 'LTE Admin: Create services directory'
+    file:
+        path: "{{ project_web_path }}/src/{{ project_name|title }}/AdminBundle/Services"
+        state: directory
+        mode: 0755
+
+-   name: 'LTE Admin: Create AdminMenuItemsListener class'
+    template:
+        src: "lte-admin/AdminMenuItemsListener.php"
+        dest: "{{ project_web_path }}/src/{{ project_name|title }}/AdminBundle/Services/AdminMenuItemsListener.php"
+
+-   name: 'LTE Admin: Create models directory'
+    file:
+        path: "{{ project_web_path }}/src/{{ project_name|title }}/AdminBundle/Model"
+        state: directory
+        mode: 0755
+
+-   name: 'LTE Admin: Create MenuItemModel class'
+    template:
+        src: "lte-admin/MenuItemModel.php"
+        dest: "{{ project_web_path }}/src/{{ project_name|title }}/AdminBundle/Model/MenuItemModel.php"

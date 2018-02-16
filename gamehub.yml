@@ -6,10 +6,10 @@
         -   symfony-bundles
     vars:
         bundles:
-            -   name: default_config
-            -   name: migrations
-            -   name: user
-            -   name: lte-admin
+            -   default_config
+            -   migrations
+            -   user
+            -   lte-admin
         project_name: gamehub
         project_host: gamehub.com
         projects_web_path: /var/www/projects
