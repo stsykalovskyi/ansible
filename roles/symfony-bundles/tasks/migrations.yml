@@ -16,19 +16,25 @@
 -   name: Migrations Enable bundle
     lineinfile:
         dest: "{{ project_web_path }}/app/AppKernel.php"
-        regexp: '^Bundles'
-        insertafter: '#Bundles'
+        regexp: 'DoctrineMigrationsBundle()'
+        insertbefore: ' *\];'
         line: '            new Doctrine\Bundle\MigrationsBundle\DoctrineMigrationsBundle(),'
         state: present
 
--   name: FOSUserBundle import routing files
-    blockinfile:
+-   name: 'LTE Admin: Define "# Doctrine migrations" in config.yml'
+    lineinfile:
         dest: "{{ project_web_path }}/app/config/config.yml"
-        marker: '# Migrations'
-        content: "doctrine_migrations:
+        regexp: '# Doctrine migrations'
+        line: '# Doctrine migrations'
+        state: present
+
+-   name: 'LTE Admin: import routing files'
+    lineinfile:
+        dest: "{{ project_web_path }}/app/config/config.yml"
+        regexp: '# Doctrine migrations'
+        insertafter: '# Doctrine migrations'
+        line: "doctrine_migrations:
         \n    dir_name: '%kernel.root_dir%/DoctrineMigrations'
         \n    namespace: Application\\Migrations
         \n    table_name: '%database.schema%.migration_versions'
         \n    name: Application Migrations"
-
-

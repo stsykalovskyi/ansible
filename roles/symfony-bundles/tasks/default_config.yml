@@ -1,9 +1,4 @@
 ---
--   name: 'Default config: Replace AppKernel.php with default'
-    template:
-        src: default_config/AppKernel.php
-        dest: "{{ project_web_path }}/app/AppKernel.php"
-        
 -   name: 'Default config: Replace app_dev.php with default'
     template:
         src: default_config/app_dev.php
@@ -13,11 +8,6 @@
     file:
         state: absent
         path: "{{ project_web_path }}/src/AppBundle"
-
--   name: 'Default config: Replace config with default'
-    template:
-        src: default_config/config.yml
-        dest: "{{ project_web_path }}/app/config/config.yml"
 
 -   name: 'Default config: Replace composer.json with template'
     template:
@@ -53,17 +43,12 @@
         src: default_config/bundle_routing.yml
         dest: "{{ project_web_path }}/src/{{ project_name|title }}/{{ core_bundle_name }}Bundle/Resources/config/routing.yml"
 
--   name: 'Default config: Replace AppKernel.php with default'
-    template:
-        src: default_config/AppKernel.php
-        dest: "{{ project_web_path }}/app/AppKernel.php"
-
 -   name: 'Default config: Enable bundle'
     lineinfile:
         dest: "{{ project_web_path }}/app/AppKernel.php"
-        regexp: '^Bundles'
-        insertafter: '#Bundles'
-        line: '            new {{namespace}}\{{ core_bundle_full_name }}(),'
+        regexp: "{{ core_bundle_full_name }}()"
+        insertbefore: ' *\];'
+        line: "            new {{namespace}}\\{{ core_bundle_full_name }}(),"
         state: present
 
 -   name: 'Default config: Replace DefaultController.php with default'

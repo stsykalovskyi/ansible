@@ -16,17 +16,10 @@
 -   name: 'LTE Admin: Enable bundle'
     lineinfile:
         dest: "{{ project_web_path }}/app/AppKernel.php"
-        regexp: '^Bundles'
-        insertafter: '#Bundles'
+        regexp: 'AvanzuAdminThemeBundle()'
+        insertbefore: ' *\];'
         line: '            new Avanzu\AdminThemeBundle\AvanzuAdminThemeBundle(),'
         state: present
-
--   name: "LTE Admin: fetch styles"
-    shell: "
-        cd {{ project_web_path }};
-        bin/console avanzu:admin:fetch-vendor;
-        bin/console assets:install --symlink web;
-    "
 
 -   name: 'LTE Admin: Check that the Bundle exists'
     stat:
@@ -40,22 +33,31 @@
 -   name: 'LTE Admin: Enable bundle'
     lineinfile:
         dest: "{{ project_web_path }}/app/AppKernel.php"
-        regexp: '^Bundles'
-        insertafter: '#Bundles'
+        regexp: '{{ project_name|title }}AdminBundle()'
+        insertbefore: ' *\];'
         line: '            new {{ project_name|title }}\AdminBundle\{{ project_name|title }}AdminBundle(),'
         state: present
 
 -   name: 'LTE Admin: add parameters.yml.dist records'
     lineinfile:
         dest: "{{ project_web_path }}/app/config/parameters.yml.dist"
+        regexp: 'admin_bundle.menu_listener.class'
         line: "    admin_bundle.menu_listener.class: {{ project_name|title }}\\AdminBundle\\Services\\AdminMenuItemsListener"
         state: present
 
 -   name: 'LTE Admin: add parameters.yml records'
     lineinfile:
+        regexp: 'admin_bundle.menu_listener.class'
         dest: "{{ project_web_path }}/app/config/parameters.yml"
         line: "    admin_bundle.menu_listener.class: {{ project_name|title }}\\AdminBundle\\Services\\AdminMenuItemsListener"
         state: present
+
+-   name: "LTE Admin: fetch styles"
+    shell: "
+        cd {{ project_web_path }};
+        bin/console avanzu:admin:fetch-vendor;
+        bin/console assets:install --symlink web;
+    "
 
 -   name: 'LTE Admin: Replace services.yml'
     template:
@@ -83,3 +85,10 @@
     template:
         src: "lte-admin/MenuItemModel.php"
         dest: "{{ project_web_path }}/src/{{ project_name|title }}/AdminBundle/Model/MenuItemModel.php"
+
+-   name: 'LTE Admin: Define "# twig globals" in config.yml'
+    lineinfile:
+        dest: "{{ project_web_path }}/app/config/config.yml"
+        regexp: 'globals: # twig globals'
+        line: '    globals: # twig globals'
+        insertafter: twig

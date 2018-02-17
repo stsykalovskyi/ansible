@@ -22,8 +22,8 @@
 -   name: 'FOSUserBundle: Enable bundle'
     lineinfile:
         dest: "{{ project_web_path }}/app/AppKernel.php"
-        regexp: '^Bundles'
-        insertafter: '#Bundles'
+        regexp: 'FOSUserBundle()'
+        insertbefore: ' *\];'
         line: '            new FOS\UserBundle\FOSUserBundle(),'
         state: present
 
@@ -104,6 +104,13 @@
     template:
         src: user/User.orm.yml
         dest: "{{ project_web_path }}/src/{{ project_name|title }}/{{ core_bundle_name }}Bundle/Resources/config/doctrine/User.orm.yml"
+
+-   name: 'FOSUserBundle: Define # FOS User in config.yml'
+    lineinfile:
+        dest: "{{ project_web_path }}/app/config/config.yml"
+        regexp: '# FOS User'
+        line: '# FOS User'
+        state: present
 
 -   name: 'FOSUserBundle: configure'
     lineinfile:
