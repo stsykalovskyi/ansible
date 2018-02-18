@@ -1,9 +1,16 @@
 ---
+-   name: 'FOSUserBundle: Remove translator record from config.yml'
+    lineinfile:
+        dest: "{{ project_web_path }}/app/config/config.yml"
+        regexp: ' *#translator: '
+        state: absent
+
 -   name: 'FOSUserBundle: Enable translator in config'
     lineinfile:
         dest: "{{ project_web_path }}/app/config/config.yml"
-        regexp: 'translator: '
+        regexp: ' *translator: '
         line: '    translator: ~'
+        insertafter: 'framework:'
 
 -   name: 'FOSUserBundle: Check that the user Bundle installed'
     stat:
@@ -30,36 +37,42 @@
 -   name: 'FOSUserBundle: add security encoder'
     lineinfile:
         dest: "{{ project_web_path }}/app/config/security.yml"
-        regexp: '^ Encoders'
-        insertafter: '# Encoders'
+        regexp: 'UserInterface: bcrypt'
+        insertafter: ' *encoders:'
         line: '        FOS\UserBundle\Model\UserInterface: bcrypt'
         state: present
 
 -   name: 'FOSUserBundle: add security roles hierarchy'
     lineinfile:
         dest: "{{ project_web_path }}/app/config/security.yml"
-        regexp: '^ Role hierarchy'
-        insertafter: '# Role hierarchy'
-        line: "        {{ item.name }}"
+        regexp: ' *ROLE_{{ item.parent|upper }}: ROLE_{{ item.child|upper }}'
+        insertafter: ' *role_hierarchy:'
+        line: "        ROLE_{{ item.parent|upper }}: ROLE_{{ item.child|upper }}"
         state: present
     with_items: "{{ security_roles_hierarchy }}"
 
--   name: 'FOSUserBundle: add security providers'
+-   name: 'FOSUserBundle: add security provider step1'
     lineinfile:
         dest: "{{ project_web_path }}/app/config/security.yml"
-        regexp: '^ Providers'
-        insertafter: '# Providers'
-        line: "        {{ item.name }}:
-            \n            {{ item.attr_key }}: {{ item.attr_value }}"
+        regexp: ' *fos_userbundle:'
+        insertafter: ' *providers:'
+        line: '        fos_userbundle:'
         state: present
-    with_items: "{{ security_providers }}"
+
+-   name: 'FOSUserBundle: add security provider step2'
+    lineinfile:
+        dest: "{{ project_web_path }}/app/config/security.yml"
+        regexp: ' *id: fos_user.user_provider.username_email'
+        insertafter: ' *fos_userbundle:'
+        line: '            id: fos_user.user_provider.username_email'
+        state: present
 
 -   name: 'FOSUserBundle: add firewall'
-    lineinfile:
+    blockinfile:
         dest: "{{ project_web_path }}/app/config/security.yml"
-        regexp: '^ Firewalls'
-        insertafter: '# Firewalls'
-        line: "        main:
+        insertafter: ' *firewalls:'
+        marker: '# main firewall {mark}'
+        block: "        main:
         \n            pattern: ^/
         \n            form_login:
         \n                provider: fos_userbundle
@@ -71,12 +84,11 @@
         state: present
 
 -   name: 'FOSUserBundle: add access control items'
-    lineinfile:
+    blockinfile:
         dest: "{{ project_web_path }}/app/config/security.yml"
-        regexp: '^ Access control'
-        insertafter: '# Access control'
-        line: "
-        \n        - { path: ^/register, role: IS_AUTHENTICATED_ANONYMOUSLY }
+        insertafter: ' *access_control:'
+        marker: '# fos user access control {mark}'
+        block: "        - { path: ^/register, role: IS_AUTHENTICATED_ANONYMOUSLY }
         \n        - { path: ^/login$, role: IS_AUTHENTICATED_ANONYMOUSLY }
         \n        - { path: ^/admin/, role: ROLE_ADMIN }
         \n        - { path: ^/resetting, role: IS_AUTHENTICATED_ANONYMOUSLY }
@@ -105,19 +117,11 @@
         src: user/User.orm.yml
         dest: "{{ project_web_path }}/src/{{ project_name|title }}/{{ core_bundle_name }}Bundle/Resources/config/doctrine/User.orm.yml"
 
--   name: 'FOSUserBundle: Define # FOS User in config.yml'
-    lineinfile:
-        dest: "{{ project_web_path }}/app/config/config.yml"
-        regexp: '# FOS User'
-        line: '# FOS User'
-        state: present
-
 -   name: 'FOSUserBundle: configure'
-    lineinfile:
+    blockinfile:
         dest: "{{ project_web_path }}/app/config/config.yml"
-        regexp: '^ FOS User'
-        insertafter: '# FOS User'
-        line: "fos_user:
+        marker: '# FOS User {mark}'
+        content: "fos_user:
             \n    db_driver: orm
             \n    firewall_name: main
             \n    user_class: {{ namespace }}\\Entity\\User
@@ -127,12 +131,11 @@
             \n    service:
             \n        mailer: 'fos_user.mailer.noop'
             "
-        state: present
 
 -   name: 'FOSUserBundle: import routing files'
     blockinfile:
         dest: "{{ project_web_path }}/app/config/routing.yml"
-        marker: '# FOS User'
+        marker: '# FOS User {mark}'
         content: "fos_user_security:
         \n    resource: \"@FOSUserBundle/Resources/config/routing/security.xml\"
         \n

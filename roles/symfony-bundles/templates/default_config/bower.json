@@ -1,0 +1,28 @@
+{
+  "name": "{{project_name}}",
+  "description": "",
+  "main": "",
+  "license": "MIT",
+  "homepage": "",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests",
+    "web/assets/vendor/"
+  ],
+  "dependencies": {
+    "bootstrap": "^3.3.7",
+    "bootstrap-grid-only": "^1.0.0",
+    "bootstrap-grid": "^3.3.6-beta.1",
+    "bootstrap-css": "^3.3.7",
+    "select2": "^4.0.3",
+    "font-awesome": "fontawesome#^4.7.0",
+    "bootstrap-callouts": "^1.0.1",
+    "angular": "angularjs#^1.6.6",
+    "angular-sanitize": "^1.6.6",
+    "ng-ckeditor": "^0.2.1",
+    "angular-loading-bar": "^0.9.0"
+  }
+}

@@ -4,9 +4,12 @@ roles:
         version: 3.3
 
 security_roles_hierarchy:
-    - name: 'ROLE_ADMIN:       ROLE_MODERATOR'
-    - name: 'ROLE_SUPER_ADMIN: ROLE_ADMIN'
-    - name: 'ROLE_MODERATOR:   ROLE_USER'
+    -   parent: admin
+        child: moderator
+    -   parent: super_admin
+        child: admin
+    -   parent: moderator
+        child: user
 
 security_providers:
     - name: fos_userbundle

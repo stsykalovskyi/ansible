@@ -21,19 +21,11 @@
         line: '            new Doctrine\Bundle\MigrationsBundle\DoctrineMigrationsBundle(),'
         state: present
 
--   name: 'LTE Admin: Define "# Doctrine migrations" in config.yml'
-    lineinfile:
+-   name: 'LTE Admin: add configurations'
+    blockinfile:
         dest: "{{ project_web_path }}/app/config/config.yml"
-        regexp: '# Doctrine migrations'
-        line: '# Doctrine migrations'
-        state: present
-
--   name: 'LTE Admin: import routing files'
-    lineinfile:
-        dest: "{{ project_web_path }}/app/config/config.yml"
-        regexp: '# Doctrine migrations'
-        insertafter: '# Doctrine migrations'
-        line: "doctrine_migrations:
+        marker: '# Doctrine migrations {mark}'
+        content: "doctrine_migrations:
         \n    dir_name: '%kernel.root_dir%/DoctrineMigrations'
         \n    namespace: Application\\Migrations
         \n    table_name: '%database.schema%.migration_versions'

@@ -14,20 +14,20 @@
         src: default_config/composer.json
         dest: "{{ project_web_path }}/composer.json"
 
+-   name: 'Default config: Replace .bowerrc with template'
+    template:
+        src: default_config/.bowerrc
+        dest: "{{ project_web_path }}/.bowerrc"
+
+-   name: 'Default config: Replace bower.json with template'
+    template:
+        src: default_config/bower.json
+        dest: "{{ project_web_path }}/bower.json"
+                
 -   name: 'Default config: Replace services.yml'
     template:
         src: default_config/services.yml
         dest: "{{ project_web_path }}/app/config/services.yml"
-
--   name: 'Default config: Replace routing.yml'
-    template:
-        src: default_config/routing.yml
-        dest: "{{ project_web_path }}/app/config/routing.yml"
-
--   name: 'Default config: Replace security.yml'
-    template:
-        src: default_config/security.yml
-        dest: "{{ project_web_path }}/app/config/security.yml"
 
 -   name: 'Default config: Check that the Bundle exists'
     stat:
