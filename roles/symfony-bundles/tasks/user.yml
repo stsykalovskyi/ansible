@@ -188,7 +188,6 @@
             composer dump-autoload -o"
     become: true
     become_user: "{{ bash_username }}"
-    when: stat_result.stat.exists == False
 
 -   name: 'FOSUserBundle: Copy FOSUserBundle class'
     template:

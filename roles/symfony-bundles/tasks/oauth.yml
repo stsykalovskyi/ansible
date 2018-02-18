@@ -1,4 +1,18 @@
 ---
+-   name: 'OAuth: Check that the transliterator Bundle installed'
+    stat:
+        path: "{{ project_web_path }}/vendor/behat/transliterator"
+    register: stat_result
+
+-   name: 'OAuth: Download transliterator bundle using composer'
+    composer:
+            command: require
+            arguments: behat/transliterator
+            working_dir: "{{ project_web_path }}"
+    become: true
+    become_user: "{{ bash_username }}"
+    when: stat_result.stat.exists == False
+
 -   name: 'OAuth: Check that the user Bundle installed'
     stat:
         path: "{{ project_web_path }}/vendor/hwi/oauth-bundle"
@@ -23,23 +37,102 @@
 
 -   name: 'OAuth: import routing'
     blockinfile:
-        dest: "{{ project_web_path }}/{{ project_name|title }}//config/routing.yml"
-        marker: '# FOS User {mark}'
-        content: "fos_user_security:
-        \n    resource: \"@FOSUserBundle/Resources/config/routing/security.xml\"
+        dest: "{{ project_web_path }}/src/{{ project_name|title }}/{{ core_bundle_name }}Bundle/Resources/config/routing.yml"
+        marker: '# Hwi OAuth {mark}'
+        content: "hwi_oauth_redirect:
+        \n    resource: \"@HWIOAuthBundle/Resources/config/routing/redirect.xml\"
+        \n    prefix:   /connect
         \n
-        \nfos_user_profile:
-        \n    resource: \"@FOSUserBundle/Resources/config/routing/profile.xml\"
-        \n    prefix: /profile
+        \nhwi_oauth_connect:
+        \n    resource: \"@HWIOAuthBundle/Resources/config/routing/connect.xml\"
+        \n    prefix:   /connect
         \n
-        \nfos_user_register:
-        \n    resource: \"@FOSUserBundle/Resources/config/routing/registration.xml\"
-        \n    prefix: /register
+        \nhwi_oauth_login:
+        \n    resource: \"@HWIOAuthBundle/Resources/config/routing/login.xml\"
+        \n    prefix:   /login
         \n
-        \nfos_user_resetting:
-        \n    resource: \"@FOSUserBundle/Resources/config/routing/resetting.xml\"
-        \n    prefix: /resetting
+        \nfacebook_login:
+        \n    path: /login/check-facebook
         \n
-        \nfos_user_change_password:
-        \n    resource: \"@FOSUserBundle/Resources/config/routing/change_password.xml\"
-        \n    prefix: /profile"
+        \ngoogle_login:
+        \n    path: /login/check-google"
+
+-   name: 'OAuth: add configurations'
+    blockinfile:
+        dest: "{{ project_web_path }}/app/config/config.yml"
+        marker: '# Hwi OAuth {mark}'
+        content: "hwi_oauth:
+        \n    firewall_names: ['main']
+        \n    resource_owners:
+        \n        facebook:
+        \n            type:                facebook
+        \n            client_id:           '%facebook_client_id%'
+        \n            client_secret:       '%facebook_secret%'
+        \n            scope: \"email\"
+        \n            options:
+        \n                display: popup
+        \n        google:
+        \n            type:                google
+        \n            client_id:           '%google_client_id%'
+        \n            client_secret:       '%google_secret%'
+        \n            scope:               'email profile'
+        \n            options:
+        \n                display: popup"
+
+-   name: 'OAuth: add records to parameters.dist.yml'
+    lineinfile:
+        dest: "{{ project_web_path }}/app/config/parameters.yml.dist"
+        regexp: " *{{ item }}"
+        line: '    {{ item }}: ~'
+    with_items:
+        - facebook_client_id
+        - facebook_secret
+        - google_client_id
+        - google_secret
+
+-   name: 'OAuth: firewall configuration'
+    blockinfile:
+        dest: "{{ project_web_path }}/app/config/security.yml"
+        insertafter: ' *main:'
+        marker: '# OAuth {mark}'
+        block: "            oauth:
+        \n                resource_owners:
+        \n                    facebook: \"/connect/check-facebook\"
+        \n                    google: \"/connect/check-google\"
+        \n                login_path: fos_user_security_login
+        \n                check_path: fos_user_security_check
+        \n                oauth_user_provider:
+        \n                    service: {{ project_name }}.fos_user.oauth_provider"
+        state: present
+
+-   name: 'OAuth: create provider folders path'
+    file:
+        path: "{{ project_web_path }}/src/{{ project_name|title }}/{{ core_bundle_name }}Bundle/{{ item }}"
+        mode: 0755
+        state: directory
+    with_items:
+        - Security
+        - Security/Core
+        - Security/Core/User
+
+-   name: 'OAuth: provider service configuration'
+    blockinfile:
+        dest: "{{ project_web_path }}/app/config/services.yml"
+        insertafter: ' *services:'
+        marker: '# FOSUBUserProvider {mark}'
+        block: "    {{ project_name }}.fos_user.oauth_provider:
+        \n        class: {{ project_name|title }}\\{{ core_bundle_name }}Bundle\\Security\\Core\\User\\FOSUBUserProvider
+        \n        arguments:
+        \n            - '@fos_user.user_manager'
+        \n            - {google: 'google_id', facebook: 'facebook_id'}
+        \n            - '@service_container'"
+        state: present
+
+-   name: 'OAuth: Copy provider class'
+    template:
+        src: oauth/FOSUBUserProvider.php
+        dest: "{{ project_web_path }}/src/{{ project_name|title }}/{{ core_bundle_name }}Bundle/Security/Core/User/FOSUBUserProvider.php"
+
+
+
+

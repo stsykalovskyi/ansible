@@ -27,11 +27,6 @@
     template:
         src: default_config/bower.json
         dest: "{{ project_web_path }}/bower.json"
-                
--   name: 'Default config: Replace services.yml'
-    template:
-        src: default_config/services.yml
-        dest: "{{ project_web_path }}/app/config/services.yml"
 
 -   name: 'Default config: Check that the Bundle exists'
     stat:
