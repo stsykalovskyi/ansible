@@ -1,0 +1,45 @@
+---
+-   name: 'OAuth: Check that the user Bundle installed'
+    stat:
+        path: "{{ project_web_path }}/vendor/hwi/oauth-bundle"
+    register: stat_result
+
+-   name: 'OAuth: Download using composer'
+    composer:
+            command: require
+            arguments: hwi/oauth-bundle
+            working_dir: "{{ project_web_path }}"
+    become: true
+    become_user: "{{ bash_username }}"
+    when: stat_result.stat.exists == False
+
+-   name: 'OAuth: Enable bundle'
+    lineinfile:
+        dest: "{{ project_web_path }}/app/AppKernel.php"
+        regexp: 'HWIOAuthBundle()'
+        insertbefore: ' *\];'
+        line: '            new HWI\Bundle\OAuthBundle\HWIOAuthBundle(),'
+        state: present
+
+-   name: 'OAuth: import routing'
+    blockinfile:
+        dest: "{{ project_web_path }}/{{ project_name|title }}//config/routing.yml"
+        marker: '# FOS User {mark}'
+        content: "fos_user_security:
+        \n    resource: \"@FOSUserBundle/Resources/config/routing/security.xml\"
+        \n
+        \nfos_user_profile:
+        \n    resource: \"@FOSUserBundle/Resources/config/routing/profile.xml\"
+        \n    prefix: /profile
+        \n
+        \nfos_user_register:
+        \n    resource: \"@FOSUserBundle/Resources/config/routing/registration.xml\"
+        \n    prefix: /register
+        \n
+        \nfos_user_resetting:
+        \n    resource: \"@FOSUserBundle/Resources/config/routing/resetting.xml\"
+        \n    prefix: /resetting
+        \n
+        \nfos_user_change_password:
+        \n    resource: \"@FOSUserBundle/Resources/config/routing/change_password.xml\"
+        \n    prefix: /profile"
