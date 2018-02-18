@@ -165,3 +165,53 @@
     template:
         src: migrations/Version20180213232013.php
         dest: "{{ project_web_path }}/app/DoctrineMigrations/Version20180213232013.php"
+
+-   name: 'FOSUserBundle: Check that the Bundle exists'
+    stat:
+        path: "{{ project_web_path }}/src/{{ project_name|title }}/UserBundle"
+    register: stat_result
+
+-   name: 'FOSUserBundle: Generate bundle'
+    shell: "{{ project_web_path }}/bin/console generate:bundle --namespace={{ project_name|title }}/UserBundle --dir=src --no-interaction --format yml --shared "
+    when: stat_result.stat.exists == False
+
+-   name: 'FOSUserBundle: Enable bundle'
+    lineinfile:
+        dest: "{{ project_web_path }}/app/AppKernel.php"
+        regexp: "{{ project_name|title }}UserBundle()"
+        insertbefore: ' *\];'
+        line: "            new {{ project_name|title }}\\UserBundle\\{{ project_name|title }}UserBundle(),"
+        state: present
+
+-   name: 'FOSUserBundle: Composer dump autoload'
+    shell: "cd {{ project_web_path }};
+            composer dump-autoload -o"
+    become: true
+    become_user: "{{ bash_username }}"
+    when: stat_result.stat.exists == False
+
+-   name: 'FOSUserBundle: Copy FOSUserBundle class'
+    template:
+        src: user/FOSUserBundle.php
+        dest: "{{ project_web_path }}/src/{{ project_name|title }}/UserBundle/{{ project_name|title }}UserBundle.php"
+
+-   name: 'FOSUserBundle: remove routing file'
+    file:
+        state: absent
+        dest: "{{ project_web_path }}/src/{{ project_name|title }}/UserBundle/Resources/config/routing.yml"
+
+-   name: 'FOSUserBundle: add routing file'
+    file:
+        state: touch
+        path: "{{ project_web_path }}/src/{{ project_name|title }}/UserBundle/Resources/config/routing.yml"
+        mode: 0755
+
+-   name: 'FOSUserBundle: Copy view templates'
+    shell: "cp -anr {{ project_web_path }}/vendor/friendsofsymfony/user-bundle/Resources/views/{{ item }} {{ project_web_path }}/src/{{ project_name|title }}/UserBundle/Resources/views/{{ item }}"
+    with_items:
+        - 'ChangePassword'
+        - 'Group'
+        - 'Profile'
+        - 'Registration'
+        - 'Resetting'
+        - 'Security'

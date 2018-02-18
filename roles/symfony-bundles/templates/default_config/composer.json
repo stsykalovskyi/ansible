@@ -6,6 +6,8 @@
         "psr-4": {
             {% if 'lte-admin' in bundles %}"{{project_name|title}}\\AdminBundle\\": "src/{{project_name|title}}/AdminBundle",{% endif %}
 
+            {% if 'user' in bundles %}"{{project_name|title}}\\UserBundle\\": "src/{{project_name|title}}/UserBundle",{% endif %}
+
             "{{project_name|title}}\\{{ core_bundle_full_name }}\\": "src/{{project_name|title}}/{{ core_bundle_full_name }}",
             "{{project_name|title}}\\{{ core_bundle_name }}Bundle\\": "src/{{project_name|title}}/{{ core_bundle_name }}Bundle"
         },

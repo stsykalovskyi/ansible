@@ -4,6 +4,10 @@
         src: default_config/app_dev.php
         dest: "{{ project_web_path }}/web/app_dev.php"
 
+-   name: 'Default config: Skip app_dev.php from push files'
+    shell:
+        "cd {{ project_web_path }};git update-index --skip-worktree web/app_dev.php"
+
 -   name: 'Default config: Remove default AppBundle directory'
     file:
         state: absent
@@ -55,3 +59,12 @@
     template:
         src: default_config/DefaultController.php
         dest: "{{ project_web_path }}/src/{{project_name|title}}/{{ core_bundle_name }}Bundle/Controller"
+
+-   name: 'Default config: add layout template to core bundle'
+    template:
+        src: default_config/layout.html.twig
+        dest: "{{ project_web_path }}/src/{{project_name|title}}/{{ core_bundle_name }}Bundle/Resources/views/layout.html.twig"
+        variable_start_string: [[
+        variable_end_string: ]]
+
+
