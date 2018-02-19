@@ -14,7 +14,13 @@
 #        - symfony_config
 #        - elasticsearch-ubuntu
 #        - rabbitmq-ubuntu
-        - symfony_config
+#        - symfony_config
+    tasks:
+        -   name: 'Add color prompt'
+            lineinfile:
+                path: '/home/{{ bash_username }}/.bashrc'
+                regexp: '.force_color_prompt=yes'
+                line: 'force_color_prompt=yes'
 
     vars:
         projects:

@@ -24,5 +24,5 @@
         listen_group: "{{ bash_username }}"
         git_user_email: stsykalovskyi@singlehop.com
         git_user_name: stsykalovskyi
-        git_version: 2.16.1
+        git_version: 2.16.2
         ansible_private_key_file: /drives/drive0/vagrant/machines/microservices/.vagrant/machines/default/virtualbox/private_key
