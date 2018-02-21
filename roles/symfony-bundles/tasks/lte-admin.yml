@@ -91,3 +91,17 @@
         regexp: 'globals: # twig globals'
         line: '    globals: # twig globals'
         insertafter: twig
+
+-   name: 'LTE Admin: add base-layout'
+    template:
+        src: lte-admin/layout.html.twig
+        dest: "{{ project_web_path }}/src/{{project_name|title}}/AdminBundle/Resources/views/base-layout.html.twig"
+        variable_start_string: [[
+        variable_end_string: ]]
+
+-   name: 'LTE Admin: add login-layout'
+    template:
+        src: lte-admin/login-layout.html.twig
+        dest: "{{ project_web_path }}/src/{{project_name|title}}/AdminBundle/Resources/views/login-layout.html.twig"
+        variable_start_string: [[
+        variable_end_string: ]]

@@ -37,16 +37,16 @@ class AdminMenuItemsListener
 
         $items = new MenuItemModel(
             'homepage',
-            'Главная',
+            'Site home page',
             '{{ project_name }}.{{ core_bundle_name|lower }}_bundle.homepage',
             [],
-            'fa fa-book'
+            'fa fa-home'
         );
 
         $menuItems[] = $items;
 
-        if ($this->authChecker->isGranted('ROLE_SUPER_ADMIN')) {
-        }
+//        if ($this->authChecker->isGranted('ROLE_SUPER_ADMIN')) {
+//        }
 
         return $this->activateByRoute($request->get('_route'), $menuItems);
     }

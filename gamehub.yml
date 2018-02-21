@@ -6,11 +6,11 @@
         -   symfony-bundles
     vars:
         bundles:
-            - default_config
-            - migrations
-            - user
+#            - default_config
+#            - migrations
+#            - user
             - lte-admin
-            - oauth
+#            - oauth
         project_name: gamehub
         project_host: gamehub.com
         projects_web_path: /var/www/projects
