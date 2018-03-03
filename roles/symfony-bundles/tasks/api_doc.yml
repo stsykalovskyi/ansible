@@ -1,0 +1,81 @@
+---
+#-   name: 'ApiDoc: Check that the symfony/twig-bundle installed'
+#    stat:
+#        path: "{{ project_web_path }}/vendor/symfony/twig-bundle"
+#    register: twig_result
+#
+#-   name: 'ApiDoc: Install symfony/twig-bundle using composer'
+#    composer:
+#            command: require
+#            arguments: 'symfony/twig-bundle: 3.4'
+#            working_dir: "{{ project_web_path }}"
+#    become: true
+#    become_user: "{{ bash_username }}"
+#    when: twig_result.stat.exists == False
+#
+#-   name: 'ApiDoc: Check that the symfony/asset installed'
+#    stat:
+#        path: "{{ project_web_path }}/vendor/symfony/asset"
+#    register: asset_result
+#
+#-   name: 'ApiDoc: Install symfony/asset using composer'
+#    composer:
+#            command: require
+#            arguments: "symfony/asset 4.0"
+#            working_dir: "{{ project_web_path }}"
+#    become: true
+#    become_user: "{{ bash_username }}"
+#    when: asset_result.stat.exists == False
+
+-   name: 'ApiDoc: Check that the nelmio/api-doc-bundle installed'
+    stat:
+        path: "{{ project_web_path }}/vendor/nelmio/api-doc-bundle"
+    register: stat_result
+
+-   name: 'ApiDoc: configure'
+    blockinfile:
+        dest: "{{ project_web_path }}/app/config/config.yml"
+        marker: '# ApiDoc {mark}'
+        content: "nelmio_api_doc:
+        \n    name:   '%app.name%'
+        \n    cache:
+        \n        enabled: true
+        \n    sandbox:
+        \n        request_format:
+        \n            method: accept_header
+        \n        authentication:
+        \n            name:     access_token
+        \n            delivery: query
+        \n            type:     bearer"
+
+-   name: 'ApiDoc: Download nelmio/api-doc-bundle using composer'
+    composer:
+            command: require
+            arguments: 'nelmio/api-doc-bundle 2.13'
+            working_dir: "{{ project_web_path }}"
+    become: true
+    become_user: "{{ bash_username }}"
+#    when: stat_result.stat.exists == False
+
+-   name: 'ApiDoc: Enable nelmio/api-doc-bundle bundle'
+    lineinfile:
+        dest: "{{ project_web_path }}/app/AppKernel.php"
+        regexp: 'NelmioApiDocBundle()'
+        insertbefore: ' *\];'
+        line: '            new Nelmio\ApiDocBundle\NelmioApiDocBundle(),'
+        state: present
+
+#-   name: 'ApiDoc: import routing files'
+#    blockinfile:
+#        dest: "{{ project_web_path }}/app/config/routing.yml"
+#        marker: '# ApiDoc {mark}'
+#        content: "NelmioApiDocBundle:
+#        \n    resource: \"@NelmioApiDocBundle/Resources/config/routing/swaggerui.xml\"
+#        \n    prefix:   /api/doc"
+-   name: 'ApiDoc: import routing files'
+    blockinfile:
+        dest: "{{ project_web_path }}/app/config/routing.yml"
+        marker: '# ApiDoc {mark}'
+        content: "NelmioApiDocBundle:
+        \n    resource: \"@NelmioApiDocBundle/Resources/config/routing.yml\"
+        \n    prefix:   /api/doc"
