@@ -1,0 +1,128 @@
+---
+
+-   name: 'OAuth-server: Check that the friendsofsymfony/oauth-server-bundle installed'
+    stat:
+        path: "{{ project_web_path }}/vendor/friendsofsymfony/oauth-server-bundle"
+    register: stat_result
+
+-   name: 'OAuth-server: configure'
+    blockinfile:
+        dest: "{{ project_web_path }}/app/config/config.yml"
+        marker: '# OAuth-server {mark}'
+        content: ""
+
+-   name: 'OAuth-server: Download friendsofsymfony/oauth-server-bundle using composer'
+    composer:
+            command: require
+            arguments: 'friendsofsymfony/oauth-server-bundle 1.5'
+            working_dir: "{{ project_web_path }}"
+    become: true
+    become_user: "{{ bash_username }}"
+    when: stat_result.stat.exists == False
+
+-   name: 'OAuth-server: Enable friendsofsymfony/oauth-server-bundle bundle'
+    lineinfile:
+        dest: "{{ project_web_path }}/app/AppKernel.php"
+        regexp: 'FOSOAuthServerBundle()'
+        insertbefore: ' *\];'
+        line: '            new FOS\OAuthServerBundle\FOSOAuthServerBundle(),'
+        state: present
+
+-   name: 'OAuth-server: configure'
+    blockinfile:
+        dest: "{{ project_web_path }}/app/config/config.yml"
+        marker: '# OAuth-server {mark}'
+        content: "fos_oauth_server:
+        \n    db_driver: orm
+        \n    client_class:        {{ namespace }}\\Entity\\Client
+        \n    access_token_class:  {{ namespace }}\\Entity\\AccessToken
+        \n    refresh_token_class: {{ namespace }}\\Entity\\RefreshToken
+        \n    auth_code_class:     {{ namespace }}\\Entity\\AuthCode
+        \n    service:
+        \n        user_provider: fos_user.user_provider.username"
+
+-   name: 'OAuth-server: Create client entity class'
+    template:
+        src: oauth-server/Client.php
+        dest: "{{ project_web_path }}/src/{{ project_name|title }}/{{ core_bundle_name }}Bundle/Entity/Client.php"
+
+-   name: 'OAuth-server: Create AuthCode entity class'
+    template:
+        src: oauth-server/AuthCode.php
+        dest: "{{ project_web_path }}/src/{{ project_name|title }}/{{ core_bundle_name }}Bundle/Entity/AuthCode.php"
+
+-   name: 'OAuth-server: Create AccessToken entity class'
+    template:
+        src: oauth-server/AccessToken.php
+        dest: "{{ project_web_path }}/src/{{ project_name|title }}/{{ core_bundle_name }}Bundle/Entity/AccessToken.php"
+
+-   name: 'OAuth-server: Create RefreshToken entity class'
+    template:
+        src: oauth-server/RefreshToken.php
+        dest: "{{ project_web_path }}/src/{{ project_name|title }}/{{ core_bundle_name }}Bundle/Entity/RefreshToken.php"
+
+-   name: 'OAuth-server: Create Client.orm.yml'
+    template:
+        src: oauth-server/Client.orm.yml
+        dest: "{{ project_web_path }}/src/{{ project_name|title }}/{{ core_bundle_name }}Bundle/Resources/config/doctrine/Client.orm.yml"
+
+-   name: 'OAuth-server: Create AccessToken.orm.yml'
+    template:
+        src: oauth-server/AccessToken.orm.yml
+        dest: "{{ project_web_path }}/src/{{ project_name|title }}/{{ core_bundle_name }}Bundle/Resources/config/doctrine/AccessToken.orm.yml"
+
+-   name: 'OAuth-server: Create RefreshToken.orm.yml'
+    template:
+        src: oauth-server/RefreshToken.orm.yml
+        dest: "{{ project_web_path }}/src/{{ project_name|title }}/{{ core_bundle_name }}Bundle/Resources/config/doctrine/RefreshToken.orm.yml"
+
+-   name: 'OAuth-server: Create AuthCode.orm.yml'
+    template:
+        src: oauth-server/AuthCode.orm.yml
+        dest: "{{ project_web_path }}/src/{{ project_name|title }}/{{ core_bundle_name }}Bundle/Resources/config/doctrine/AuthCode.orm.yml"
+
+-   name: 'OAuth-server: add firewall'
+    blockinfile:
+        dest: "{{ project_web_path }}/app/config/security.yml"
+        insertafter: ' *firewalls:'
+        marker: '# OAuth-server-firewall {mark}'
+        block: "        api_docs:
+        \n            pattern:        ^/api/doc
+        \n            security:       false
+        \n
+        \n        oauth_token:
+        \n            pattern:    ^/oauth/v2/token
+        \n            security:   false
+        \n
+        \n        oauth_authorize:
+        \n            pattern:    ^/oauth/v2/auth
+        \n            form_login:
+        \n                provider: fos_userbundle
+        \n                check_path: /oauth/v2/auth_login_check
+        \n                login_path: /oauth/v2/auth_login
+        \n            anonymous: true
+        \n
+        \n        api:
+        \n            pattern:    ^/api
+        \n            fos_oauth:  true
+        \n            stateless:  true
+        \n            anonymous:  false # can be omitted as its default value"
+        state: present
+
+-   name: 'OAuth-server: add access control items'
+    blockinfile:
+        dest: "{{ project_web_path }}/app/config/security.yml"
+        insertafter: ' *access_control:'
+        marker: '# OAuth-server-access {mark}'
+        block: "        - { path: ^/api, roles: [ IS_AUTHENTICATED_FULLY ] }"
+        state: present
+
+-   name: 'OAuth-server: import routing'
+    blockinfile:
+        dest: "{{ project_web_path }}/src/{{ project_name|title }}/{{ core_bundle_name }}Bundle/Resources/config/routing.yml"
+        marker: '# OAuth-server {mark}'
+        content: "fos_oauth_server_token:
+        \n    resource: \"@FOSOAuthServerBundle/Resources/config/routing/token.xml\"
+        \n
+        \nfos_oauth_server_authorize:
+        \n    resource: \"@FOSOAuthServerBundle/Resources/config/routing/authorize.xml\""

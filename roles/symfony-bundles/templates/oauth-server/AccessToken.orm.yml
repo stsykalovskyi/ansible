@@ -1,0 +1,19 @@
+{{ namespace }}\Entity\AccessToken:
+    type:  entity
+    table: {{ project_name }}.access_token
+    id:
+        id:
+            type: integer
+            generator:
+                strategy: AUTO
+    manyToOne:
+        user:
+            targetEntity: {{ namespace }}\Entity\User
+            joinColumn:
+                name: user_id
+                onDelete: CASCADE
+                referencedColumnName: id
+        client:
+            targetEntity: {{ namespace }}\Entity\Client
+            joinColumn:
+                nullable: false

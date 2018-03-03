@@ -12,6 +12,7 @@
 #            - lte-admin
 #            - oauth
             - api_doc
+            - oauth-server
         project_name: gamehub
         project_host: gamehub.com
         projects_web_path: /var/www/projects
