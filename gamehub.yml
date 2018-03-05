@@ -11,7 +11,7 @@
 #            - user
 #            - lte-admin
 #            - oauth
-            - api_doc
+#            - api_doc
             - oauth-server
         project_name: gamehub
         project_host: gamehub.com
@@ -23,4 +23,9 @@
         core_bundle_full_name: "{{ project_name|title }}{{ core_bundle_name }}Bundle"
         namespace: "{{ project_name|title }}\\{{ core_bundle_name }}Bundle"
         ansible_private_key_file: /drives/drive0/vagrant/machines/projects/.vagrant/machines/default/virtualbox/private_key
+        composer_autoload_bundles:
+            - Admin
+            - User
+            - GamehubCore
+            - Core
 

@@ -14,19 +14,34 @@
         path: "{{ project_web_path }}/src/AppBundle"
 
 -   name: 'Default config: Replace composer.json with template'
-    template:
-        src: default_config/composer.json
-        dest: "{{ project_web_path }}/composer.json"
+    lineinfile:
+        dest: '{{ project_web_path }}/composer.json'
+        regexp: '{{ item.1 }}Bundle'
+        insertafter: '\t*"psr-4": {'
+        line: '            "{{project_name|title}}\\{{ item.1 }}Bundle\\": "src/{{project_name|title}}/{{ item.1 }}Bundle",'
+    with_indexed_items: '{{ composer_autoload_bundles }}'
+
+-   name: 'Default config: Check that the .bowerrc exists'
+    stat:
+        path: "{{ project_web_path }}/.bowerrc"
+    register: stat_result
 
 -   name: 'Default config: Replace .bowerrc with template'
     template:
         src: default_config/.bowerrc
         dest: "{{ project_web_path }}/.bowerrc"
+    when: stat_result.stat.exists == False
+
+-   name: 'Default config: Check that the bower.json exists'
+    stat:
+        path: "{{ project_web_path }}/bower.json"
+    register: stat_result
 
 -   name: 'Default config: Replace bower.json with template'
     template:
         src: default_config/bower.json
         dest: "{{ project_web_path }}/bower.json"
+    when: stat_result.stat.exists == False
 
 -   name: 'Default config: Check that the Bundle exists'
     stat:
@@ -36,11 +51,6 @@
 -   name: 'Default config: Generate bundle'
     shell: "{{ project_web_path }}/bin/console generate:bundle --namespace={{ project_name|title }}/{{ core_bundle_name }}Bundle --dir=src --no-interaction --format yml --shared "
     when: stat_result.stat.exists == False
-
--   name: 'Default config: Replace core bundle routing.yml file'
-    template:
-        src: default_config/bundle_routing.yml
-        dest: "{{ project_web_path }}/src/{{ project_name|title }}/{{ core_bundle_name }}Bundle/Resources/config/routing.yml"
 
 -   name: 'Default config: Enable bundle'
     lineinfile:
@@ -62,4 +72,10 @@
         variable_start_string: [[
         variable_end_string: ]]
 
-
+-   name: 'Default config: composer dump-autoload'
+    composer:
+            command: dump-autoload
+            arguments: -o
+            working_dir: "{{ project_web_path }}"
+    become: true
+    become_user: "{{ bash_username }}"

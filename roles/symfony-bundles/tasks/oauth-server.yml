@@ -1,15 +1,14 @@
 ---
-
--   name: 'OAuth-server: Check that the friendsofsymfony/oauth-server-bundle installed'
-    stat:
-        path: "{{ project_web_path }}/vendor/friendsofsymfony/oauth-server-bundle"
-    register: stat_result
-
 -   name: 'OAuth-server: configure'
     blockinfile:
         dest: "{{ project_web_path }}/app/config/config.yml"
         marker: '# OAuth-server {mark}'
         content: ""
+
+-   name: 'OAuth-server: Check that the friendsofsymfony/oauth-server-bundle installed'
+    stat:
+        path: "{{ project_web_path }}/vendor/friendsofsymfony/oauth-server-bundle"
+    register: stat_result
 
 -   name: 'OAuth-server: Download friendsofsymfony/oauth-server-bundle using composer'
     composer:
@@ -126,3 +125,11 @@
         \n
         \nfos_oauth_server_authorize:
         \n    resource: \"@FOSOAuthServerBundle/Resources/config/routing/authorize.xml\""
+
+-   name: 'OAuth-server: composer dump-autoload'
+    composer:
+            command: dump-autoload
+            arguments: -o
+            working_dir: "{{ project_web_path }}"
+    become: true
+    become_user: "{{ bash_username }}"
