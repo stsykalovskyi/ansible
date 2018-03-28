@@ -11,8 +11,6 @@ postgresql_unix_socket_directories:
 
 # Global configuration options that will be set in postgresql.conf.
 postgresql_global_config_options:
-#    -   option: unix_socket_directories
-#        value: '{{ postgresql_unix_socket_directories | join(",") }}'
     -   option: listen_addresses
         value: '*'
 
@@ -25,7 +23,6 @@ postgresql_hba_entries:
     - { type: local, database: all, user: all, auth_method: peer }
     - { type: host, database: all, user: all, address: '127.0.0.1/32', auth_method: md5 }
     - { type: host, database: all, user: all, address: '::1/128', auth_method: md5 }
-#    - { type: host, database: all, user: all, auth_method: trust }
 
 
 # Debian only. Used to generate the locales used by PostgreSQL databases.

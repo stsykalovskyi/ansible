@@ -3,3 +3,4 @@
 gamehub.retry
 microservices.retry
 projects.retry
+*.retry
