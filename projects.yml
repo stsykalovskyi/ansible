@@ -13,7 +13,6 @@
 #        - postgresql
 #        - elasticsearch-ubuntu
 #        - rabbitmq-ubuntu
-#        - symfony_config
     tasks:
         -   name: 'TASK: Add color prompt'
             lineinfile:

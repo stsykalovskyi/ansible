@@ -21,3 +21,8 @@
 # Install git from source when git_install_from_source is true.
 - include: install-from-source.yml
   when: git_install_from_source == true
+
+-   name: "Git ubuntu: add .gitconfig file"
+    template:
+        src: .gitconfig
+        dest: '/home/{{ bash_username }}/.gitconfig'

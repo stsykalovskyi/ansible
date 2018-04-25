@@ -9,6 +9,7 @@
         - default-jdk
         - npm
         - nodejs-legacy
+        - ruby
 
 -   name: Configure default editor to nano
     lineinfile:
