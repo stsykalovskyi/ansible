@@ -1,3 +1,9 @@
+---
+-   name: Install epel
+    yum:
+        name: epel-release
+        state: present
+
 -   name: Install utils
     yum:
         name: "{{ item }}"
@@ -7,6 +13,7 @@
         - nano
         - curl
         - telnet
+        - python-pip
 
 -   name: Configure default editor to nano
     lineinfile:

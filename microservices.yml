@@ -2,23 +2,27 @@
     sudo: yes
     user: "{{ bash_username }}"
     roles:
+        -   utils-centos
+        -   pip
+        -   docker
         -   git-centos
-#        -   php71-centos
-#        -   composer
-#        -   nginx-centos
-#        -   utils-centos
-#    tasks:
-#        -   name: 'colorize prompt'
-#            lineinfile:
-#                regexp: 'PS1='
-#                path: '/home/{{ bash_username }}/.bashrc'
-#                line: PS1='\[\033[01;36m\]\u@\h\[\033[00m\]:\[\033[01;32m\]\w\[\033[00m\] '
+        -   php71-centos
+        -   composer
+        -   nginx-centos
+    tasks:
+        -   name: 'colorize prompt'
+            lineinfile:
+                regexp: 'PS1='
+                path: '/home/{{ bash_username }}/.bashrc'
+                line: PS1='\[\033[01;36m\]\u@\h\[\033[00m\]:\[\033[01;32m\]\w\[\033[00m\] '
     vars:
         microservices:
             -   name: rbac
                 host: rbac.local
             -   name: ipam
                 host: ipam.local
+        pip_install_packages:
+            - name: docker-compose
         symfony_root_dir: /var/www/services
         bash_username: vagrant
         bash_password: "{{ bash_username }}"
@@ -30,4 +34,5 @@
         git_user_email: stsykalovskyi@singlehop.com
         git_user_name: stsykalovskyi
         git_version: 2.16.2
+        composer_github_oauth_token: ebb2353ed432cdd891cde1d2b5fe953d964b39f0
         ansible_private_key_file: /drives/drive0/vagrant/machines/microservices/.vagrant/machines/default/virtualbox/private_key
