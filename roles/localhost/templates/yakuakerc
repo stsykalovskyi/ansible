@@ -1,0 +1,14 @@
+[Desktop Entry]
+DefaultProfile=Shell.profile
+
+[Shortcuts]
+new-session=Ctrl+T
+new-session-two-horizontal=Ctrl+H
+next-session=Ctrl+Right
+previous-session=Ctrl+Left
+
+[Window]
+Height=100
+KeepOpen=true
+Screen=0
+Width=100

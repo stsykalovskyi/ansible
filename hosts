@@ -12,3 +12,5 @@
 192.168.0.102
 [localhost]
 localhost ansible_connection=local ansible_become=false
+[localhost-vagrant]
+192.168.0.110
