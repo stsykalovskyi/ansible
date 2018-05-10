@@ -1,0 +1,41 @@
+Host stage
+    Hostname 172.21.15.24
+    User root
+
+Host rbac
+    Hostname 172.21.15.26
+    User root
+
+Host consumer
+    Hostname 172.21.15.27
+    User root
+
+Host server
+    Hostname ved.tso.in.ua
+    User stsykalovskyi
+Host tso
+    Hostname 94.177.218.130
+    User stsykalovskyi
+host consumer
+    hostname 172.21.15.27
+    user root
+host rbac-prod
+    hostname 172.21.9.10
+    user root
+host jumpbox
+    hostname access.shim.chi03.singlehop.local
+    user stsykalovskyi
+host gamadrill
+    IdentityFile ~/.ssh/gamadrill.pem
+    hostname ec2-52-212-137-243.eu-west-1.compute.amazonaws.com
+    user ubuntu
+
+host gamehub
+    user ubuntu
+    hostname ec2-34-241-154-224.eu-west-1.compute.amazonaws.com
+    identityfile ~/.ssh/stsykalovskyi_gamehub.pem
+
+host aws
+    user ubuntu
+    hostname ec2-18-221-45-197.us-east-2.compute.amazonaws.com
+    identityfile ~/.ssh/stsykalovskyi.pem 

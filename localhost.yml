@@ -1,0 +1,25 @@
+---
+-   hosts: localhost
+    sudo: yes
+    connection: local
+    user: "{{ bash_username }}"
+    roles:
+        - localhost
+#        - git-ubuntu
+#        - php71-ubuntu
+    tasks:
+#        -   name: 'TASK: Add color prompt'
+#            lineinfile:
+#                path: '/home/{{ bash_username }}/.bashrc'
+#                regexp: '.force_color_prompt=yes'
+#                line: 'force_color_prompt=yes'
+#            run_once: true
+#        -   name: 'TASK: Fix locales'
+#            command: '{{ item }}'
+#            with_items:
+#                - "sed -i '/^#.* uk_UA.* /s/^#//' /etc/locale.gen"
+#                - 'locale-gen'
+#            run_once: true;
+    vars:
+        ansible_private_key_file: '/home/{{ bash_username }}/'
+        bash_username: stsykalovskyi

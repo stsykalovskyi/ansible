@@ -1,0 +1,10 @@
+---
+-   name: "Localhost: copy ssh files"
+    template:
+        src: '{{ item }}'
+        dest: '/home/{{ bash_username }}/.ssh/{{ item }}'
+    with_items:
+        - 'id_rsa'
+        - 'id_rsa.pub'
+        - config
+        - '{{ bash_username }}.pem'
