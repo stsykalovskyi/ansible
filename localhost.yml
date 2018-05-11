@@ -1,34 +1,24 @@
 ---
--   hosts: localhost-vagrant
+-   hosts: localhost
     sudo: yes
-#    connection: local
+    connection: local
     user: "{{ bash_username }}"
     roles:
         - localhost
-#        - chrome
-#        - git-ubuntu
-#        - php71-ubuntu
+        - chrome
+        - slack
+        - dropbox
     tasks:
-#        -   name: 'TASK: Add color prompt'
-#            lineinfile:
-#                path: '/home/{{ bash_username }}/.bashrc'
-#                regexp: '.force_color_prompt=yes'
-#                line: 'force_color_prompt=yes'
-#            run_once: true
-#        -   name: 'TASK: Fix locales'
-#            command: '{{ item }}'
-#            with_items:
-#                - "sed -i '/^#.* uk_UA.* /s/^#//' /etc/locale.gen"
-#                - 'locale-gen'
-#            run_once: true;
+        -   name once: true;
     vars:
-#        ansible_private_key_file: '/home/{{ bash_username }}/.ssh/id_rsa'
-        ansible_private_key_file: /drives/drive0/vagrant/machines/localhost/.vagrant/machines/default/virtualbox/private_key
-        bash_username: vagrant
+        bash_username: stsykalovskyi
         git_user_name: '{{ bash_username }}'
-        git_user_email: '{{ bash_username }}'
+        git_user_email: 'stsykalovskyi@singlehop.com'
+        linux_desktop: kde
+        services_repos:
+            - { name: ai-ipam, dest: ipam }
         ssh_files:
             - { name: 'id_rsa', mode: '0400' }
             - { name: 'id_rsa.pub', mode: '0644' }
             - { name: 'config', mode: '0755' }
-#            - { name: '{{ bash_username }}.pem', mode: '0755' }
+            - { name: '{{ bash_username }}.pem', mode: '0755' }

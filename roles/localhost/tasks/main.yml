@@ -1,10 +1,27 @@
 ---
+-   name: "Localhost: ensure .ssh directory exists"
+    file:
+        path: "/home/{{ bash_username }}/.ssh"
+        state: directory
+
+-   name: "Localhost: github config"
+    template:
+        src: '.gitconfig'
+        dest: '/home/{{ bash_username }}/.gitconfig'
+
 -   name: "Localhost: copy ssh files"
     template:
         src: '{{ item.name }}'
         dest: '/home/{{ bash_username }}/.ssh/{{ item.name }}'
         mode: '{{ item.mode }}'
     with_items: '{{ ssh_files }}'
+
+#-   name: "Localhost: clone services repos"
+#    git:
+#        repo: 'git@github.com:singlehopllc/{{ item.name }}.git'
+#        dest: '/home/{{ bash_username }}/services/{{ item.dest }}'
+#    with_items: '{{ services_repos }}'
+
 
 -   name: "Localhost: Install utils"
     apt:
@@ -16,16 +33,30 @@
         - unzip
         - default-jdk
         - yakuake
+        - konsole
+        - revelation
+        - clementine
+        - numlockx
 
 -   name: Configure default editor to nano
+    lineinfile:
+        dest: "/usr/share/lightdm/lightdm.conf.d/50-unity-greeter.conf"
+        regexp: "greeter-setup-script="
+        line: "greeter-setup-script=/usr/bin/numlockx on"
+
+-   name: "Localhost: numlock on boot"
     lineinfile:
         dest: "/home/{{ bash_username }}/.bashrc"
         regexp: "{{ item.regexp }}"
         line: "{{ item.line }}"
-        backup: yes
     with_items:
         - { regexp: "export VISUAL", line: "export VISUAL=nano" }
         - { regexp: "export EDITOR", line: "export EDITOR=\"$VISUAL\"" }
+
+-   name: "Localhost: Create yakuake config file"
+    file:
+        path: '/home/{{ bash_username }}/.kde/share/config'
+        state: directory
 
 -   name: "Localhost: Config yakuake"
     template:
