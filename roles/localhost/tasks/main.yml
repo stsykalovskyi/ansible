@@ -1,13 +1,28 @@
 ---
+-   name: "Localhost: add hosts file records"
+    sudo: yes
+    lineinfile:
+        dest: "/etc/hosts"
+        regexp: "{{ item.regexp }}"
+        line: "{{ item.line }}"
+    with_items:
+        - { regexp: "192.168.1.100 ", line: "192.168.1.100 rbac.local ipam.local audit.local" }
+        - { regexp: "192.168.1.101 ", line: "192.168.1.101 tso.com gamehub.com" }
+
 -   name: "Localhost: ensure .ssh directory exists"
     file:
         path: "/home/{{ bash_username }}/.ssh"
         state: directory
 
--   name: "Localhost: github config"
-    template:
-        src: '.gitconfig'
-        dest: '/home/{{ bash_username }}/.gitconfig'
+-   name: "Localhost: ensure repos directories exists"
+    file:
+        path: "/home/{{ bash_username }}/repos/{{ item }}"
+        state: directory
+        owner: '{{ bash_username }}'
+        group: '{{ bash_username }}'
+    with_items:
+        - services
+        - projects
 
 -   name: "Localhost: copy ssh files"
     template:
@@ -16,12 +31,42 @@
         mode: '{{ item.mode }}'
     with_items: '{{ ssh_files }}'
 
-#-   name: "Localhost: clone services repos"
-#    git:
-#        repo: 'git@github.com:singlehopllc/{{ item.name }}.git'
-#        dest: '/home/{{ bash_username }}/services/{{ item.dest }}'
-#    with_items: '{{ services_repos }}'
+-   name: "Localhost: github config"
+    template:
+        src: '.gitconfig'
+        dest: '/home/{{ bash_username }}/.gitconfig'
 
+-   name: "Localhost: clone services repos"
+    git:
+        repo: 'git@github.com:singlehopllc/{{ item.name }}.git'
+        dest: '/home/{{ bash_username }}/repos/services/{{ item.dest }}'
+        key_file: '/home/{{ bash_username }}/.ssh/id_rsa'
+        accept_hostkey: yes
+    with_items: '{{ services_repos }}'
+
+-   name: "Localhost: set owner to services repos"
+    file:
+        path: '/home/{{ bash_username }}/repos/services/{{ item.dest }}'
+        owner: '{{ bash_username }}'
+        group: '{{ bash_username }}'
+        recurse: yes
+    with_items: '{{ services_repos }}'
+
+-   name: "Localhost: clone projects repos"
+    git:
+        repo: 'git@bitbucket.org:{{ bash_username }}/{{ item.name }}.git'
+        dest: '/home/{{ bash_username }}/repos/projects/{{ item.dest }}'
+        key_file: '/home/{{ bash_username }}/.ssh/id_rsa'
+        accept_hostkey: yes
+    with_items: '{{ projects_repos }}'
+
+-   name: "Localhost: set owner to projects repos"
+    file:
+        path: '/home/{{ bash_username }}/repos/projects/{{ item.dest }}'
+        owner: '{{ bash_username }}'
+        group: '{{ bash_username }}'
+        recurse: yes
+    with_items: '{{ projects_repos }}'
 
 -   name: "Localhost: Install utils"
     apt:
@@ -37,14 +82,15 @@
         - revelation
         - clementine
         - numlockx
+        - blender
 
--   name: Configure default editor to nano
+-   name: "Localhost: numlock on boot"
     lineinfile:
         dest: "/usr/share/lightdm/lightdm.conf.d/50-unity-greeter.conf"
         regexp: "greeter-setup-script="
         line: "greeter-setup-script=/usr/bin/numlockx on"
 
--   name: "Localhost: numlock on boot"
+-   name: Configure default editor to nano
     lineinfile:
         dest: "/home/{{ bash_username }}/.bashrc"
         regexp: "{{ item.regexp }}"
@@ -63,3 +109,13 @@
         src: 'yakuakerc'
         dest: '/home/{{ bash_username }}/.kde/share/config/yakuakerc'
         mode: '0600'
+
+-   name: "Localhost: add aliases"
+    lineinfile:
+        dest: "/home/{{ bash_username }}/.bashrc"
+        regexp: "{{ item.regexp }}"
+        line: "{{ item.line }}"
+    with_items:
+        - { regexp: "alias goMicroservices", line: "alias goMicroservices='cd /drives/drive0/vagrant/machines/microservices'" }
+        - { regexp: "alias goProjects", line: "alias goProjects='cd /drives/drive0/vagrant/machines/projects'" }
+        - { regexp: "alias goAnsible", line: "alias goAnsible='cd /home/{{ bash_username }}/repos/projects/ansible'" }

@@ -1,22 +1,36 @@
 ---
 -   hosts: localhost
-    sudo: yes
     connection: local
     user: "{{ bash_username }}"
     roles:
         - localhost
-        - chrome
-        - slack
-        - dropbox
+#        - chrome
+#        - slack
+#        - dropbox
+#        - vagrant
     tasks:
-        -   name once: true;
+#        -   name: 'TASK: Add color prompt'
+#            lineinfile:
+#                path: '/home/{{ bash_username }}/.bashrc'
+#                regexp: '.force_color_prompt=yes'
+#                line: 'force_color_prompt=yes'
+#            run_once: true
+#        -   name: 'TASK: Fix locales'
+#            command: '{{ item }}'
+#            with_items:
+#                - "sed -i '/^#.* uk_UA.* /s/^#//' /etc/locale.gen"
+#                - 'locale-gen'
+#            run_once: true;
     vars:
         bash_username: stsykalovskyi
         git_user_name: '{{ bash_username }}'
         git_user_email: 'stsykalovskyi@singlehop.com'
-        linux_desktop: kde
+        vagrant_version: "1.9.8"
         services_repos:
             - { name: ai-ipam, dest: ipam }
+            - { name: rbac-beta, dest: rbac }
+        projects_repos:
+            - { name: tso, dest: tso }
         ssh_files:
             - { name: 'id_rsa', mode: '0400' }
             - { name: 'id_rsa.pub', mode: '0644' }

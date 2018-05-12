@@ -1,6 +1,16 @@
 ---
-- name: Download Ubuntu dropbox package
-  get_url: url={{ dropbox_url_ubuntu_deb }} dest={{dropbox_tmp_deb}}
+-   name: Check if Dropbox directory already exists
+    stat:
+        path: "/home/{{ bash_username }}/Dropbox"
+    register: dropbox_exists_result
 
-- name: Install Ubuntu dropbox package
-  apt: deb={{dropbox_tmp_deb}}
+-   name: Download Ubuntu dropbox package
+    get_url:
+        url: '{{ dropbox_url_ubuntu_deb }}'
+        dest: '{{dropbox_tmp_deb}}'
+    when: dropbox_exists_result.stat.exists == False
+
+-   name: Install Ubuntu dropbox package
+    apt:
+        deb: '{{dropbox_tmp_deb}}'
+    when: dropbox_exists_result.stat.exists == False

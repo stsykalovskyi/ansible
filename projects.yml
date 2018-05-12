@@ -3,14 +3,14 @@
     sudo: yes
     user: "{{ bash_username }}"
     roles:
-#        - git-ubuntu
-#        - php71-ubuntu
-#        - composer
-#        - utils-ubuntu
-#        - nodejs
-#        - bower
-#        - nginx-ubuntu
-#        - postgresql
+        - git-ubuntu
+        - php71-ubuntu
+        - composer
+        - utils-ubuntu
+        - nodejs
+        - bower
+        - nginx-ubuntu
+        - postgresql
 #        - elasticsearch-ubuntu
 #        - rabbitmq-ubuntu
     tasks:

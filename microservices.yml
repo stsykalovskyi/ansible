@@ -2,13 +2,13 @@
     sudo: yes
     user: "{{ bash_username }}"
     roles:
-        -   utils-centos
-        -   pip
-        -   docker
+#        -   utils-centos
+#        -   pip
+#        -   docker
         -   git-centos
-        -   php71-centos
-        -   composer
-        -   nginx-centos
+#        -   php71-centos
+#        -   composer
+#        -   nginx-centos
     tasks:
         -   name: 'colorize prompt'
             lineinfile:
