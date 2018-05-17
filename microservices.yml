@@ -2,13 +2,13 @@
     sudo: yes
     user: "{{ bash_username }}"
     roles:
-#        -   utils-centos
-#        -   pip
-#        -   docker
+        -   utils-centos
+        -   pip
+        -   docker
         -   git-centos
-#        -   php71-centos
-#        -   composer
-#        -   nginx-centos
+        -   php71-centos
+        -   composer
+        -   nginx-centos
     tasks:
         -   name: 'colorize prompt'
             lineinfile:
@@ -21,8 +21,11 @@
                 host: rbac.local
             -   name: ipam
                 host: ipam.local
+            -   name: cab
+                host: cab.local
         pip_install_packages:
-            - name: docker-compose
+            -   name: docker-compose
+            -   name: httpie
         symfony_root_dir: /var/www/services
         bash_username: vagrant
         bash_password: "{{ bash_username }}"

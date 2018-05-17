@@ -1,5 +1,5 @@
 [microservices]
-192.168.1.100
+192.168.0.100
 [projects]
 192.168.1.101
 [gamehub.ua]
