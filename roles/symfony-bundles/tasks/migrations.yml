@@ -28,5 +28,5 @@
         content: "doctrine_migrations:
         \n    dir_name: '%kernel.root_dir%/DoctrineMigrations'
         \n    namespace: Application\\Migrations
-        \n    table_name: '%database.schema%.migration_versions'
+        \n    table_name: 'migration_versions'
         \n    name: Application Migrations"

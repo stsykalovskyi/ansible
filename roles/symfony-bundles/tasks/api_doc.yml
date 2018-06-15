@@ -1,21 +1,42 @@
 ---
+-   name: 'ApiDoc: Fix parameters.yml.dist'
+    lineinfile:
+        dest: "{{ project_web_path }}/app/config/parameters.yml.dist"
+        regexp: '\t*app.name:'
+        line: '    app.name: {{ project_name|title }}'
+        state: present
+
+-   name: 'ApiDoc: Check that the symfony/templating installed'
+    stat:
+        path: "{{ project_web_path }}/vendor/symfony/templating"
+    register: stat_result
+
+-   name: 'ApiDoc: Download symfony/templating using composer'
+    composer:
+        command: require
+        arguments: 'symfony/templating 3.0 -o'
+        working_dir: "{{ project_web_path }}"
+    become: true
+    become_user: "{{ bash_username }}"
+    when: stat_result.stat.exists == False
+
+-   name: 'ApiDoc: configure templating'
+    blockinfile:
+        dest: "{{ project_web_path }}/app/config/config.yml"
+        marker: '# ApiDoc templating {mark}'
+        content: "templating:
+        \n    engines: ['twig']"
 
 -   name: 'ApiDoc: Check that the nelmio/api-doc-bundle installed'
     stat:
         path: "{{ project_web_path }}/vendor/nelmio/api-doc-bundle"
     register: stat_result
 
-#-   name: 'ApiDoc: configure'
-#    blockinfile:
-#        dest: "{{ project_web_path }}/app/config/config.yml"
-#        marker: '# ApiDoc {mark}'
-#        content: ""
-
 -   name: 'ApiDoc: Download nelmio/api-doc-bundle using composer'
     composer:
-            command: require
-            arguments: 'nelmio/api-doc-bundle 2.13'
-            working_dir: "{{ project_web_path }}"
+        command: require
+        arguments: 'nelmio/api-doc-bundle 2.13'
+        working_dir: "{{ project_web_path }}"
     become: true
     become_user: "{{ bash_username }}"
     when: stat_result.stat.exists == False

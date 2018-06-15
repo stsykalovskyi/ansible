@@ -34,12 +34,28 @@
         line: '            new FOS\UserBundle\FOSUserBundle(),'
         state: present
 
+-   name: 'FOSUserBundle: add "encoders:" to security.yml'
+    lineinfile:
+        dest: "{{ project_web_path }}/app/config/security.yml"
+        regexp: ' \t*encoders:'
+        insertafter: '^security:'
+        line: "    encoders:"
+        state: present
+
 -   name: 'FOSUserBundle: add security encoder'
     lineinfile:
         dest: "{{ project_web_path }}/app/config/security.yml"
         regexp: 'UserInterface: bcrypt'
         insertafter: ' *encoders:'
         line: '        FOS\UserBundle\Model\UserInterface: bcrypt'
+        state: present
+
+-   name: 'FOSUserBundle: add roles_hierarchy to security.yml'
+    lineinfile:
+        dest: "{{ project_web_path }}/app/config/security.yml"
+        regexp: ' \t*role_hierarchy:'
+        insertafter: '^security:'
+        line: "    role_hierarchy:"
         state: present
 
 -   name: 'FOSUserBundle: add security roles hierarchy'
@@ -70,10 +86,9 @@
 -   name: 'FOSUserBundle: add firewall'
     blockinfile:
         dest: "{{ project_web_path }}/app/config/security.yml"
-        insertafter: ' *firewalls:'
-        marker: '# main firewall {mark}'
-        block: "        main:
-        \n            pattern: ^/
+        insertafter: '\t*main:'
+        marker: '# fos userbundle {mark}'
+        block: "            pattern: ^/
         \n            form_login:
         \n                provider: fos_userbundle
         \n                csrf_token_generator: security.csrf.token_manager
@@ -81,6 +96,19 @@
         \n                check_path: fos_user_security_check
         \n            logout:       true
         \n            anonymous:    true"
+        state: present
+
+-   name: 'Default config: Remove anonymous: ~ from security.yml'
+    lineinfile:
+        dest: "{{ project_web_path }}/app/config/security.yml"
+        regexp: "\t*anonymous: ~"
+        state: absent
+
+-   name: 'Default config: Add access_control to security.yml'
+    lineinfile:
+        dest: "{{ project_web_path }}/app/config/security.yml"
+        regexp: "\t*access_control:"
+        line: "    access_control:"
         state: present
 
 -   name: 'FOSUserBundle: add access control items'
@@ -117,6 +145,16 @@
         src: user/User.orm.yml
         dest: "{{ project_web_path }}/src/{{ project_name|title }}/{{ core_bundle_name }}Bundle/Resources/config/doctrine/User.orm.yml"
 
+-   name: 'FOSUserBundle: fix parameters.yml'
+    lineinfile:
+        dest: "{{ project_web_path }}/app/config/parameters.yml"
+        regexp: ' \t*{{ item.name }}:'
+        line: "    {{ item.name }}: {{ item.value }}"
+        state: present
+    with_items:
+        - { name: mailer_user, value: default }
+        - { name: mailer_password, value: default }
+
 -   name: 'FOSUserBundle: configure'
     blockinfile:
         dest: "{{ project_web_path }}/app/config/config.yml"
@@ -126,8 +164,8 @@
             \n    firewall_name: main
             \n    user_class: {{ namespace }}\\Entity\\User
             \n    from_email:
-            \n        address: '%mailer.user%'
-            \n        sender_name: '%mailer.user%'
+            \n        address: '%mailer_user%'
+            \n        sender_name: '%mailer_user%'
             \n    service:
             \n        mailer: 'fos_user.mailer.noop'
             "

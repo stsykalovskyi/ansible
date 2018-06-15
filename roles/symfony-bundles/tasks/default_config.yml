@@ -1,81 +1,136 @@
 ---
--   name: 'Default config: Replace app_dev.php with default'
-    template:
-        src: default_config/app_dev.php
-        dest: "{{ project_web_path }}/web/app_dev.php"
-
--   name: 'Default config: Skip app_dev.php from push files'
-    shell:
-        "cd {{ project_web_path }};git update-index --skip-worktree web/app_dev.php"
-
--   name: 'Default config: Remove default AppBundle directory'
-    file:
+-   name: 'Default config: clean config.yml'
+    lineinfile:
+        dest: "{{ project_web_path }}/app/config/config.yml"
+        regexp: ' \t*{{ item }}'
         state: absent
-        path: "{{ project_web_path }}/src/AppBundle"
+    with_items:
+        - 'driver: pdo_mysql'
 
--   name: 'Default config: Replace composer.json with template'
+-   name: 'Default config: config.yml data set'
     lineinfile:
-        dest: '{{ project_web_path }}/composer.json'
-        regexp: '{{ item.1 }}Bundle'
-        insertafter: '\t*"psr-4": {'
-        line: '            "{{project_name|title}}\\{{ item.1 }}Bundle\\": "src/{{project_name|title}}/{{ item.1 }}Bundle",'
-    with_indexed_items: '{{ composer_autoload_bundles }}'
-
--   name: 'Default config: Check that the .bowerrc exists'
-    stat:
-        path: "{{ project_web_path }}/.bowerrc"
-    register: stat_result
-
--   name: 'Default config: Replace .bowerrc with template'
-    template:
-        src: default_config/.bowerrc
-        dest: "{{ project_web_path }}/.bowerrc"
-    when: stat_result.stat.exists == False
-
--   name: 'Default config: Check that the bower.json exists'
-    stat:
-        path: "{{ project_web_path }}/bower.json"
-    register: stat_result
-
--   name: 'Default config: Replace bower.json with template'
-    template:
-        src: default_config/bower.json
-        dest: "{{ project_web_path }}/bower.json"
-    when: stat_result.stat.exists == False
-
--   name: 'Default config: Check that the Bundle exists'
-    stat:
-        path: "{{ project_web_path }}/src/{{ project_name|title }}/{{ core_bundle_name }}Bundle"
-    register: stat_result
-
--   name: 'Default config: Generate bundle'
-    shell: "{{ project_web_path }}/bin/console generate:bundle --namespace={{ project_name|title }}/{{ core_bundle_name }}Bundle --dir=src --no-interaction --format yml --shared "
-    when: stat_result.stat.exists == False
-
--   name: 'Default config: Enable bundle'
-    lineinfile:
-        dest: "{{ project_web_path }}/app/AppKernel.php"
-        regexp: "{{ core_bundle_full_name }}()"
-        insertbefore: ' *\];'
-        line: "            new {{namespace}}\\{{ core_bundle_full_name }}(),"
+        dest: "{{ project_web_path }}/app/config/config.yml"
+        regexp: ' \t*{{ item.name }}'
+        line: "{{ item.value }}"
+        insertafter: '{{ item.after }}'
         state: present
+    with_items:
+        - { name: 'driver' , value: '        driver: pdo_pgsql', after: '    dbal:'}
 
--   name: 'Default config: Replace DefaultController.php with default'
-    template:
-        src: default_config/DefaultController.php
-        dest: "{{ project_web_path }}/src/{{project_name|title}}/{{ core_bundle_name }}Bundle/Controller"
+-   name: 'Default config: clean parameters.yml.dist'
+    lineinfile:
+        dest: "{{ project_web_path }}/app/config/parameters.yml.dist"
+        regexp: ' \t*{{ item }}:'
+        state: absent
+    with_items:
+        - database_driver
 
--   name: 'Default config: add layout template to core bundle'
-    template:
-        src: default_config/layout.html.twig
-        dest: "{{ project_web_path }}/src/{{project_name|title}}/{{ core_bundle_name }}Bundle/Resources/views/layout.html.twig"
-        variable_start_string: [[
-        variable_end_string: ]]
+-   name: 'Default config: parameters.yml.dist data set'
+    lineinfile:
+        dest: "{{ project_web_path }}/app/config/parameters.yml.dist"
+        regexp: ' \t*{{ item.name }}:'
+        line: "    {{ item.name }}: {{ item.value }}"
+        state: present
+    with_items:
+        - { name: database_driver, value: pdo_pgsql }
 
--   name: 'Default config: composer dump-autoload'
-    composer:
-            command: dump-autoload
-            arguments: -o
-            working_dir: "{{ project_web_path }}"
-    become: true
-    become_user: "{{ bash_username }}"
+#-   name: 'Default config: Replace app_dev.php with default'
+#    template:
+#        src: default_config/app_dev.php
+#        dest: "{{ project_web_path }}/web/app_dev.php"
+#
+#-   name: 'Default config: Skip app_dev.php from push files'
+#    shell:
+#        "cd {{ project_web_path }};git update-index --skip-worktree web/app_dev.php"
+#
+#-   name: 'Default config: Remove default AppBundle directory'
+#    file:
+#        state: absent
+#        path: "{{ project_web_path }}/src/AppBundle"
+#
+#-   name: 'Default config: Remove default AppBundle fro AppKernel.php'
+#    lineinfile:
+#        dest: "{{ project_web_path }}/app/AppKernel.php"
+#        regexp: "\t*new AppBundle"
+#        state: absent
+#
+#-   name: 'Default config: Replace services.yml with template'
+#    template:
+#        src: default_config/services.yml
+#        dest: "{{ project_web_path }}/app/config/services.yml"
+#
+#-   name: 'Default config: Replace composer.json with template'
+#    lineinfile:
+#        dest: '{{ project_web_path }}/composer.json'
+#        regexp: '{{ item.1 }}Bundle'
+#        insertafter: '\t*"psr-4": {'
+#        line: '            "{{project_name|title}}\\{{ item.1 }}Bundle\\": "src/{{project_name|title}}/{{ item.1 }}Bundle/",'
+#    with_indexed_items: '{{ composer_autoload_bundles }}'
+#
+#-   name: 'Default config: Check that the .bowerrc exists'
+#    stat:
+#        path: "{{ project_web_path }}/.bowerrc"
+#    register: stat_result
+#
+#-   name: 'Default config: Replace .bowerrc with template'
+#    template:
+#        src: default_config/.bowerrc
+#        dest: "{{ project_web_path }}/.bowerrc"
+#    when: stat_result.stat.exists == False
+#
+#-   name: 'Default config: Check that the bower.json exists'
+#    stat:
+#        path: "{{ project_web_path }}/bower.json"
+#    register: stat_result
+#
+#-   name: 'Default config: Replace bower.json with template'
+#    template:
+#        src: default_config/bower.json
+#        dest: "{{ project_web_path }}/bower.json"
+#    when: stat_result.stat.exists == False
+#
+#-   name: 'Default config: Check that the Bundle exists'
+#    stat:
+#        path: "{{ project_web_path }}/src/{{ project_name|title }}/{{ core_bundle_name }}Bundle"
+#    register: stat_result
+#
+#-   name: 'Default config: Generate bundle'
+#    shell: "{{ project_web_path }}/bin/console generate:bundle --namespace={{ project_name|title }}/{{ core_bundle_name }}Bundle --dir=src --no-interaction --format yml --shared "
+#    when: stat_result.stat.exists == False
+#
+#-   name: 'Default config: Enable bundle'
+#    lineinfile:
+#        dest: "{{ project_web_path }}/app/AppKernel.php"
+#        regexp: "{{ core_bundle_full_name }}()"
+#        insertbefore: ' *\];'
+#        line: "            new {{namespace}}\\{{ core_bundle_full_name }}(),"
+#        state: present
+#
+#-   name: 'Default config: Replace DefaultController.php with default'
+#    template:
+#        src: default_config/DefaultController.php
+#        dest: "{{ project_web_path }}/src/{{project_name|title}}/{{ core_bundle_name }}Bundle/Controller"
+#
+#-   name: 'Default config: add layout template to core bundle'
+#    template:
+#        src: default_config/layout.html.twig
+#        dest: "{{ project_web_path }}/src/{{project_name|title}}/{{ core_bundle_name }}Bundle/Resources/views/layout.html.twig"
+#        variable_start_string: [[
+#        variable_end_string: ]]
+#
+#-   name: 'Default config: composer dump-autoload'
+#    composer:
+#            command: dump-autoload
+#            arguments: -o
+#            working_dir: "{{ project_web_path }}"
+#    become: true
+#    become_user: "{{ bash_username }}"
+#
+#-   name: 'Default config: fix .gitignore file'
+#    lineinfile:
+#        dest: '{{ project_web_path }}.gitignore'
+#        regexp: '{{ item }}'
+#        line: '{{ item }}'
+#    with_indexed_items:
+#        - tests/_output/*
+#        - .idea

@@ -1,0 +1,69 @@
+---
+-   hosts: quizhub.tk
+    sudo: yes
+    user: "{{ bash_username }}"
+    roles:
+#        - git-ubuntu
+#        - php71-ubuntu
+#        - composer
+#        - utils-ubuntu
+#        - nodejs
+#        - bower
+#        - nginx-ubuntu
+#        - postgresql
+#        - symfony_config
+#        - elasticsearch-ubuntu
+#        - rabbitmq-ubuntu
+        - symfony-bundles
+#    tasks:
+#        -   name: 'TASK: Add color prompt'
+#            lineinfile:
+#                path: '/home/{{ bash_username }}/.bashrc'
+#                regexp: '.force_color_prompt=yes'
+#                line: 'force_color_prompt=yes'
+#            run_once: true
+#        -   name: 'TASK: Fix locales'
+#            command: '{{ item }}'
+#            with_items:
+#                - "sed -i '/^#.* uk_UA.* /s/^#//' /etc/locale.gen"
+#                - 'locale-gen'
+#            run_once: true;
+    vars:
+        bundles:
+            - default_config
+#            - migrations
+#            - user
+#            - lte-admin
+#            - oauth
+#            - api_doc
+#            - oauth-server
+        projects:
+            -   name: stlhub.tk
+                host: stlhub.tk
+        ansible_private_key_file: /drives/drive0/vagrant/machines/projects/.vagrant/machines/default/virtualbox/private_key
+        postgres_version: 9.4.11
+        bash_username: vagrant
+        bash_password: "{{ bash_username }}"
+        upload_max_file_size: 2M
+        max_input_vars: 1000
+        memory_limit: -1
+        listen_user: "{{ bash_username }}"
+        listen_group: "{{ bash_username }}"
+        git_user_email: stsykalovskyi@gmail.com
+        git_user_name: stsykalovskyi
+        git_version: 2.16.1
+        project_name: quizhub
+        project_host: quizhub.tk
+        projects_web_path: /var/www/projects
+        project_web_path: "{{ projects_web_path }}/{{ project_host }}"
+        core_bundle_name: Core
+        core_bundle_full_name: "{{ project_name|title }}{{ core_bundle_name }}Bundle"
+        namespace: "{{ project_name|title }}\\{{ core_bundle_name }}Bundle"
+        composer_autoload_bundles:
+            - Admin
+            - User
+            - Core
+        postgresql_databases:
+            -   name: quizhub_tk
+        rabbitmq_queues:
+            - test_q

@@ -1,5 +1,5 @@
 ---
--   hosts: gamehub.ua
+-   hosts: stlhub.tk
     sudo: yes
     user: "{{ bash_username }}"
     roles:
@@ -9,18 +9,28 @@
         - utils-ubuntu
         - nodejs
         - bower
-        - nginx-project
+        - nginx-ubuntu
         - postgresql
-        - symfony_config
+#        - symfony_config
 #        - elasticsearch-ubuntu
 #        - rabbitmq-ubuntu
-
+    tasks:
+        -   name: 'TASK: Add color prompt'
+            lineinfile:
+                path: '/home/{{ bash_username }}/.bashrc'
+                regexp: '.force_color_prompt=yes'
+                line: 'force_color_prompt=yes'
+            run_once: true
+        -   name: 'TASK: Fix locales'
+            command: '{{ item }}'
+            with_items:
+                - "sed -i '/^#.* uk_UA.* /s/^#//' /etc/locale.gen"
+                - 'locale-gen'
+            run_once: true;
     vars:
         projects:
-            -   name: gamehub
-                host: gamehub.ua
-#            -   name: quizhub
-#                host: quizhub.com
+            -   name: stlhub.tk
+                host: stlhub.tk
         ansible_private_key_file: /home/stsykalovskyi/.ssh/id_rsa
         postgres_version: 9.4.11
         bash_username: ubuntu
@@ -35,7 +45,7 @@
         git_version: 2.16.1
         projects_web_path: /var/www/projects
         postgresql_databases:
-            -   name: gamehub
+            -   name: stlhub_tk
 #            -   name: quizhub
         rabbitmq_queues:
             - test_q
