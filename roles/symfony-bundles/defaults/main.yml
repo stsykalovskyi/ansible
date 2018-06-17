@@ -21,3 +21,5 @@ security_access_control:
     - name: '- { path: ^/resetting, role: IS_AUTHENTICATED_ANONYMOUSLY }'
     - name: '- { path: ^/admin/, role: ROLE_ADMIN }'
     - name: '- { path: ^/login$, role: IS_AUTHENTICATED_ANONYMOUSLY }'
+    
+parameters_clean: []

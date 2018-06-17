@@ -129,7 +129,7 @@
 
 -   name: 'OAuth: provider service configuration'
     blockinfile:
-        dest: "{{ project_web_path }}/app/config/services.yml"
+        dest: "{{ project_web_path }}/src/{{ project_name|title }}/{{ core_bundle_name }}Bundle/Resources/config/services.yml"
         insertafter: ' *services:'
         marker: '# FOSUBUserProvider {mark}'
         block: "    {{ project_name }}.fos_user.oauth_provider:

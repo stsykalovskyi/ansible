@@ -1,5 +1,5 @@
 services:
-    websoft.app_bundle.menu_listener:
+    {{ project_name }}.app_bundle.menu_listener:
         class: '%admin_bundle.menu_listener.class%'
         arguments:
             - '@security.authorization_checker'

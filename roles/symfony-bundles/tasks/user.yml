@@ -164,8 +164,8 @@
             \n    firewall_name: main
             \n    user_class: {{ namespace }}\\Entity\\User
             \n    from_email:
-            \n        address: '%mailer_user%'
-            \n        sender_name: '%mailer_user%'
+            \n        address: '%mailer.user%'
+            \n        sender_name: '%mailer.user%'
             \n    service:
             \n        mailer: 'fos_user.mailer.noop'
             "

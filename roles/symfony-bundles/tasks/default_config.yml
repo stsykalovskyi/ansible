@@ -4,8 +4,7 @@
         dest: "{{ project_web_path }}/app/config/config.yml"
         regexp: ' \t*{{ item }}'
         state: absent
-    with_items:
-        - 'driver: pdo_mysql'
+    with_items: '{{ parameters_clean }}'
 
 -   name: 'Default config: config.yml data set'
     lineinfile:
@@ -14,16 +13,29 @@
         line: "{{ item.value }}"
         insertafter: '{{ item.after }}'
         state: present
-    with_items:
-        - { name: 'driver' , value: '        driver: pdo_pgsql', after: '    dbal:'}
+    with_items: '{{ config_data_set }}'
+
+-   name: 'Default config: clean parameters.yml'
+    lineinfile:
+        dest: "{{ project_web_path }}/app/config/parameters.yml"
+        regexp: ' \t*{{ item }}:'
+        state: absent
+    with_items: '{{ parameters_clean }}'
+
+-   name: 'Default config: parameters.yml data set'
+    lineinfile:
+        dest: "{{ project_web_path }}/app/config/parameters.yml"
+        regexp: ' \t*{{ item.name }}:'
+        line: "    {{ item.name }}: {{ item.value }}"
+        state: present
+    with_items: '{{ parameters_data_set }}'
 
 -   name: 'Default config: clean parameters.yml.dist'
     lineinfile:
         dest: "{{ project_web_path }}/app/config/parameters.yml.dist"
         regexp: ' \t*{{ item }}:'
         state: absent
-    with_items:
-        - database_driver
+    with_items: '{{ parameters_clean }}'
 
 -   name: 'Default config: parameters.yml.dist data set'
     lineinfile:
@@ -31,9 +43,8 @@
         regexp: ' \t*{{ item.name }}:'
         line: "    {{ item.name }}: {{ item.value }}"
         state: present
-    with_items:
-        - { name: database_driver, value: pdo_pgsql }
-
+    with_items: '{{ parameters_data_set }}'
+#
 #-   name: 'Default config: Replace app_dev.php with default'
 #    template:
 #        src: default_config/app_dev.php
@@ -58,14 +69,6 @@
 #    template:
 #        src: default_config/services.yml
 #        dest: "{{ project_web_path }}/app/config/services.yml"
-#
-#-   name: 'Default config: Replace composer.json with template'
-#    lineinfile:
-#        dest: '{{ project_web_path }}/composer.json'
-#        regexp: '{{ item.1 }}Bundle'
-#        insertafter: '\t*"psr-4": {'
-#        line: '            "{{project_name|title}}\\{{ item.1 }}Bundle\\": "src/{{project_name|title}}/{{ item.1 }}Bundle/",'
-#    with_indexed_items: '{{ composer_autoload_bundles }}'
 #
 #-   name: 'Default config: Check that the .bowerrc exists'
 #    stat:
@@ -98,13 +101,13 @@
 #    shell: "{{ project_web_path }}/bin/console generate:bundle --namespace={{ project_name|title }}/{{ core_bundle_name }}Bundle --dir=src --no-interaction --format yml --shared "
 #    when: stat_result.stat.exists == False
 #
-#-   name: 'Default config: Enable bundle'
-#    lineinfile:
-#        dest: "{{ project_web_path }}/app/AppKernel.php"
-#        regexp: "{{ core_bundle_full_name }}()"
-#        insertbefore: ' *\];'
-#        line: "            new {{namespace}}\\{{ core_bundle_full_name }}(),"
-#        state: present
+##-   name: 'Default config: Enable bundle'
+##    lineinfile:
+##        dest: "{{ project_web_path }}/app/AppKernel.php"
+##        regexp: "{{ core_bundle_full_name }}()"
+##        insertbefore: ' *\];'
+##        line: "            new {{namespace}}\\{{ core_bundle_full_name }}(),"
+##        state: present
 #
 #-   name: 'Default config: Replace DefaultController.php with default'
 #    template:
@@ -128,9 +131,9 @@
 #
 #-   name: 'Default config: fix .gitignore file'
 #    lineinfile:
-#        dest: '{{ project_web_path }}.gitignore'
+#        dest: '{{ project_web_path }}/.gitignore'
 #        regexp: '{{ item }}'
 #        line: '{{ item }}'
-#    with_indexed_items:
+#    with_items:
 #        - tests/_output/*
 #        - .idea

@@ -67,3 +67,44 @@
             -   name: quizhub_tk
         rabbitmq_queues:
             - test_q
+        parameters_clean:
+            - database_host
+            - database_driver
+            - database_port
+            - database_name
+            - database_user
+            - database_password
+            - mailer_transport
+            - mailer_user
+            - mailer_password
+            - mailer_host
+            - 'driver: pdo_mysql'
+            - "transport: '%mailer_transport%'"
+            - "host: '%mailer_host%'"
+            - "username: '%mailer_user%'"
+            - "password: '%mailer_password%'"
+        config_data_set:
+            - { name: "password: '%database.password%'", value: "        password: '%database.password%'", after: '    dbal:'}
+            - { name: "user: '%database.user%", value: "        user: '%database.user%'", after: '    dbal:'}
+            - { name: "dbname: '%database.name%", value: "        dbname: '%database.name%'", after: '    dbal:'}
+            - { name: "port: '%database.port%", value: "        port: '%database.port%'", after: '    dbal:'}
+            - { name: 'driver: "%database.driver%"' , value: '        driver: "%database.driver%"', after: '    dbal:'}
+            - { name: "host: '%database.host%'", value: "        host: '%database.host%'", after: '    dbal:'}
+            - { name: "username: '%mailer.user%'" , value: "    username: '%mailer.user%'", after: '^swiftmailer:'}
+            - { name: "password: '%mailer.password%'" , value: "    password: '%mailer.password%'", after: '^swiftmailer:'}
+            - { name: "transport: '%mailer.transport%'" , value: "    transport: '%mailer.transport%'", after: '^swiftmailer:'}
+            - { name: "host: '%mailer.host%'" , value: "    host: '%mailer.host%'", after: '^swiftmailer:'}
+
+        parameters_data_set:
+            - { name: database.password, value: '{{ project_name }}_stage' }
+            - { name: database.user, value: '{{ project_name }}_stage' }
+            - { name: database.driver, value: 'pdo_pgsql' }
+            - { name: database.name, value: '{{ project_host }}' }
+            - { name: database.port, value: 6432 }
+            - { name: database.host, value: 'pg.local' }
+            - { name: mailer.transport, value: smtp }
+            - { name: mailer.user, value: default }
+            - { name: mailer.password, value: default }
+            - { name: mailer.host, value: localhost }
+            - { name: elasticsearch.host, value: es.local }
+            - { name: elasticsearch.port, value: 9200 }
