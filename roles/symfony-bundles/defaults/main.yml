@@ -23,3 +23,5 @@ security_access_control:
     - name: '- { path: ^/login$, role: IS_AUTHENTICATED_ANONYMOUSLY }'
     
 parameters_clean: []
+
+gitignore: []

@@ -129,11 +129,9 @@
 #    become: true
 #    become_user: "{{ bash_username }}"
 #
-#-   name: 'Default config: fix .gitignore file'
-#    lineinfile:
-#        dest: '{{ project_web_path }}/.gitignore'
-#        regexp: '{{ item }}'
-#        line: '{{ item }}'
-#    with_items:
-#        - tests/_output/*
-#        - .idea
+-   name: 'Default config: fix .gitignore file'
+    lineinfile:
+        dest: '{{ project_web_path }}/.gitignore'
+        regexp: '{{ item }}'
+        line: '{{ item }}'
+    with_items: '{{ gitignore}}'

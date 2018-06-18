@@ -108,3 +108,7 @@
             - { name: mailer.host, value: localhost }
             - { name: elasticsearch.host, value: es.local }
             - { name: elasticsearch.port, value: 9200 }
+        gitignore:
+            - tests/_output/*
+            - .idea
+            - web/bundles
