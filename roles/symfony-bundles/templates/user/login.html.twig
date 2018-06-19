@@ -1,0 +1,13 @@
+{% raw %}
+{% trans_default_domain 'FOSUserBundle' %}
+
+{% extends{% endraw %} '@{{ project_name|title }}Admin/login-layout.html.twig'{% raw %} %}
+
+{% block title %}
+    {{ 'layout.login'|trans({}) }}
+{% endblock %}
+
+{% block page_content %}
+    {{ include('@FOSUser/Security/login_content.html.twig') }}
+{% endblock %}
+{% endraw %}

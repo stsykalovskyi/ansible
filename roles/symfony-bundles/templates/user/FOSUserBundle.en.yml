@@ -1,0 +1,75 @@
+change_password:
+    submit: 'Change password'
+
+group:
+    edit:
+        submit: 'Update group'
+
+    new:
+        submit: 'Create group'
+
+    show:
+        name: 'Group name'
+
+label:
+    message: Message
+
+layout:
+    check: Check
+    homepage: Homepage
+    login: Login
+    or: OR
+
+link:
+    forgot_password: 'Forgot password'
+
+profile:
+    edit:
+        submit: Update
+
+    show:
+        email: Email
+        username: Username
+
+registration:
+    back: 'Back to the originating page.'
+    check_email: "An email has been sent to %email%. It contains an activation link you must click to activate your account.\n"
+    confirmed: 'Congrats %username%, your account is now activated.'
+
+    email:
+        message: "Hello %username%!\n\nTo finish activating your account - please visit %confirmationUrl%\n\nThis link can only be used once to validate your account.\n\nRegards,\nthe Team.\n"
+        subject: 'Welcome %username%!'
+
+    go_to_main_page: 'Go to main page'
+    i_already_have_a_membership: 'Already have a membership'
+    login: Login
+    message: Message
+    register: Register
+    register_new_membership: Registration
+
+resetting:
+    check_email: "An email has been sent. It contains a link you must click to reset your password.\nNote: You can only request a new password once within %tokenLifetime% hours.\n\nIf you don't get an email check your spam folder or try again.\n"
+
+    email:
+        message: "Hello %username%!\n\nTo reset your password - please visit %confirmationUrl%\n\nRegards,\nthe Team.\n"
+        subject: 'Reset Password'
+
+    request:
+        submit: Submit
+        username: Username
+
+    reset:
+        submit: Submit
+        user_not_found: 'User %username% not found'
+
+security:
+    login:
+        password: Password
+        register_new_membership: Registration
+        remember_me: 'Remember me'
+        sign_in: 'Sign In'
+        sign_in_to_start_your_session: 'Sign in to start your session'
+        username: Username
+
+    sign_in_using_facebook: Sign in using facebook
+    sign_in_using_google: Sign in using google

@@ -1,49 +1,49 @@
 ---
--   name: 'Default config: clean config.yml'
-    lineinfile:
-        dest: "{{ project_web_path }}/app/config/config.yml"
-        regexp: ' \t*{{ item }}'
-        state: absent
-    with_items: '{{ parameters_clean }}'
-
--   name: 'Default config: config.yml data set'
-    lineinfile:
-        dest: "{{ project_web_path }}/app/config/config.yml"
-        regexp: ' \t*{{ item.name }}'
-        line: "{{ item.value }}"
-        insertafter: '{{ item.after }}'
-        state: present
-    with_items: '{{ config_data_set }}'
-
--   name: 'Default config: clean parameters.yml'
-    lineinfile:
-        dest: "{{ project_web_path }}/app/config/parameters.yml"
-        regexp: ' \t*{{ item }}:'
-        state: absent
-    with_items: '{{ parameters_clean }}'
-
--   name: 'Default config: parameters.yml data set'
-    lineinfile:
-        dest: "{{ project_web_path }}/app/config/parameters.yml"
-        regexp: ' \t*{{ item.name }}:'
-        line: "    {{ item.name }}: {{ item.value }}"
-        state: present
-    with_items: '{{ parameters_data_set }}'
-
--   name: 'Default config: clean parameters.yml.dist'
-    lineinfile:
-        dest: "{{ project_web_path }}/app/config/parameters.yml.dist"
-        regexp: ' \t*{{ item }}:'
-        state: absent
-    with_items: '{{ parameters_clean }}'
-
--   name: 'Default config: parameters.yml.dist data set'
-    lineinfile:
-        dest: "{{ project_web_path }}/app/config/parameters.yml.dist"
-        regexp: ' \t*{{ item.name }}:'
-        line: "    {{ item.name }}: {{ item.value }}"
-        state: present
-    with_items: '{{ parameters_data_set }}'
+#-   name: 'Default config: clean config.yml'
+#    lineinfile:
+#        dest: "{{ project_web_path }}/app/config/config.yml"
+#        regexp: ' \t*{{ item }}'
+#        state: absent
+#    with_items: '{{ parameters_clean }}'
+#
+#-   name: 'Default config: config.yml data set'
+#    lineinfile:
+#        dest: "{{ project_web_path }}/app/config/config.yml"
+#        regexp: ' \t*{{ item.name }}'
+#        line: "{{ item.value }}"
+#        insertafter: '{{ item.after }}'
+#        state: present
+#    with_items: '{{ config_data_set }}'
+#
+#-   name: 'Default config: clean parameters.yml'
+#    lineinfile:
+#        dest: "{{ project_web_path }}/app/config/parameters.yml"
+#        regexp: ' \t*{{ item }}:'
+#        state: absent
+#    with_items: '{{ parameters_clean }}'
+#
+#-   name: 'Default config: parameters.yml data set'
+#    lineinfile:
+#        dest: "{{ project_web_path }}/app/config/parameters.yml"
+#        regexp: ' \t*{{ item.name }}:'
+#        line: "    {{ item.name }}: {{ item.value }}"
+#        state: present
+#    with_items: '{{ parameters_data_set }}'
+#
+#-   name: 'Default config: clean parameters.yml.dist'
+#    lineinfile:
+#        dest: "{{ project_web_path }}/app/config/parameters.yml.dist"
+#        regexp: ' \t*{{ item }}:'
+#        state: absent
+#    with_items: '{{ parameters_clean }}'
+#
+#-   name: 'Default config: parameters.yml.dist data set'
+#    lineinfile:
+#        dest: "{{ project_web_path }}/app/config/parameters.yml.dist"
+#        regexp: ' \t*{{ item.name }}:'
+#        line: "    {{ item.name }}: {{ item.value }}"
+#        state: present
+#    with_items: '{{ parameters_data_set }}'
 #
 #-   name: 'Default config: Replace app_dev.php with default'
 #    template:
@@ -129,9 +129,34 @@
 #    become: true
 #    become_user: "{{ bash_username }}"
 #
--   name: 'Default config: fix .gitignore file'
+#-   name: 'Default config: fix .gitignore file'
+#    lineinfile:
+#        dest: '{{ project_web_path }}/.gitignore'
+#        regexp: '{{ item }}'
+#        line: '{{ item }}'
+#    with_items: '{{ gitignore}}'
+
+-   name: 'Default config: Require bundles using composer'
+    composer:
+        command: require
+        arguments: '{{ item }}'
+        working_dir: "{{ project_web_path }}"
+    with_items:
+        - 'jms/translation-bundle: ^1.3'
+        - 'jms/i18n-routing-bundle : dev-master'
+        - 'a2lix/translation-form-bundle: ^2.1'
+    become: true
+    become_user: "{{ bash_username }}"
+
+-   name: 'Default config: Enable bundles'
     lineinfile:
-        dest: '{{ project_web_path }}/.gitignore'
-        regexp: '{{ item }}'
-        line: '{{ item }}'
-    with_items: '{{ gitignore}}'
+        dest: "{{ project_web_path }}/app/AppKernel.php"
+        regexp: '\t*{{ item }}'
+        insertbefore: ' *\];'
+        line: '            {{ item }},'
+        state: present
+    with_items:
+        - 'new JMS\TranslationBundle\JMSTranslationBundle()'
+        - 'new A2lix\TranslationFormBundle\A2lixTranslationFormBundle()'
+        - 'new A2lix\I18nDoctrineBundle\A2lixI18nDoctrineBundle()'
+        - 'new JMS\I18nRoutingBundle\JMSI18nRoutingBundle()'
