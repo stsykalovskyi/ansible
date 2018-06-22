@@ -31,9 +31,10 @@
     vars:
         bundles:
             - default_config
+#            - localization
 #            - migrations
 #            - user
-#            - lte-admin
+            - lte-admin
 #            - oauth
 #            - api_doc
 #            - oauth-server
@@ -94,6 +95,8 @@
             - { name: "password: '%mailer.password%'" , value: "    password: '%mailer.password%'", after: '^swiftmailer:'}
             - { name: "transport: '%mailer.transport%'" , value: "    transport: '%mailer.transport%'", after: '^swiftmailer:'}
             - { name: "host: '%mailer.host%'" , value: "    host: '%mailer.host%'", after: '^swiftmailer:'}
+            - { name: "project_name: '%project.name%'" , value: "        project_name: '%project.name%'", after: '\t*globals:'}
+            - { name: "project_hostname: '%project.hostname%'" , value: "        project_hostname: '%project.hostname%'", after: '\t*globals:'}
 
         parameters_data_set:
             - { name: database.password, value: '{{ project_name }}_stage' }
@@ -108,6 +111,8 @@
             - { name: mailer.host, value: localhost }
             - { name: elasticsearch.host, value: es.local }
             - { name: elasticsearch.port, value: 9200 }
+            - { name: project.hostname, value: '{{ project_host }}.local' }
+            - { name: project.name, value: '{{ project_name|title }}' }
         gitignore:
             - tests/_output/*
             - .idea

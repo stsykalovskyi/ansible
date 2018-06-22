@@ -1,221 +1,221 @@
 ---
-#-   name: 'FOSUserBundle: Remove translator record from config.yml'
-#    lineinfile:
-#        dest: "{{ project_web_path }}/app/config/config.yml"
-#        regexp: ' *#translator: '
-#        state: absent
-#
-#-   name: 'FOSUserBundle: Enable translator in config'
-#    lineinfile:
-#        dest: "{{ project_web_path }}/app/config/config.yml"
-#        regexp: ' *translator: '
-#        line: '    translator: ~'
-#        insertafter: 'framework:'
-#
-#-   name: 'FOSUserBundle: Check that the user Bundle installed'
-#    stat:
-#        path: "{{ project_web_path }}/vendor/friendsofsymfony/user-bundle"
-#    register: stat_result
-#
-#-   name: 'FOSUserBundle: Download using composer'
-#    composer:
-#            command: require
-#            arguments: friendsofsymfony/user-bundle
-#            working_dir: "{{ project_web_path }}"
-#    become: true
-#    become_user: "{{ bash_username }}"
-#    when: stat_result.stat.exists == False
-#
-#-   name: 'FOSUserBundle: Enable bundle'
-#    lineinfile:
-#        dest: "{{ project_web_path }}/app/AppKernel.php"
-#        regexp: 'FOSUserBundle()'
-#        insertbefore: ' *\];'
-#        line: '            new FOS\UserBundle\FOSUserBundle(),'
-#        state: present
-#
-#-   name: 'FOSUserBundle: add "encoders:" to security.yml'
-#    lineinfile:
-#        dest: "{{ project_web_path }}/app/config/security.yml"
-#        regexp: ' \t*encoders:'
-#        insertafter: '^security:'
-#        line: "    encoders:"
-#        state: present
-#
-#-   name: 'FOSUserBundle: add security encoder'
-#    lineinfile:
-#        dest: "{{ project_web_path }}/app/config/security.yml"
-#        regexp: 'UserInterface: bcrypt'
-#        insertafter: ' *encoders:'
-#        line: '        FOS\UserBundle\Model\UserInterface: bcrypt'
-#        state: present
-#
-#-   name: 'FOSUserBundle: add roles_hierarchy to security.yml'
-#    lineinfile:
-#        dest: "{{ project_web_path }}/app/config/security.yml"
-#        regexp: ' \t*role_hierarchy:'
-#        insertafter: '^security:'
-#        line: "    role_hierarchy:"
-#        state: present
-#
-#-   name: 'FOSUserBundle: add security roles hierarchy'
-#    lineinfile:
-#        dest: "{{ project_web_path }}/app/config/security.yml"
-#        regexp: ' *ROLE_{{ item.parent|upper }}: ROLE_{{ item.child|upper }}'
-#        insertafter: ' *role_hierarchy:'
-#        line: "        ROLE_{{ item.parent|upper }}: ROLE_{{ item.child|upper }}"
-#        state: present
-#    with_items: "{{ security_roles_hierarchy }}"
-#
-#-   name: 'FOSUserBundle: add security provider step1'
-#    lineinfile:
-#        dest: "{{ project_web_path }}/app/config/security.yml"
-#        regexp: ' *fos_userbundle:'
-#        insertafter: ' *providers:'
-#        line: '        fos_userbundle:'
-#        state: present
-#
-#-   name: 'FOSUserBundle: add security provider step2'
-#    lineinfile:
-#        dest: "{{ project_web_path }}/app/config/security.yml"
-#        regexp: ' *id: fos_user.user_provider.username_email'
-#        insertafter: ' *fos_userbundle:'
-#        line: '            id: fos_user.user_provider.username_email'
-#        state: present
-#
-#-   name: 'FOSUserBundle: add firewall'
-#    blockinfile:
-#        dest: "{{ project_web_path }}/app/config/security.yml"
-#        insertafter: '\t*main:'
-#        marker: '# fos userbundle {mark}'
-#        block: "            pattern: ^/
-#        \n            form_login:
-#        \n                provider: fos_userbundle
-#        \n                csrf_token_generator: security.csrf.token_manager
-#        \n                login_path: fos_user_security_login
-#        \n                check_path: fos_user_security_check
-#        \n            logout:       true
-#        \n            anonymous:    true"
-#        state: present
-#
-#-   name: 'Default config: Remove anonymous: ~ from security.yml'
-#    lineinfile:
-#        dest: "{{ project_web_path }}/app/config/security.yml"
-#        regexp: "\t*anonymous: ~"
-#        state: absent
-#
-#-   name: 'Default config: Add access_control to security.yml'
-#    lineinfile:
-#        dest: "{{ project_web_path }}/app/config/security.yml"
-#        regexp: "\t*access_control:"
-#        line: "    access_control:"
-#        state: present
-#
-#-   name: 'FOSUserBundle: add access control items'
-#    blockinfile:
-#        dest: "{{ project_web_path }}/app/config/security.yml"
-#        insertafter: ' *access_control:'
-#        marker: '# fos user access control {mark}'
-#        block: "        - { path: ^/register, role: IS_AUTHENTICATED_ANONYMOUSLY }
-#        \n        - { path: ^/login$, role: IS_AUTHENTICATED_ANONYMOUSLY }
-#        \n        - { path: ^/admin/, role: ROLE_ADMIN }
-#        \n        - { path: ^/resetting, role: IS_AUTHENTICATED_ANONYMOUSLY }
-#        "
-#        state: present
-#
-#-   name: 'FOSUserBundle: Create entity directory'
-#    file:
-#        path: "{{ project_web_path }}/src/{{ project_name|title }}/{{ core_bundle_name }}Bundle/Entity"
-#        state: directory
-#        mode: 0755
-#
-#-   name: 'FOSUserBundle: Create User entity class'
-#    template:
-#        src: user/User.php
-#        dest: "{{ project_web_path }}/src/{{ project_name|title }}/{{ core_bundle_name }}Bundle/Entity/User.php"
-#
-#-   name: 'FOSUserBundle: Create doctrine config directory'
-#    file:
-#        path: "{{ project_web_path }}/src/{{ project_name|title }}/{{ core_bundle_name }}Bundle/Resources/config/doctrine"
-#        state: directory
-#        mode: 0755
-#
-#-   name: 'FOSUserBundle: Create User.orm.yml'
-#    template:
-#        src: user/User.orm.yml
-#        dest: "{{ project_web_path }}/src/{{ project_name|title }}/{{ core_bundle_name }}Bundle/Resources/config/doctrine/User.orm.yml"
-#
-#-   name: 'FOSUserBundle: fix parameters.yml'
-#    lineinfile:
-#        dest: "{{ project_web_path }}/app/config/parameters.yml"
-#        regexp: ' \t*{{ item.name }}:'
-#        line: "    {{ item.name }}: {{ item.value }}"
-#        state: present
-#    with_items:
-#        - { name: mailer_user, value: default }
-#        - { name: mailer_password, value: default }
-#
-#-   name: 'FOSUserBundle: configure'
-#    blockinfile:
-#        dest: "{{ project_web_path }}/app/config/config.yml"
-#        marker: '# FOS User {mark}'
-#        content: "fos_user:
-#            \n    db_driver: orm
-#            \n    firewall_name: main
-#            \n    user_class: {{ namespace }}\\Entity\\User
-#            \n    from_email:
-#            \n        address: '%mailer.user%'
-#            \n        sender_name: '%mailer.user%'
-#            \n    service:
-#            \n        mailer: 'fos_user.mailer.noop'
-#            "
-#
-#-   name: 'FOSUserBundle: Create migrations directory'
-#    file:
-#        path: "{{ project_web_path }}/app/DoctrineMigrations"
-#        state: directory
-#        mode: 0755
-#
-#-   name: 'FOSUserBundle: Copy migrations file'
-#    template:
-#        src: migrations/Version20180213232013.php
-#        dest: "{{ project_web_path }}/app/DoctrineMigrations/Version20180213232013.php"
-#
-#-   name: 'FOSUserBundle: Check that the Bundle exists'
-#    stat:
-#        path: "{{ project_web_path }}/src/{{ project_name|title }}/UserBundle"
-#    register: stat_result
-#
-#-   name: 'FOSUserBundle: Generate bundle'
-#    shell: "{{ project_web_path }}/bin/console generate:bundle --namespace={{ project_name|title }}/UserBundle --dir=src --no-interaction --format yml --shared "
-#    when: stat_result.stat.exists == False
-#
-#-   name: 'FOSUserBundle: Enable bundle'
-#    lineinfile:
-#        dest: "{{ project_web_path }}/app/AppKernel.php"
-#        regexp: "{{ project_name|title }}UserBundle()"
-#        insertbefore: ' *\];'
-#        line: "            new {{ project_name|title }}\\UserBundle\\{{ project_name|title }}UserBundle(),"
-#        state: present
+-   name: 'FOSUserBundle: Remove translator record from config.yml'
+    lineinfile:
+        dest: "{{ project_web_path }}/app/config/config.yml"
+        regexp: ' *#translator: '
+        state: absent
 
-#-   name: 'FOSUserBundle: create routing file'
-#    file:
-#        state: directory
-#        path: "{{ project_web_path }}/src/{{ project_name|title }}/UserBundle/Resources/config/routing/"
-#        mode: 0755
-#
-#-   name: 'FOSUserBundle: create routing file'
-#    file:
-#        state: touch
-#        path: "{{ project_web_path }}/src/{{ project_name|title }}/UserBundle/Resources/config/routing.yml"
-#        mode: 0755
-#
-#-   name: 'FOSUserBundle: create security routing file'
-#    file:
-#        state: touch
-#        path: "{{ project_web_path }}/src/{{ project_name|title }}/UserBundle/Resources/config/routing/security.yml"
-#        mode: 0755
-#
+-   name: 'FOSUserBundle: Enable translator in config'
+    lineinfile:
+        dest: "{{ project_web_path }}/app/config/config.yml"
+        regexp: ' *translator: '
+        line: '    translator: ~'
+        insertafter: 'framework:'
+
+-   name: 'FOSUserBundle: Check that the user Bundle installed'
+    stat:
+        path: "{{ project_web_path }}/vendor/friendsofsymfony/user-bundle"
+    register: stat_result
+
+-   name: 'FOSUserBundle: Download using composer'
+    composer:
+            command: require
+            arguments: friendsofsymfony/user-bundle
+            working_dir: "{{ project_web_path }}"
+    become: true
+    become_user: "{{ bash_username }}"
+    when: stat_result.stat.exists == False
+
+-   name: 'FOSUserBundle: Enable bundle'
+    lineinfile:
+        dest: "{{ project_web_path }}/app/AppKernel.php"
+        regexp: 'FOSUserBundle()'
+        insertbefore: ' *\];'
+        line: '            new FOS\UserBundle\FOSUserBundle(),'
+        state: present
+
+-   name: 'FOSUserBundle: add "encoders:" to security.yml'
+    lineinfile:
+        dest: "{{ project_web_path }}/app/config/security.yml"
+        regexp: ' \t*encoders:'
+        insertafter: '^security:'
+        line: "    encoders:"
+        state: present
+
+-   name: 'FOSUserBundle: add security encoder'
+    lineinfile:
+        dest: "{{ project_web_path }}/app/config/security.yml"
+        regexp: 'UserInterface: bcrypt'
+        insertafter: ' *encoders:'
+        line: '        FOS\UserBundle\Model\UserInterface: bcrypt'
+        state: present
+
+-   name: 'FOSUserBundle: add roles_hierarchy to security.yml'
+    lineinfile:
+        dest: "{{ project_web_path }}/app/config/security.yml"
+        regexp: ' \t*role_hierarchy:'
+        insertafter: '^security:'
+        line: "    role_hierarchy:"
+        state: present
+
+-   name: 'FOSUserBundle: add security roles hierarchy'
+    lineinfile:
+        dest: "{{ project_web_path }}/app/config/security.yml"
+        regexp: ' *ROLE_{{ item.parent|upper }}: ROLE_{{ item.child|upper }}'
+        insertafter: ' *role_hierarchy:'
+        line: "        ROLE_{{ item.parent|upper }}: ROLE_{{ item.child|upper }}"
+        state: present
+    with_items: "{{ security_roles_hierarchy }}"
+
+-   name: 'FOSUserBundle: add security provider step1'
+    lineinfile:
+        dest: "{{ project_web_path }}/app/config/security.yml"
+        regexp: ' *fos_userbundle:'
+        insertafter: ' *providers:'
+        line: '        fos_userbundle:'
+        state: present
+
+-   name: 'FOSUserBundle: add security provider step2'
+    lineinfile:
+        dest: "{{ project_web_path }}/app/config/security.yml"
+        regexp: ' *id: fos_user.user_provider.username_email'
+        insertafter: ' *fos_userbundle:'
+        line: '            id: fos_user.user_provider.username_email'
+        state: present
+
+-   name: 'FOSUserBundle: add firewall'
+    blockinfile:
+        dest: "{{ project_web_path }}/app/config/security.yml"
+        insertafter: '\t*main:'
+        marker: '# fos userbundle {mark}'
+        block: "            pattern: ^/
+        \n            form_login:
+        \n                provider: fos_userbundle
+        \n                csrf_token_generator: security.csrf.token_manager
+        \n                login_path: fos_user_security_login
+        \n                check_path: fos_user_security_check
+        \n            logout:       true
+        \n            anonymous:    true"
+        state: present
+
+-   name: 'Default config: Remove anonymous: ~ from security.yml'
+    lineinfile:
+        dest: "{{ project_web_path }}/app/config/security.yml"
+        regexp: "\t*anonymous: ~"
+        state: absent
+
+-   name: 'Default config: Add access_control to security.yml'
+    lineinfile:
+        dest: "{{ project_web_path }}/app/config/security.yml"
+        regexp: "\t*access_control:"
+        line: "    access_control:"
+        state: present
+
+-   name: 'FOSUserBundle: add access control items'
+    blockinfile:
+        dest: "{{ project_web_path }}/app/config/security.yml"
+        insertafter: ' *access_control:'
+        marker: '# fos user access control {mark}'
+        block: "        - { path: ^/register, role: IS_AUTHENTICATED_ANONYMOUSLY }
+        \n        - { path: ^/login$, role: IS_AUTHENTICATED_ANONYMOUSLY }
+        \n        - { path: ^/admin/, role: ROLE_ADMIN }
+        \n        - { path: ^/resetting, role: IS_AUTHENTICATED_ANONYMOUSLY }
+        "
+        state: present
+
+-   name: 'FOSUserBundle: Create entity directory'
+    file:
+        path: "{{ project_web_path }}/src/{{ project_name|title }}/{{ core_bundle_name }}Bundle/Entity"
+        state: directory
+        mode: 0755
+
+-   name: 'FOSUserBundle: Create User entity class'
+    template:
+        src: user/User.php
+        dest: "{{ project_web_path }}/src/{{ project_name|title }}/{{ core_bundle_name }}Bundle/Entity/User.php"
+
+-   name: 'FOSUserBundle: Create doctrine config directory'
+    file:
+        path: "{{ project_web_path }}/src/{{ project_name|title }}/{{ core_bundle_name }}Bundle/Resources/config/doctrine"
+        state: directory
+        mode: 0755
+
+-   name: 'FOSUserBundle: Create User.orm.yml'
+    template:
+        src: user/User.orm.yml
+        dest: "{{ project_web_path }}/src/{{ project_name|title }}/{{ core_bundle_name }}Bundle/Resources/config/doctrine/User.orm.yml"
+
+-   name: 'FOSUserBundle: fix parameters.yml'
+    lineinfile:
+        dest: "{{ project_web_path }}/app/config/parameters.yml"
+        regexp: ' \t*{{ item.name }}:'
+        line: "    {{ item.name }}: {{ item.value }}"
+        state: present
+    with_items:
+        - { name: mailer_user, value: default }
+        - { name: mailer_password, value: default }
+
+-   name: 'FOSUserBundle: configure'
+    blockinfile:
+        dest: "{{ project_web_path }}/app/config/config.yml"
+        marker: '# FOS User {mark}'
+        content: "fos_user:
+            \n    db_driver: orm
+            \n    firewall_name: main
+            \n    user_class: {{ namespace }}\\Entity\\User
+            \n    from_email:
+            \n        address: '%mailer.user%'
+            \n        sender_name: '%mailer.user%'
+            \n    service:
+            \n        mailer: 'fos_user.mailer.noop'
+            "
+
+-   name: 'FOSUserBundle: Create migrations directory'
+    file:
+        path: "{{ project_web_path }}/app/DoctrineMigrations"
+        state: directory
+        mode: 0755
+
+-   name: 'FOSUserBundle: Copy migrations file'
+    template:
+        src: migrations/Version20180213232013.php
+        dest: "{{ project_web_path }}/app/DoctrineMigrations/Version20180213232013.php"
+
+-   name: 'FOSUserBundle: Check that the Bundle exists'
+    stat:
+        path: "{{ project_web_path }}/src/{{ project_name|title }}/UserBundle"
+    register: stat_result
+
+-   name: 'FOSUserBundle: Generate bundle'
+    shell: "{{ project_web_path }}/bin/console generate:bundle --namespace={{ project_name|title }}/UserBundle --dir=src --no-interaction --format yml --shared "
+    when: stat_result.stat.exists == False
+
+-   name: 'FOSUserBundle: Enable bundle'
+    lineinfile:
+        dest: "{{ project_web_path }}/app/AppKernel.php"
+        regexp: "{{ project_name|title }}UserBundle()"
+        insertbefore: ' *\];'
+        line: "            new {{ project_name|title }}\\UserBundle\\{{ project_name|title }}UserBundle(),"
+        state: present
+
+-   name: 'FOSUserBundle: create routing file'
+    file:
+        state: directory
+        path: "{{ project_web_path }}/src/{{ project_name|title }}/UserBundle/Resources/config/routing/"
+        mode: 0755
+
+-   name: 'FOSUserBundle: create routing file'
+    file:
+        state: touch
+        path: "{{ project_web_path }}/src/{{ project_name|title }}/UserBundle/Resources/config/routing.yml"
+        mode: 0755
+
+-   name: 'FOSUserBundle: create security routing file'
+    file:
+        state: touch
+        path: "{{ project_web_path }}/src/{{ project_name|title }}/UserBundle/Resources/config/routing/security.yml"
+        mode: 0755
+
 -   name: 'FOSUserBundle: paste security routing content'
     blockinfile:
         dest: "{{ project_web_path }}/src/{{ project_name|title }}/UserBundle/Resources/config/routing/security.yml"
@@ -234,29 +234,29 @@
         \n    path: /logout
         \n    methods: [GET, POST]
         \n    defaults: { _controller: fos_user.security.controller:logoutAction }"
-#
-#-   name: 'FOSUserBundle: import routing files'
-#    blockinfile:
-#        dest: "{{ project_web_path }}/src/{{ project_name|title }}/UserBundle/Resources/config/routing.yml"
-#        marker: '# FOS User {mark}'
-#        content: "fos_user_security:
-#        \n    resource: \"@{{ project_name|title }}UserBundle/Resources/config/routing/security.yml\"
-#        \n
-#        \nfos_user_profile:
-#        \n    resource: \"@FOSUserBundle/Resources/config/routing/profile.xml\"
-#        \n    prefix: /profile
-#        \n
-#        \nfos_user_register:
-#        \n    resource: \"@FOSUserBundle/Resources/config/routing/registration.xml\"
-#        \n    prefix: /register
-#        \n
-#        \nfos_user_resetting:
-#        \n    resource: \"@FOSUserBundle/Resources/config/routing/resetting.xml\"
-#        \n    prefix: /resetting
-#        \n
-#        \nfos_user_change_password:
-#        \n    resource: \"@FOSUserBundle/Resources/config/routing/change_password.xml\"
-#        \n    prefix: /profile"
+
+-   name: 'FOSUserBundle: import routing files'
+    blockinfile:
+        dest: "{{ project_web_path }}/src/{{ project_name|title }}/UserBundle/Resources/config/routing.yml"
+        marker: '# FOS User {mark}'
+        content: "fos_user_security:
+        \n    resource: \"@{{ project_name|title }}UserBundle/Resources/config/routing/security.yml\"
+        \n
+        \nfos_user_profile:
+        \n    resource: \"@FOSUserBundle/Resources/config/routing/profile.xml\"
+        \n    prefix: /profile
+        \n
+        \nfos_user_register:
+        \n    resource: \"@FOSUserBundle/Resources/config/routing/registration.xml\"
+        \n    prefix: /register
+        \n
+        \nfos_user_resetting:
+        \n    resource: \"@FOSUserBundle/Resources/config/routing/resetting.xml\"
+        \n    prefix: /resetting
+        \n
+        \nfos_user_change_password:
+        \n    resource: \"@FOSUserBundle/Resources/config/routing/change_password.xml\"
+        \n    prefix: /profile"
 
 -   name: 'FOSUserBundle: create translations file'
     file:
@@ -276,32 +276,32 @@
     with_items:
         - { filePrefix: login, path: Security }
         - { filePrefix: login_content, path: Security }
-#
-#-   name: 'FOSUserBundle: enable UserBundle routing'
-#    blockinfile:
-#        dest: "{{ project_web_path }}/app/config/routing.yml"
-#        marker: '# FOS User {mark}'
-#        content: "fos_user:
-#        \n    resource: \"@{{ project_name|title }}UserBundle/Resources/config/routing.yml\"
-#        \n    prefix:   /"
 
-#-   name: 'FOSUserBundle: Composer dump autoload'
-#    shell: "cd {{ project_web_path }};
-#            composer dump-autoload -o"
-#    become: true
-#    become_user: "{{ bash_username }}"
+-   name: 'FOSUserBundle: enable UserBundle routing'
+    blockinfile:
+        dest: "{{ project_web_path }}/app/config/routing.yml"
+        marker: '# FOS User {mark}'
+        content: "fos_user:
+        \n    resource: \"@{{ project_name|title }}UserBundle/Resources/config/routing.yml\"
+        \n    prefix:   /"
 
-#-   name: 'FOSUserBundle: Copy FOSUserBundle class'
-#    template:
-#        src: user/FOSUserBundle.php
-#        dest: "{{ project_web_path }}/src/{{ project_name|title }}/UserBundle/{{ project_name|title }}UserBundle.php"
+-   name: 'FOSUserBundle: Composer dump autoload'
+    shell: "cd {{ project_web_path }};
+            composer dump-autoload -o"
+    become: true
+    become_user: "{{ bash_username }}"
 
-#-   name: 'FOSUserBundle: Copy view templates'
-#    shell: "cp -anr {{ project_web_path }}/vendor/friendsofsymfony/user-bundle/Resources/views/{{ item }} {{ project_web_path }}/src/{{ project_name|title }}/UserBundle/Resources/views/{{ item }}"
-#    with_items:
-#        - 'ChangePassword'
-#        - 'Group'
-#        - 'Profile'
-#        - 'Registration'
-#        - 'Resetting'
-#        - 'Security'
+-   name: 'FOSUserBundle: Copy FOSUserBundle class'
+    template:
+        src: user/FOSUserBundle.php
+        dest: "{{ project_web_path }}/src/{{ project_name|title }}/UserBundle/{{ project_name|title }}UserBundle.php"
+
+-   name: 'FOSUserBundle: Copy view templates'
+    shell: "cp -anr {{ project_web_path }}/vendor/friendsofsymfony/user-bundle/Resources/views/{{ item }} {{ project_web_path }}/src/{{ project_name|title }}/UserBundle/Resources/views/{{ item }}"
+    with_items:
+        - 'ChangePassword'
+        - 'Group'
+        - 'Profile'
+        - 'Registration'
+        - 'Resetting'
+        - 'Security'

@@ -25,3 +25,8 @@ security_access_control:
 parameters_clean: []
 
 gitignore: []
+
+parameters:
+    locales:
+        - { name: 'locale', value: 'en' }
+        - { name: 'locales', value: "['%locale%', ru, uk]" }

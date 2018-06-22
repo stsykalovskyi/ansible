@@ -38,7 +38,7 @@ class AdminMenuItemsListener
         $items = new MenuItemModel(
             'homepage',
             'Site home page',
-            '{{ project_name }}.{{ core_bundle_name|lower }}_bundle.homepage',
+            '{{ project_name }}_{{ core_bundle_name|lower }}_homepage',
             [],
             'fa fa-home'
         );

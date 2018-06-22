@@ -6,9 +6,9 @@
 
 -   name: 'OAuth: Download transliterator bundle using composer'
     composer:
-            command: require
-            arguments: behat/transliterator
-            working_dir: "{{ project_web_path }}"
+        command: require
+        arguments: behat/transliterator
+        working_dir: "{{ project_web_path }}"
     become: true
     become_user: "{{ bash_username }}"
     when: stat_result.stat.exists == False
@@ -54,20 +54,20 @@
         content: "hwi_oauth_redirect:
         \n    resource: \"@HWIOAuthBundle/Resources/config/routing/redirect.xml\"
         \n    prefix:   /connect
+        \n    options: { i18n: false }
         \n
         \nhwi_oauth_connect:
         \n    resource: \"@HWIOAuthBundle/Resources/config/routing/connect.xml\"
         \n    prefix:   /connect
-        \n
-        \nhwi_oauth_login:
-        \n    resource: \"@HWIOAuthBundle/Resources/config/routing/login.xml\"
-        \n    prefix:   /login
+        \n    options: { i18n: false }
         \n
         \nfacebook_login:
         \n    path: /login/check-facebook
+        \n    options: { i18n: false }
         \n
         \ngoogle_login:
-        \n    path: /login/check-google"
+        \n    path: /login/check-google
+        \n    options: { i18n: false }"
 
 -   name: 'OAuth: add configurations'
     blockinfile:

@@ -1,0 +1,117 @@
+---
+-   name: 'Localization: parameters.yml.dist data set'
+    lineinfile:
+        dest: "{{ project_web_path }}/app/config/parameters.yml.dist"
+        regexp: ' \t*{{ item.name }}:'
+        line: "    {{ item.name }}: {{ item.value }}"
+        state: present
+    with_items: '{{ parameters.locales }}'
+
+-   name: 'Localization: parameters.yml data set'
+    lineinfile:
+        dest: "{{ project_web_path }}/app/config/parameters.yml"
+        regexp: ' \t*{{ item.name }}:'
+        line: "    {{ item.name }}: {{ item.value }}"
+        state: present
+    with_items: '{{ parameters.locales }}'
+
+-   name: 'Localization: Require bundles using composer'
+    composer:
+        command: require
+        arguments: '{{ item }}'
+        working_dir: "{{ project_web_path }}"
+    with_items:
+        - 'jms/translation-bundle ^1.3'
+        - 'jms/i18n-routing-bundle 2.0.4'
+        - 'a2lix/translation-form-bundle ^2.1'
+        - 'stof/doctrine-extensions-bundle ^1.2'
+        - 'a2lix/i18n-doctrine-bundle ^0.1.0'
+    become: true
+    become_user: "{{ bash_username }}"
+
+-   name: 'Localization: Enable bundles'
+    lineinfile:
+        dest: "{{ project_web_path }}/app/AppKernel.php"
+        regexp: "{{ item.name }}"
+        insertbefore: ' *\];'
+        line: '            new {{ item.namespace }}(),'
+        state: present
+    with_items:
+        - {name: 'JMSTranslationBundle', namespace: 'JMS\TranslationBundle\JMSTranslationBundle'}
+        - {name: 'A2lixTranslationFormBundle', namespace: 'A2lix\TranslationFormBundle\A2lixTranslationFormBundle'}
+        - {name: 'A2lixI18nDoctrineBundle', namespace: 'A2lix\I18nDoctrineBundle\A2lixI18nDoctrineBundle'}
+        - {name: 'JMSI18nRoutingBundle', namespace: 'JMS\I18nRoutingBundle\JMSI18nRoutingBundle'}
+        - {name: 'StofDoctrineExtensionsBundle', namespace: 'Stof\DoctrineExtensionsBundle\StofDoctrineExtensionsBundle'}
+        - {name: 'A2lixI18nDoctrineBundle', namespace: 'A2lix\I18nDoctrineBundle\A2lixI18nDoctrineBundle'}
+
+-   name: 'Localization: configure'
+    blockinfile:
+        dest: "{{ project_web_path }}/app/config/config.yml"
+        marker: '# Localization {mark}'
+        content: "jms_translation:
+            \n    configs:
+            \n        app:
+            \n            dirs: ['%kernel.root_dir%', '%kernel.root_dir%/../src']
+            \n            output_dir: '%kernel.root_dir%/Resources/translations'
+            \n            ignored_domains: [routes]
+            \n            excluded_names: ['*TestCase.php', '*Test.php']
+            \n            excluded_dirs: [cache, data, logs]
+            \n
+            \njms_i18n_routing:
+            \n    default_locale: '%locale%'
+            \n    locales: '%locales%'
+            \n    strategy: prefix
+            \n    strategy: prefix_except_default
+            \n
+            \nstof_doctrine_extensions:
+            \n    default_locale: '%locale%'
+            \n    orm:
+            \n        default:
+            \n            translatable: true
+            \n
+            \na2lix_translation_form:
+            \n    locale_provider: default
+            \n    locales: '%locales%'
+            \n    default_locale: '%locale%'
+            \n    templating: '{{ project_name|title }}AdminBundle::form-template.html.twig'
+            \n
+            \na2lix_i18n_doctrine:
+            \n    manager_registry: doctrine"
+
+
+-   name: 'Localization: add form-template view'
+    template:
+        src: 'localization/form-template.html.twig'
+        dest: "{{ project_web_path }}/src/{{ project_name|title }}/AdminBundle/Resources/views/form-template.html.twig"
+
+-   name: 'Localization: config.yml data set'
+    lineinfile:
+        dest: "{{ project_web_path }}/app/config/config.yml"
+        regexp: '\t*.*{{ item }}'
+        line: "        #{{ item }}"
+        state: present
+    with_items:
+        - 'naming_strategy: doctrine.orm.naming_strategy.underscore'
+        - 'auto_mapping: true'
+
+-   name: 'Localization: doctrine configuration'
+    blockinfile:
+        dest: "{{ project_web_path }}/app/config/config.yml"
+        marker: '# Localization doctrine {mark}'
+        insertafter: "\t*#auto_mapping: true"
+        content: "        entity_managers:
+              \n            default:
+              \n                naming_strategy: doctrine.orm.naming_strategy.underscore
+              \n                auto_mapping: true
+              \n                mappings:
+              \n                    gedmo_translatable:
+              \n                        type: annotation
+              \n                        prefix: {{ project_name|title }}\\{{ core_bundle_name }}Bundle\\Entity
+              \n                        dir: '%kernel.root_dir%/../vendor/gedmo/doctrine-extensions/lib/Gedmo/Translatable/Entity'
+              \n                        alias: GedmoTranslatable # (optional) it will default to the name set for the mapping
+              \n                        is_bundle: false
+              \n                filters:
+              \n                    oneLocale:
+              \n                        class: A2lix\\I18nDoctrineBundle\\Doctrine\\ORM\\Filter\\OneLocaleFilter
+              \n                        enabled: true"
+
