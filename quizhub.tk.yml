@@ -30,17 +30,14 @@
 #            run_once: true;
     vars:
         bundles:
-            - default_config
+#            - default_config
 #            - localization
 #            - migrations
-#            - user
-            - lte-admin
+            - user
+#            - lte-admin
 #            - oauth
 #            - api_doc
 #            - oauth-server
-        projects:
-            -   name: stlhub.tk
-                host: stlhub.tk
         ansible_private_key_file: /drives/drive0/vagrant/machines/projects/.vagrant/machines/default/virtualbox/private_key
         postgres_version: 9.4.11
         bash_username: vagrant
@@ -56,6 +53,7 @@
         project_name: quizhub
         project_host: quizhub.tk
         projects_web_path: /var/www/projects
+        project_database: quizhub_tk
         project_web_path: "{{ projects_web_path }}/{{ project_host }}"
         core_bundle_name: Core
         core_bundle_full_name: "{{ project_name|title }}{{ core_bundle_name }}Bundle"
@@ -102,7 +100,7 @@
             - { name: database.password, value: '{{ project_name }}_stage' }
             - { name: database.user, value: '{{ project_name }}_stage' }
             - { name: database.driver, value: 'pdo_pgsql' }
-            - { name: database.name, value: '{{ project_host }}' }
+            - { name: database.name, value: '{{ project_database }}' }
             - { name: database.port, value: 6432 }
             - { name: database.host, value: 'pg.local' }
             - { name: mailer.transport, value: smtp }
