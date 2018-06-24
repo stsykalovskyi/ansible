@@ -106,75 +106,75 @@
 #
 #-   name: 'Default config: Add access_control to security.yml'
 #    lineinfile:
-        dest: "{{ project_web_path }}/app/config/security.yml"
-        regexp: "\t*access_control:"
-        line: "    access_control:"
-        state: present
-
--   name: 'FOSUserBundle: add access control items'
-    blockinfile:
-        dest: "{{ project_web_path }}/app/config/security.yml"
-        insertafter: ' *access_control:'
-        marker: '# fos user access control {mark}'
-        block: "        - { path: ^/register, role: IS_AUTHENTICATED_ANONYMOUSLY }
-        \n        - { path: ^/login$, role: IS_AUTHENTICATED_ANONYMOUSLY }
-        \n        - { path: ^/admin/, role: ROLE_ADMIN }
-        \n        - { path: ^/resetting, role: IS_AUTHENTICATED_ANONYMOUSLY }
-        "
-        state: present
-
--   name: 'FOSUserBundle: Create entity directory'
-    file:
-        path: "{{ project_web_path }}/src/{{ project_name|title }}/{{ core_bundle_name }}Bundle/Entity"
-        state: directory
-        mode: 0755
-
--   name: 'FOSUserBundle: Create User entity class'
-    template:
-        src: user/User.php
-        dest: "{{ project_web_path }}/src/{{ project_name|title }}/{{ core_bundle_name }}Bundle/Entity/User.php"
-
--   name: 'FOSUserBundle: Create doctrine config directory'
-    file:
-        path: "{{ project_web_path }}/src/{{ project_name|title }}/{{ core_bundle_name }}Bundle/Resources/config/doctrine"
-        state: directory
-        mode: 0755
-
--   name: 'FOSUserBundle: Create User.orm.yml'
-    template:
-        src: user/User.orm.yml
-        dest: "{{ project_web_path }}/src/{{ project_name|title }}/{{ core_bundle_name }}Bundle/Resources/config/doctrine/User.orm.yml"
-
--   name: 'FOSUserBundle: fix parameters.yml'
-    lineinfile:
-        dest: "{{ project_web_path }}/app/config/parameters.yml"
-        regexp: ' \t*{{ item.name }}:'
-        line: "    {{ item.name }}: {{ item.value }}"
-        state: present
-    with_items:
-        - { name: mailer_user, value: default }
-        - { name: mailer_password, value: default }
-
--   name: 'FOSUserBundle: configure'
-    blockinfile:
-        dest: "{{ project_web_path }}/app/config/config.yml"
-        marker: '# FOS User {mark}'
-        content: "fos_user:
-            \n    db_driver: orm
-            \n    firewall_name: main
-            \n    user_class: {{ namespace }}\\Entity\\User
-            \n    from_email:
-            \n        address: '%mailer.user%'
-            \n        sender_name: '%mailer.user%'
-            \n    service:
-            \n        mailer: 'fos_user.mailer.noop'
-            "
-
--   name: 'FOSUserBundle: Create migrations directory'
-    file:
-        path: "{{ project_web_path }}/app/DoctrineMigrations"
-        state: directory
-        mode: 0755
+#        dest: "{{ project_web_path }}/app/config/security.yml"
+#        regexp: "\t*access_control:"
+#        line: "    access_control:"
+#        state: present
+#
+#-   name: 'FOSUserBundle: add access control items'
+#    blockinfile:
+#        dest: "{{ project_web_path }}/app/config/security.yml"
+#        insertafter: ' *access_control:'
+#        marker: '# fos user access control {mark}'
+#        block: "        - { path: ^/register, role: IS_AUTHENTICATED_ANONYMOUSLY }
+#        \n        - { path: ^/login$, role: IS_AUTHENTICATED_ANONYMOUSLY }
+#        \n        - { path: ^/admin/, role: ROLE_ADMIN }
+#        \n        - { path: ^/resetting, role: IS_AUTHENTICATED_ANONYMOUSLY }
+#        "
+#        state: present
+#
+#-   name: 'FOSUserBundle: Create entity directory'
+#    file:
+#        path: "{{ project_web_path }}/src/{{ project_name|title }}/{{ core_bundle_name }}Bundle/Entity"
+#        state: directory
+#        mode: 0755
+#
+#-   name: 'FOSUserBundle: Create User entity class'
+#    template:
+#        src: user/User.php
+#        dest: "{{ project_web_path }}/src/{{ project_name|title }}/{{ core_bundle_name }}Bundle/Entity/User.php"
+#
+#-   name: 'FOSUserBundle: Create doctrine config directory'
+#    file:
+#        path: "{{ project_web_path }}/src/{{ project_name|title }}/{{ core_bundle_name }}Bundle/Resources/config/doctrine"
+#        state: directory
+#        mode: 0755
+#
+#-   name: 'FOSUserBundle: Create User.orm.yml'
+#    template:
+#        src: user/User.orm.yml
+#        dest: "{{ project_web_path }}/src/{{ project_name|title }}/{{ core_bundle_name }}Bundle/Resources/config/doctrine/User.orm.yml"
+#
+#-   name: 'FOSUserBundle: fix parameters.yml'
+#    lineinfile:
+#        dest: "{{ project_web_path }}/app/config/parameters.yml"
+#        regexp: ' \t*{{ item.name }}:'
+#        line: "    {{ item.name }}: {{ item.value }}"
+#        state: present
+#    with_items:
+#        - { name: mailer_user, value: default }
+#        - { name: mailer_password, value: default }
+#
+#-   name: 'FOSUserBundle: configure'
+#    blockinfile:
+#        dest: "{{ project_web_path }}/app/config/config.yml"
+#        marker: '# FOS User {mark}'
+#        content: "fos_user:
+#            \n    db_driver: orm
+#            \n    firewall_name: main
+#            \n    user_class: {{ namespace }}\\Entity\\User
+#            \n    from_email:
+#            \n        address: '%mailer.user%'
+#            \n        sender_name: '%mailer.user%'
+#            \n    service:
+#            \n        mailer: 'fos_user.mailer.noop'
+#            "
+#
+#-   name: 'FOSUserBundle: Create migrations directory'
+#    file:
+#        path: "{{ project_web_path }}/app/DoctrineMigrations"
+#        state: directory
+#        mode: 0755
 
 -   name: 'FOSUserBundle: Copy migrations file'
     template:

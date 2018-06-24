@@ -53,7 +53,8 @@
         project_name: quizhub
         project_host: quizhub.tk
         projects_web_path: /var/www/projects
-        project_database: quizhub_tk
+        database:
+            schema: '{{ project_name }}'
         project_web_path: "{{ projects_web_path }}/{{ project_host }}"
         core_bundle_name: Core
         core_bundle_full_name: "{{ project_name|title }}{{ core_bundle_name }}Bundle"
