@@ -93,7 +93,10 @@
 
         <!-- Main content -->
         <section class="content">
-            {% block page_content %}{% endblock %}
+            <div class="panel panel-primary">
+                <div class="panel-heading">{% block page_heading %}{% endblock %}</div>
+                <div class="panel-body">{% block page_content %}{% endblock %}</div>
+            </div>
         </section>
         <!-- /.content -->
     </div>
