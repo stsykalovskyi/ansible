@@ -6,6 +6,7 @@ use Avanzu\AdminThemeBundle\Event\SidebarMenuEvent;
 use Symfony\Component\Security\Core\Authorization\AuthorizationChecker;
 use {{ project_name|title }}\AdminBundle\Model\MenuItemModel;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Translation\TranslatorInterface;
 
 /**
  * Class AdminMenuItemsListener
@@ -15,10 +16,12 @@ class AdminMenuItemsListener
 {
     /** @var  AuthorizationChecker */
     private $authChecker;
+    private $translator;
 
-    public function __construct(AuthorizationChecker $authorizationChecker)
+    public function __construct(AuthorizationChecker $authorizationChecker, TranslatorInterface $translator)
     {
         $this->authChecker = $authorizationChecker;
+        $this->translator = $translator;
     }
 
     public function onSetupMenu(SidebarMenuEvent $event)

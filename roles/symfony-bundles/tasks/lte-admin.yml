@@ -1,107 +1,128 @@
 ---
--   name: 'LTE Admin: Check that the Bundle installed'
-    stat:
-        path: "{{ project_web_path }}/vendor/avanzu/admin-theme-bundle"
-    register: stat_result
+#-   name: 'LTE Admin: Check that the Bundle installed'
+#    stat:
+#        path: "{{ project_web_path }}/vendor/avanzu/admin-theme-bundle"
+#    register: stat_result
+#
+#-   name: 'LTE Admin: Download using composer'
+#    composer:
+#            command: require
+#            arguments: avanzu/admin-theme-bundle
+#            working_dir: "{{ project_web_path }}"
+#    become: true
+#    become_user: "{{ bash_username }}"
+#    when: stat_result.stat.exists == False
+#
+#-   name: 'LTE Admin: Enable bundle'
+#    lineinfile:
+#        dest: "{{ project_web_path }}/app/AppKernel.php"
+#        regexp: 'AvanzuAdminThemeBundle()'
+#        insertbefore: ' *\];'
+#        line: '            new Avanzu\AdminThemeBundle\AvanzuAdminThemeBundle(),'
+#        state: present
+#
+#-   name: 'LTE Admin: Check that the Bundle exists'
+#    stat:
+#        path: "{{ project_web_path }}/src/{{ project_name|title }}/AdminBundle"
+#    register: stat_result
+#
+#-   name: 'LTE Admin: Generate bundle'
+#    shell: "{{ project_web_path }}/bin/console generate:bundle --namespace={{ project_name|title }}/AdminBundle --dir=src --no-interaction --format yml --shared "
+#    when: stat_result.stat.exists == False
+#
+#-   name: 'LTE Admin: Composer dump autoload'
+#    shell: "cd {{ project_web_path }};
+#            composer dump-autoload -o"
+#    become: true
+#    become_user: "{{ bash_username }}"
+#
+#-   name: 'LTE Admin: Enable bundle'
+#    lineinfile:
+#        dest: "{{ project_web_path }}/app/AppKernel.php"
+#        regexp: '{{ project_name|title }}AdminBundle()'
+#        insertbefore: ' *\];'
+#        line: '            new {{ project_name|title }}\AdminBundle\{{ project_name|title }}AdminBundle(),'
+#        state: present
+#
+#-   name: 'LTE Admin: add parameters.yml.dist records'
+#    lineinfile:
+#        dest: "{{ project_web_path }}/app/config/parameters.yml.dist"
+#        regexp: 'admin_bundle.menu_listener.class'
+#        line: "    admin_bundle.menu_listener.class: {{ project_name|title }}\\AdminBundle\\Services\\AdminMenuItemsListener"
+#        state: present
+#
+#-   name: 'LTE Admin: add parameters.yml records'
+#    lineinfile:
+#        regexp: 'admin_bundle.menu_listener.class'
+#        dest: "{{ project_web_path }}/app/config/parameters.yml"
+#        line: "    admin_bundle.menu_listener.class: {{ project_name|title }}\\AdminBundle\\Services\\AdminMenuItemsListener"
+#        state: present
 
--   name: 'LTE Admin: Download using composer'
-    composer:
-            command: require
-            arguments: avanzu/admin-theme-bundle
-            working_dir: "{{ project_web_path }}"
-    become: true
-    become_user: "{{ bash_username }}"
-    when: stat_result.stat.exists == False
-
--   name: 'LTE Admin: Enable bundle'
-    lineinfile:
-        dest: "{{ project_web_path }}/app/AppKernel.php"
-        regexp: 'AvanzuAdminThemeBundle()'
-        insertbefore: ' *\];'
-        line: '            new Avanzu\AdminThemeBundle\AvanzuAdminThemeBundle(),'
-        state: present
-
--   name: 'LTE Admin: Check that the Bundle exists'
-    stat:
-        path: "{{ project_web_path }}/src/{{ project_name|title }}/AdminBundle"
-    register: stat_result
-
--   name: 'LTE Admin: Generate bundle'
-    shell: "{{ project_web_path }}/bin/console generate:bundle --namespace={{ project_name|title }}/AdminBundle --dir=src --no-interaction --format yml --shared "
-    when: stat_result.stat.exists == False
-
--   name: 'LTE Admin: Composer dump autoload'
-    shell: "cd {{ project_web_path }};
-            composer dump-autoload -o"
-    become: true
-    become_user: "{{ bash_username }}"
-
--   name: 'LTE Admin: Enable bundle'
-    lineinfile:
-        dest: "{{ project_web_path }}/app/AppKernel.php"
-        regexp: '{{ project_name|title }}AdminBundle()'
-        insertbefore: ' *\];'
-        line: '            new {{ project_name|title }}\AdminBundle\{{ project_name|title }}AdminBundle(),'
-        state: present
-
--   name: 'LTE Admin: add parameters.yml.dist records'
-    lineinfile:
-        dest: "{{ project_web_path }}/app/config/parameters.yml.dist"
-        regexp: 'admin_bundle.menu_listener.class'
-        line: "    admin_bundle.menu_listener.class: {{ project_name|title }}\\AdminBundle\\Services\\AdminMenuItemsListener"
-        state: present
-
--   name: 'LTE Admin: add parameters.yml records'
-    lineinfile:
-        regexp: 'admin_bundle.menu_listener.class'
-        dest: "{{ project_web_path }}/app/config/parameters.yml"
-        line: "    admin_bundle.menu_listener.class: {{ project_name|title }}\\AdminBundle\\Services\\AdminMenuItemsListener"
-        state: present
-
--   name: 'LTE Admin: Replace services.yml'
-    template:
-        src: "lte-admin/services.yml"
+-   name: 'LTE Admin: Add services'
+    blockinfile:
         dest: "{{ project_web_path }}/src/{{ project_name|title }}/AdminBundle/Resources/config/services.yml"
+        marker: '# AdminBundle services {mark}'
+        content: "    {{ project_name }}.app_bundle.menu_listener:
+                  \n        class: '%admin_bundle.menu_listener.class%'
+                  \n        arguments:
+                  \n            - '@security.authorization_checker'
+                  \n            - '@translator'
+                  \n        tags:
+                  \n            - { name: kernel.event_listener, event:theme.sidebar_setup_menu, method:onSetupMenu }
+                  \n
+                  \n#    {{ project_name }}.breadcrumb_listener:
+                  \n#        class: '%admin_bundle.menu_listener.class%'
+                  \n#        arguments:
+                  \n#            - '@security.authorization_checker'
+                  \n#        tags:
+                  \n#            - { name: kernel.event_listener, event:theme.breadcrumb, method:onSetupMenu }
+            "
 
--   name: 'LTE Admin: Create services directory'
-    file:
-        path: "{{ project_web_path }}/src/{{ project_name|title }}/AdminBundle/Services"
-        state: directory
-        mode: 0755
+#-   name: 'LTE Admin: Create services directory'
+#    file:
+#        path: "{{ project_web_path }}/src/{{ project_name|title }}/AdminBundle/Services"
+#        state: directory
+#        mode: 0755
+#
+-   name: 'LTE Admin: Check that the menu listener class exists'
+    stat:
+        path: "{{ project_web_path }}/src/{{ project_name|title }}/AdminBundle/Services/AdminMenuItemsListener.php"
+    register: stat_result
 
 -   name: 'LTE Admin: Create AdminMenuItemsListener class'
     template:
         src: "lte-admin/AdminMenuItemsListener.php"
         dest: "{{ project_web_path }}/src/{{ project_name|title }}/AdminBundle/Services/AdminMenuItemsListener.php"
-
--   name: 'LTE Admin: Create models directory'
-    file:
-        path: "{{ project_web_path }}/src/{{ project_name|title }}/AdminBundle/Model"
-        state: directory
-        mode: 0755
-
--   name: 'LTE Admin: Create MenuItemModel class'
-    template:
-        src: "lte-admin/MenuItemModel.php"
-        dest: "{{ project_web_path }}/src/{{ project_name|title }}/AdminBundle/Model/MenuItemModel.php"
-
--   name: 'LTE Admin: Define "# twig globals" in config.yml'
-    lineinfile:
-        dest: "{{ project_web_path }}/app/config/config.yml"
-        regexp: 'globals: # twig globals'
-        line: '    globals: # twig globals'
-        insertafter: twig
-
--   name: 'LTE Admin: add base-layout'
-    template:
-        src: lte-admin/layout.html.twig
-        dest: "{{ project_web_path }}/src/{{project_name|title}}/AdminBundle/Resources/views/base-layout.html.twig"
-        variable_start_string: [[
-        variable_end_string: ]]
-
--   name: 'LTE Admin: add login-layout'
-    template:
-        src: lte-admin/login-layout.html.twig
-        dest: "{{ project_web_path }}/src/{{project_name|title}}/AdminBundle/Resources/views/login-layout.html.twig"
-        variable_start_string: [[
-        variable_end_string: ]]
+    when: stat_result.stat.exists == False
+#
+#-   name: 'LTE Admin: Create models directory'
+#    file:
+#        path: "{{ project_web_path }}/src/{{ project_name|title }}/AdminBundle/Model"
+#        state: directory
+#        mode: 0755
+#
+#-   name: 'LTE Admin: Create MenuItemModel class'
+#    template:
+#        src: "lte-admin/MenuItemModel.php"
+#        dest: "{{ project_web_path }}/src/{{ project_name|title }}/AdminBundle/Model/MenuItemModel.php"
+#
+#-   name: 'LTE Admin: Define "# twig globals" in config.yml'
+#    lineinfile:
+#        dest: "{{ project_web_path }}/app/config/config.yml"
+#        regexp: 'globals: # twig globals'
+#        line: '    globals: # twig globals'
+#        insertafter: twig
+#
+#-   name: 'LTE Admin: add base-layout'
+#    template:
+#        src: lte-admin/layout.html.twig
+#        dest: "{{ project_web_path }}/src/{{project_name|title}}/AdminBundle/Resources/views/base-layout.html.twig"
+#        variable_start_string: [[
+#        variable_end_string: ]]
+#
+#-   name: 'LTE Admin: add login-layout'
+#    template:
+#        src: lte-admin/login-layout.html.twig
+#        dest: "{{ project_web_path }}/src/{{project_name|title}}/AdminBundle/Resources/views/login-layout.html.twig"
+#        variable_start_string: [[
+#        variable_end_string: ]]
