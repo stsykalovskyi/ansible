@@ -3,31 +3,37 @@
     sudo: yes
     user: "{{ bash_username }}"
     roles:
-        - git-ubuntu
-        - php71-ubuntu
-        - composer
-        - utils-ubuntu
-        - nodejs
-        - bower
-        - nginx-ubuntu
-        - postgresql
+#        - git-ubuntu
+#        - php71-ubuntu
+#        - composer
+#        - utils-ubuntu
+#        - nodejs
+#        - bower
+#        - nginx-ubuntu
+#        - postgresql
+#        - ssl-ubuntu
 #        - symfony_config
 #        - elasticsearch-ubuntu
 #        - rabbitmq-ubuntu
 #        - symfony-bundles
     tasks:
-        -   name: 'TASK: Add color prompt'
-            lineinfile:
-                path: '/home/{{ bash_username }}/.bashrc'
-                regexp: '.force_color_prompt=yes'
-                line: 'force_color_prompt=yes'
-            run_once: true
-        -   name: 'TASK: Fix locales'
-            command: '{{ item }}'
-            with_items:
-                - "sed -i '/^#.* uk_UA.* /s/^#//' /etc/locale.gen"
-                - 'locale-gen'
-            run_once: true;
+#        -   name: 'TASK: Add color prompt'
+#            lineinfile:
+#                path: '/home/{{ bash_username }}/.bashrc'
+#                regexp: '.force_color_prompt=yes'
+#                line: 'force_color_prompt=yes'
+#            run_once: true
+#        -   name: 'TASK: Fix locales'
+#            command: '{{ item }}'
+#            with_items:
+#                - "sed -i '/^#.* uk_UA.* /s/^#//' /etc/locale.gen"
+#                - 'locale-gen'
+#            run_once: true;
+#        -   name: "Task: clone quizhub.tk repo"
+#            git:
+#                repo: 'https://stsykalovskyi:bC6wfOeW@bitbucket.org/stsykalovskyi/quizhub.tk.git'
+#                dest: '{{ projects_web_path }}/stage.quihub.tk'
+#                update: no
     vars:
 #        bundles:
 #            - default_config
@@ -39,6 +45,9 @@
 #            - api_doc
 #            - oauth-server
         ansible_private_key_file: /home/stsykalovskyi/.ssh/stsykalovskyi001.pem
+        projects:
+            - { host: quizhub.tk, name: quizhub.tk }
+            - { host: stage.quizhub.tk, name: stage.quizhub.tk }
         postgres_version: 9.4.11
         bash_username: ubuntu
         bash_password: bC6wfOeW

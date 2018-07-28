@@ -27,3 +27,8 @@
     - restart php7-fpm
 
 - include: configure.yml
+
+- name: "Task: restart php-fpm"
+  service:
+    name: php7.1-fpm
+    state: restarted
