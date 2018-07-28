@@ -10,7 +10,7 @@
         - nodejs-legacy
         - npm
         - ruby
-        -
+        - zip
 
 -   name: Configure default editor to nano
     lineinfile:

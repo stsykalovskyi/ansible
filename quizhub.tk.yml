@@ -32,7 +32,7 @@
 #        -   name: "Task: clone quizhub.tk repo"
 #            git:
 #                repo: 'https://stsykalovskyi:bC6wfOeW@bitbucket.org/stsykalovskyi/quizhub.tk.git'
-#                dest: '{{ projects_web_path }}/stage.quihub.tk'
+#                dest: '{{ projects_web_path }}/stage.quizhub.tk'
 #                update: no
     vars:
 #        bundles:
