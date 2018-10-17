@@ -3,7 +3,7 @@
     connection: local
     user: "{{ bash_username }}"
     roles:
-        - localhost
+#        - localhost
 #        - chrome
 #        - slack
 #        - dropbox
@@ -21,16 +21,24 @@
 #                - "sed -i '/^#.* uk_UA.* /s/^#//' /etc/locale.gen"
 #                - 'locale-gen'
 #            run_once: true;
+        -   name: 'TASK: set permissions'
+            file:
+                path: '{{ item }}'
+                owner: '{{ bash_username }}'
+                group: '{{ bash_username }}'
+                recurse: true
+            with_items:
+            - '/home/{{ bash_username }}'
     vars:
         bash_username: stsykalovskyi
         git_user_name: '{{ bash_username }}'
         git_user_email: 'stsykalovskyi@singlehop.com'
-        vagrant_version: "1.9.8"
-        services_repos:
-            - { name: ai-ipam, dest: ipam }
-            - { name: rbac-beta, dest: rbac }
-        projects_repos:
-            - { name: tso, dest: tso }
+        vagrant_version: "2.0.2"
+        services_repos: []
+#            - { name: ai-ipam, dest: ipam }
+#            - { name: rbac-beta, dest: rbac }
+        projects_repos: [cle]
+#            - { name: tso, dest: tso }
         ssh_files:
             - { name: 'id_rsa', mode: '0400' }
             - { name: 'id_rsa.pub', mode: '0644' }

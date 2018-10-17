@@ -84,11 +84,11 @@
         - numlockx
         - blender
 
--   name: "Localhost: numlock on boot"
-    lineinfile:
-        dest: "/usr/share/lightdm/lightdm.conf.d/50-unity-greeter.conf"
-        regexp: "greeter-setup-script="
-        line: "greeter-setup-script=/usr/bin/numlockx on"
+#-   name: "Localhost: numlock on boot"
+#    lineinfile:
+#        dest: "/usr/share/lightdm/lightdm.conf.d/50-unity-greeter.conf"
+#        regexp: "greeter-setup-script="
+#        line: "greeter-setup-script=/usr/bin/numlockx on"
 
 -   name: Configure default editor to nano
     lineinfile:

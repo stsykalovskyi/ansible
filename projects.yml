@@ -10,7 +10,7 @@
         - nodejs
         - bower
         - nginx-ubuntu
-        - postgresql
+#        - postgresql
 #        - elasticsearch-ubuntu
 #        - rabbitmq-ubuntu
     tasks:
@@ -28,10 +28,12 @@
             run_once: true;
     vars:
         projects:
+            -   name: quizhub
+                host: quizhub.tk.local
 #            -   name: gamehub
 #                host: gamehub.com
-            -   name: tso
-                host: tso.com
+#            -   name: tso
+#                host: tso.com
         ansible_private_key_file: /drives/drive0/vagrant/machines/projects/.vagrant/machines/default/virtualbox/private_key
         bash_username: vagrant
         bash_password: "{{ bash_username }}"
@@ -47,8 +49,8 @@
         composer_github_oauth_token: ebb2353ed432cdd891cde1d2b5fe953d964b39f0
         postgresql_version: 9.5
         postgresql_databases:
-            -   name: gamehub
-            -   name: quizhub
-            -   name: ipam
+#            -   name: gamehub
+            -   name: stage_quizhub_tk
+#            -   name: ipam
         rabbitmq_queues:
             - test_q
