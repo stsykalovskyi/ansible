@@ -7,7 +7,7 @@
         line: "{{ item.line }}"
     with_items:
         - { regexp: "192.168.1.100 ", line: "192.168.1.100 rbac.local ipam.local audit.local" }
-        - { regexp: "192.168.1.101 ", line: "192.168.1.101 tso.com gamehub.com" }
+        - { regexp: "192.168.1.101 ", line: "192.168.1.101 quizhub.tk.local" }
 
 -   name: "Localhost: ensure .ssh directory exists"
     file:
@@ -83,6 +83,12 @@
         - clementine
         - numlockx
         - blender
+        - php-pear
+
+-   name: "Localhost: install codeSniffer"
+    pear:
+        name: 'PHP_CodeSniffer'
+        state: present
 
 #-   name: "Localhost: numlock on boot"
 #    lineinfile:

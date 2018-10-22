@@ -1,6 +1,5 @@
 ---
 -   name: 'Git-centos: Install git'
-    register: is_installed
     yum:
         name: git
         state: present
@@ -18,7 +17,11 @@
     with_items:
         - gcc
         - gcc-c++
+        - openssl-devel
+        - curl-devel
+        - expat-devel
         - kernel-devel
+        - perl-devel
 
 -   name: 'Git-centos: Compile git from sources'
     make:

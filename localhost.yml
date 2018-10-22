@@ -3,24 +3,25 @@
     connection: local
     user: "{{ bash_username }}"
     roles:
-#        - localhost
-#        - chrome
-#        - slack
-#        - dropbox
-#        - vagrant
+        - localhost
+        - chrome
+        - slack
+        - dropbox
+        - vagrant
+        - git-ubuntu
     tasks:
-#        -   name: 'TASK: Add color prompt'
-#            lineinfile:
-#                path: '/home/{{ bash_username }}/.bashrc'
-#                regexp: '.force_color_prompt=yes'
-#                line: 'force_color_prompt=yes'
-#            run_once: true
-#        -   name: 'TASK: Fix locales'
-#            command: '{{ item }}'
-#            with_items:
-#                - "sed -i '/^#.* uk_UA.* /s/^#//' /etc/locale.gen"
-#                - 'locale-gen'
-#            run_once: true;
+        -   name: 'TASK: Add color prompt'
+            lineinfile:
+                path: '/home/{{ bash_username }}/.bashrc'
+                regexp: '.force_color_prompt=yes'
+                line: 'force_color_prompt=yes'
+            run_once: true
+        -   name: 'TASK: Fix locales'
+            command: '{{ item }}'
+            with_items:
+                - "sed -i '/^#.* uk_UA.* /s/^#//' /etc/locale.gen"
+                - 'locale-gen'
+            run_once: true;
         -   name: 'TASK: set permissions'
             file:
                 path: '{{ item }}'
@@ -37,7 +38,7 @@
         services_repos: []
 #            - { name: ai-ipam, dest: ipam }
 #            - { name: rbac-beta, dest: rbac }
-        projects_repos: [cle]
+        projects_repos: []
 #            - { name: tso, dest: tso }
         ssh_files:
             - { name: 'id_rsa', mode: '0400' }

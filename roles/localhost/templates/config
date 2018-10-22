@@ -25,17 +25,7 @@ host rbac-prod
 host jumpbox
     hostname access.shim.chi03.singlehop.local
     user stsykalovskyi
-host gamadrill
-    IdentityFile ~/.ssh/gamadrill.pem
-    hostname ec2-52-212-137-243.eu-west-1.compute.amazonaws.com
+host quizhub
     user ubuntu
-
-host gamehub
-    user ubuntu
-    hostname ec2-34-241-154-224.eu-west-1.compute.amazonaws.com
-    identityfile ~/.ssh/stsykalovskyi_gamehub.pem
-
-host aws
-    user ubuntu
-    hostname ec2-18-221-45-197.us-east-2.compute.amazonaws.com
+    hostname ec2-13-59-175-112.us-east-2.compute.amazonaws.com
     identityfile ~/.ssh/stsykalovskyi.pem 

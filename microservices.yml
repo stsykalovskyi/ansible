@@ -5,8 +5,8 @@
         -   utils-centos
         -   pip
         -   docker
-        -   git-centos
         -   php71-centos
+        -   git-centos
         -   composer
         -   nginx-centos
     tasks:
