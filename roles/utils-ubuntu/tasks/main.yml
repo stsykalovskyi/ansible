@@ -11,6 +11,8 @@
         - npm
         - ruby
         - zip
+        - docker
+        - docker-compose
 
 -   name: Configure default editor to nano
     lineinfile:

@@ -10,9 +10,10 @@
         - nodejs
         - bower
         - nginx-ubuntu
-#        - postgresql
-#        - elasticsearch-ubuntu
-#        - rabbitmq-ubuntu
+        - postgresql
+        - elasticsearch-ubuntu
+        - rabbitmq-ubuntu
+        - aliases-projects
     tasks:
         -   name: 'TASK: Add color prompt'
             lineinfile:
@@ -25,7 +26,7 @@
             with_items:
                 - "sed -i '/^#.* uk_UA.* /s/^#//' /etc/locale.gen"
                 - 'locale-gen'
-            run_once: true;
+            run_once: true
     vars:
         projects:
             -   name: quizhub

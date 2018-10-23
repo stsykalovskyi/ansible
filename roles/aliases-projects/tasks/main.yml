@@ -1,0 +1,17 @@
+---
+-   name: 'Aliases: touch .bash_aliases'
+    file:
+        path: '/home/{{ bash_username }}/.bash_aliases'
+        state: touch
+
+-   name: 'Aliases: add aliases'
+    lineinfile:
+        dest: "/home/{{ bash_username }}/.bash_aliases"
+        regexp: "{{ item.regexp }}"
+        line: "{{ item.line }}"
+    with_items:
+        - { regexp: "alias initQuizhub", line: 'alias initQuizhub="cd /var/www/projects/quizhub.tk; git pull origin stage --rebase; sudo docker-compose up -d --build; sh shell/init_db.sh; bin/console doctrine:migrations:migrate --quiet"' }
+        - { regexp: "alias updateQuizhub", line: 'alias updateQuizhub="cd /var/www/projects/quizhub.tk; git pull origin stage --rebase; bin/console doctrine:migrations:migrate"' }
+
+-   name: 'Aliases: exec_bash'
+    shell: 'exec bash'
