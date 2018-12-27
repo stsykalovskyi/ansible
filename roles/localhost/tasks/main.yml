@@ -1,123 +1,123 @@
 ---
-#-   name: "Localhost: add hosts file records"
-#    sudo: yes
-#    lineinfile:
-#        dest: "/etc/hosts"
-#        regexp: "{{ item.regexp }}"
-#        line: "{{ item.line }}"
-#    with_items:
-#        - { regexp: "192.168.1.100 ", line: "192.168.1.100 rbac.local ipam.local audit.local" }
-#        - { regexp: "192.168.1.101 ", line: "192.168.1.101 quizhub.tk.local" }
-#
-#-   name: "Localhost: ensure .ssh directory exists"
-#    file:
-#        path: "/home/{{ bash_username }}/.ssh"
-#        state: directory
-#
-#-   name: "Localhost: ensure repos directories exists"
-#    file:
-#        path: "/home/{{ bash_username }}/repos/{{ item }}"
-#        state: directory
-#        owner: '{{ bash_username }}'
-#        group: '{{ bash_username }}'
-#    with_items:
-#        - services
-#        - projects
-#
-#-   name: "Localhost: copy ssh files"
-#    template:
-#        src: '{{ item.name }}'
-#        dest: '/home/{{ bash_username }}/.ssh/{{ item.name }}'
-#        mode: '{{ item.mode }}'
-#    with_items: '{{ ssh_files }}'
-#
-#-   name: "Localhost: github config"
-#    template:
-#        src: '.gitconfig'
-#        dest: '/home/{{ bash_username }}/.gitconfig'
-#
-#-   name: "Localhost: clone services repos"
-#    git:
-#        repo: 'git@github.com:singlehopllc/{{ item.name }}.git'
-#        dest: '/home/{{ bash_username }}/repos/services/{{ item.dest }}'
-#        key_file: '/home/{{ bash_username }}/.ssh/id_rsa'
-#        accept_hostkey: yes
-#    with_items: '{{ services_repos }}'
-#
-#-   name: "Localhost: set owner to services repos"
-#    file:
-#        path: '/home/{{ bash_username }}/repos/services/{{ item.dest }}'
-#        owner: '{{ bash_username }}'
-#        group: '{{ bash_username }}'
-#        recurse: yes
-#    with_items: '{{ services_repos }}'
-#
-#-   name: "Localhost: clone projects repos"
-#    git:
-#        repo: 'git@bitbucket.org:{{ bash_username }}/{{ item.name }}.git'
-#        dest: '/home/{{ bash_username }}/repos/projects/{{ item.dest }}'
-#        key_file: '/home/{{ bash_username }}/.ssh/id_rsa'
-#        accept_hostkey: yes
-#    with_items: '{{ projects_repos }}'
-#
-#-   name: "Localhost: set owner to projects repos"
-#    file:
-#        path: '/home/{{ bash_username }}/repos/projects/{{ item.dest }}'
-#        owner: '{{ bash_username }}'
-#        group: '{{ bash_username }}'
-#        recurse: yes
-#    with_items: '{{ projects_repos }}'
-#
+-   name: "Localhost: add hosts file records"
+    sudo: yes
+    lineinfile:
+        dest: "/etc/hosts"
+        regexp: "{{ item.regexp }}"
+        line: "{{ item.line }}"
+    with_items:
+        - { regexp: "192.168.1.100 ", line: "192.168.1.100 rbac.local ipam.local audit.local" }
+        - { regexp: "192.168.1.101 ", line: "192.168.1.101 quizhub.tk.local" }
+
+-   name: "Localhost: ensure .ssh directory exists"
+    file:
+        path: "/home/{{ bash_username }}/.ssh"
+        state: directory
+
+-   name: "Localhost: ensure repos directories exists"
+    file:
+        path: "/home/{{ bash_username }}/repos/{{ item }}"
+        state: directory
+        owner: '{{ bash_username }}'
+        group: '{{ bash_username }}'
+    with_items:
+        - services
+        - projects
+
+-   name: "Localhost: copy ssh files"
+    template:
+        src: '{{ item.name }}'
+        dest: '/home/{{ bash_username }}/.ssh/{{ item.name }}'
+        mode: '{{ item.mode }}'
+    with_items: '{{ ssh_files }}'
+
+-   name: "Localhost: github config"
+    template:
+        src: '.gitconfig'
+        dest: '/home/{{ bash_username }}/.gitconfig'
+
+-   name: "Localhost: clone services repos"
+    git:
+        repo: 'git@github.com:singlehopllc/{{ item.name }}.git'
+        dest: '/home/{{ bash_username }}/repos/services/{{ item.dest }}'
+        key_file: '/home/{{ bash_username }}/.ssh/id_rsa'
+        accept_hostkey: yes
+    with_items: '{{ services_repos }}'
+
+-   name: "Localhost: set owner to services repos"
+    file:
+        path: '/home/{{ bash_username }}/repos/services/{{ item.dest }}'
+        owner: '{{ bash_username }}'
+        group: '{{ bash_username }}'
+        recurse: yes
+    with_items: '{{ services_repos }}'
+
+-   name: "Localhost: clone projects repos"
+    git:
+        repo: 'git@bitbucket.org:{{ bash_username }}/{{ item.name }}.git'
+        dest: '/home/{{ bash_username }}/repos/projects/{{ item.dest }}'
+        key_file: '/home/{{ bash_username }}/.ssh/id_rsa'
+        accept_hostkey: yes
+    with_items: '{{ projects_repos }}'
+
+-   name: "Localhost: set owner to projects repos"
+    file:
+        path: '/home/{{ bash_username }}/repos/projects/{{ item.dest }}'
+        owner: '{{ bash_username }}'
+        group: '{{ bash_username }}'
+        recurse: yes
+    with_items: '{{ projects_repos }}'
+
 -   name: "Localhost: Install utils"
     apt:
         pkg: "{{ item }}"
         state: "present"
     with_items:
-#        - mc
-#        - curl
-#        - unzip
-#        - default-jdk
-#        - yakuake
-#        - konsole
-#        - revelation
-#        - clementine
-#        - numlockx
-#        - blender
-#        - php-pear
+        - mc
+        - curl
+        - unzip
+        - default-jdk
+        - yakuake
+        - konsole
+        - revelation
+        - clementine
+        - numlockx
+        - blender
+        - php-pear
         - goldendict
-#
-#-   name: "Localhost: install codeSniffer"
-#    pear:
-#        name: 'PHP_CodeSniffer'
-#        state: present
-#
-##-   name: "Localhost: numlock on boot"
-##    lineinfile:
-##        dest: "/usr/share/lightdm/lightdm.conf.d/50-unity-greeter.conf"
-##        regexp: "greeter-setup-script="
-##        line: "greeter-setup-script=/usr/bin/numlockx on"
-#
-#-   name: Configure default editor to nano
-#    lineinfile:
-#        dest: "/home/{{ bash_username }}/.bashrc"
-#        regexp: "{{ item.regexp }}"
-#        line: "{{ item.line }}"
-#    with_items:
-#        - { regexp: "export VISUAL", line: "export VISUAL=nano" }
-#        - { regexp: "export EDITOR", line: "export EDITOR=\"$VISUAL\"" }
-#
-#-   name: "Localhost: Create yakuake config file"
-#    file:
-#        path: '/home/{{ bash_username }}/.kde/share/config'
-#        state: directory
 
-#-   name: "Localhost: Config yakuake"
-#    template:
-#        src: 'yakuakerc'
-#        dest: '/home/{{ bash_username }}/.config/yakuakerc'
-#        mode: '0755'
-#        owner: '{{ bash_username }}'
-#        group: '{{ bash_username }}'
+-   name: "Localhost: install codeSniffer"
+    pear:
+        name: 'PHP_CodeSniffer'
+        state: present
+
+#-   name: "Localhost: numlock on boot"
+#    lineinfile:
+#        dest: "/usr/share/lightdm/lightdm.conf.d/50-unity-greeter.conf"
+#        regexp: "greeter-setup-script="
+#        line: "greeter-setup-script=/usr/bin/numlockx on"
+
+-   name: Configure default editor to nano
+    lineinfile:
+        dest: "/home/{{ bash_username }}/.bashrc"
+        regexp: "{{ item.regexp }}"
+        line: "{{ item.line }}"
+    with_items:
+        - { regexp: "export VISUAL", line: "export VISUAL=nano" }
+        - { regexp: "export EDITOR", line: "export EDITOR=\"$VISUAL\"" }
+
+-   name: "Localhost: Create yakuake config file"
+    file:
+        path: '/home/{{ bash_username }}/.kde/share/config'
+        state: directory
+
+-   name: "Localhost: Config yakuake"
+    template:
+        src: 'yakuakerc'
+        dest: '/home/{{ bash_username }}/.config/yakuakerc'
+        mode: '0755'
+        owner: '{{ bash_username }}'
+        group: '{{ bash_username }}'
 
 -   name: "Localhost: add aliases"
     template:
@@ -151,12 +151,11 @@
         owner: '{{ bash_username }}'
         group: '{{ bash_username }}'
 
-#
-#-   name: "Localhost: install cisco anyconnect, copy script"
-#    copy:
-#        src: templates/gatekeeper.sh
-#        dest: /tmp/gatekeeper.sh
-#        mode: 0777
-#
-#-   name: "Localhost: install cisco anyconnect, execute script"
-#    command: sh /tmp/gatekeeper.sh
+-   name: "Localhost: install cisco anyconnect, copy script"
+    copy:
+        src: templates/gatekeeper.sh
+        dest: /tmp/gatekeeper.sh
+        mode: 0777
+
+-   name: "Localhost: install cisco anyconnect, execute script"
+    command: sh /tmp/gatekeeper.sh

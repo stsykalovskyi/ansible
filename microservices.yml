@@ -5,7 +5,7 @@
         -   utils-centos
         -   pip
         -   docker
-        -   php71-centos
+#        -   php71-centos
         -   git-centos
         -   composer
         -   nginx-centos
@@ -16,13 +16,13 @@
                 path: '/home/{{ bash_username }}/.bashrc'
                 line: PS1='\[\033[01;36m\]\u@\h\[\033[00m\]:\[\033[01;32m\]\w\[\033[00m\] '
     vars:
-        microservices:
-            -   name: rbac
-                host: rbac.local
-            -   name: ipam
-                host: ipam.local
-            -   name: cab
-                host: cab.local
+        microservices: []
+#            -   name: rbac
+#                host: rbac.local
+#            -   name: ipam
+#                host: ipam.local
+#            -   name: cab
+#                host: cab.local
         pip_install_packages:
             -   name: docker-compose
             -   name: httpie

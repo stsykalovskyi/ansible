@@ -15,6 +15,7 @@
         - telnet
         - python-pip
         - make
+        - libselinux-python
 
 -   name: Configure default editor to nano
     lineinfile:
