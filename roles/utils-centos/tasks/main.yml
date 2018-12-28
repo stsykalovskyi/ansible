@@ -8,14 +8,7 @@
     yum:
         name: "{{ item }}"
         state: "present"
-    with_items:
-        - mc
-        - nano
-        - curl
-        - telnet
-        - python-pip
-        - make
-        - libselinux-python
+    with_items: '{{utils}}'
 
 -   name: Configure default editor to nano
     lineinfile:

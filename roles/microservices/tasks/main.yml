@@ -1,0 +1,35 @@
+---
+-   name: "Microservices: configure servers"
+    become: true
+    template:
+        src: templates/symfony.conf
+        dest: '/etc/nginx/sites-available/{{ item.host }}'
+    with_items: '{{ microservices }}'
+
+-   name: "Microservices: Create symlinks of microservices hosts configs to sites_enabled directory"
+    become: true
+    file:
+        src: "/etc/nginx/sites-available/{{ item.host }}"
+        dest: "/etc/nginx/sites-enabled/{{ item.host }}"
+        state: link
+    with_items: "{{ microservices }}"
+
+-   name: "Microservices: Add microservices hosts to /etc/hosts"
+    become: true
+    lineinfile:
+        dest: /etc/hosts
+        regexp: "{{ item.host }}"
+        line: "127.0.0.1 {{ item.host }} "
+    with_items: "{{ microservices }}"
+
+-   name: "Microservices: Restart nginx"
+    service: name=nginx state=restarted enabled=yes
+
+-   name: "Microservices: install iptables"
+    package:
+        name: iptables
+        state: latest
+
+-   name: "Microservices: Flush iptables rules"
+    iptables:
+        flush: true
