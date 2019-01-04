@@ -5,9 +5,7 @@
         dest: "/etc/hosts"
         regexp: "{{ item.regexp }}"
         line: "{{ item.line }}"
-    with_items:
-        - { regexp: "192.168.1.100 ", line: "192.168.1.100 rbac.local ipam.local audit.local" }
-        - { regexp: "192.168.1.101 ", line: "192.168.1.101 quizhub.tk.local" }
+    with_items: '{{ hosts }}'
 
 -   name: "Localhost: ensure .ssh directory exists"
     file:
@@ -29,6 +27,8 @@
         src: '{{ item.name }}'
         dest: '/home/{{ bash_username }}/.ssh/{{ item.name }}'
         mode: '{{ item.mode }}'
+        owner: '{{ item.owner }}'
+        group: '{{ item.group }}'
     with_items: '{{ ssh_files }}'
 
 -   name: "Localhost: github config"
@@ -85,17 +85,17 @@
         - blender
         - php-pear
         - goldendict
+-   name: "Localhost: Install utils"
+    apt:
+        pkg: "{{ item }}"
+        state: "absent"
+    with_items:
+        - 'transmission*'
 
 -   name: "Localhost: install codeSniffer"
     pear:
         name: 'PHP_CodeSniffer'
         state: present
-
-#-   name: "Localhost: numlock on boot"
-#    lineinfile:
-#        dest: "/usr/share/lightdm/lightdm.conf.d/50-unity-greeter.conf"
-#        regexp: "greeter-setup-script="
-#        line: "greeter-setup-script=/usr/bin/numlockx on"
 
 -   name: Configure default editor to nano
     lineinfile:
@@ -147,6 +147,30 @@
     copy:
         src: templates/kwinrc
         dest: '/home/{{ bash_username }}/.config/kxkbrc'
+        mode: 0600
+        owner: '{{ bash_username }}'
+        group: '{{ bash_username }}'
+
+-   name: "Localhost: configure khotkeysrc"
+    copy:
+        src: templates/khotkeysrc
+        dest: '/home/{{ bash_username }}/.config/khotkeysrc'
+        mode: 0600
+        owner: '{{ bash_username }}'
+        group: '{{ bash_username }}'
+
+-   name: "Localhost: configure kcmshell5rc"
+    copy:
+        src: templates/kcmshell5rc
+        dest: '/home/{{ bash_username }}/.config/kcmshell5rc'
+        mode: 0600
+        owner: '{{ bash_username }}'
+        group: '{{ bash_username }}'
+
+-   name: "Localhost: configure kdialogrc"
+    copy:
+        src: templates/kdialogrc
+        dest: '/home/{{ bash_username }}/.config/kdialogrc'
         mode: 0600
         owner: '{{ bash_username }}'
         group: '{{ bash_username }}'

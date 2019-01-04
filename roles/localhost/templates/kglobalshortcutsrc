@@ -1,6 +1,9 @@
 [KDE Keyboard Layout Switcher]
+Switch keyboard layout to English (US)=none,none,Switch keyboard layout to English (US)
+Switch keyboard layout to Russian=none,none,Switch keyboard layout to Russian
+Switch keyboard layout to Ukrainian=none,none,Switch keyboard layout to Ukrainian
 Switch to Next Keyboard Layout=Ctrl+Alt+K,none,Switch to Next Keyboard Layout
-_k_friendly_name=System Settings
+_k_friendly_name=KDE Daemon
 
 [kaccess]
 Toggle Screen Reader On and Off=Meta+Alt+S,Meta+Alt+S,Toggle Screen Reader On and Off
@@ -10,7 +13,7 @@ _k_friendly_name=Accessibility
 Disable Touchpad=Touchpad Off,Touchpad Off,Disable Touchpad
 Enable Touchpad=Touchpad On,Touchpad On,Enable Touchpad
 Toggle Touchpad=Touchpad Toggle,Touchpad Toggle,Toggle Touchpad
-_k_friendly_name=System Settings
+_k_friendly_name=KDE Daemon
 
 [kded5]
 Show System Activity=Ctrl+Esc,Ctrl+Esc,Show System Activity
@@ -18,16 +21,14 @@ _k_friendly_name=KDE Daemon
 display=Display\tMeta+P,Display\tMeta+P,Switch Display
 
 [khotkeys]
-_k_friendly_name=KDE Daemon
-{52b9896e-9c71-4c75-b976-888d4ff53bc3}=Meta+Shift+Print,none,Take Rectangular Region Screenshot
-{55f13aed-d129-40e3-bfa3-a03fe3da87d3}=Launch (7),none,PHPStorm
-{6f43b025-1d50-43d5-b0b3-3416dd27322b}=Shift+Print,none,Take Full Screen Screenshot
-{7e7debeb-aed1-4ad0-8240-811d65cc568a}=Meta+Print,none,Take Active Window Screenshot
-{bda94a2e-733f-420c-8aaf-731a33864415}=Print,none,Start Screenshot Tool
-{cacb5103-dea7-4e84-b5b4-7c175951cb8d}=Ctrl+Shift+D,none,New Action
+_k_friendly_name=System Settings
+{1f613124-42d3-4bf6-b30c-677339cd8c42}=,none,Take Rectangular Region Screenshot
+{647853bf-c3a4-48f5-a8f1-49d4331b97fc}=,none,Take Full Screen Screenshot
+{840f5700-20a3-41e2-90d4-f3cd77e8b65d}=Ctrl+Shift+D,none,Goldendict
+{86a0945f-00f0-49cd-8278-7b5d6e022b6d}=,none,Start Screenshot Tool
+{9cde8604-91c0-4667-9b2e-e3be5283d627}=Ctrl+Shift+M,none,Clementine
+{a3838b77-427d-41e5-a50e-847b3a574b49}=,none,Take Active Window Screenshot
 {d03619b6-9b3c-48cc-9d9c-a2aadb485550}=,none,Search
-{e865e386-9fcc-4787-b069-7b3c46381734}=none,none,New Action
-{eed854aa-db80-43fd-9408-f37bcd2a0950}=Home Page,none,Chrome
 
 [kmix]
 _k_friendly_name=Audio Volume
@@ -45,11 +46,11 @@ run command on clipboard contents=Alt+Shift+F2,Alt+Shift+F2,Run Command on clipb
 
 [ksmserver]
 Halt Without Confirmation=Ctrl+Alt+Shift+PgDown,none,Halt Without Confirmation
-Lock Session=Ctrl+Alt+L\tScreensaver,Ctrl+Alt+L\tScreensaver,Lock Session
+Lock Session=none,Ctrl+Alt+L\tScreensaver,Lock Session
 Log Out=Ctrl+Alt+Del,none,Log Out
 Log Out Without Confirmation=Ctrl+Alt+Shift+Del,none,Log Out Without Confirmation
 Reboot Without Confirmation=Ctrl+Alt+Shift+PgUp,none,Reboot Without Confirmation
-_k_friendly_name=System Settings
+_k_friendly_name=ksmserver
 
 [kwin]
 Activate Window Demanding Attention=Ctrl+Alt+A,Ctrl+Alt+A,Activate Window Demanding Attention
@@ -194,7 +195,7 @@ Window to Screen 4=none,none,Window to Screen 4
 Window to Screen 5=none,none,Window to Screen 5
 Window to Screen 6=none,none,Window to Screen 6
 Window to Screen 7=none,none,Window to Screen 7
-_k_friendly_name=System Settings
+_k_friendly_name=KWin
 view_actual_size=,Meta+0,Actual Size
 view_zoom_in=Meta+=,Meta+=,Zoom In
 view_zoom_out=Meta+-,Meta+-,Zoom Out
@@ -218,7 +219,7 @@ Toggle Keyboard Backlight=Keyboard Light On/Off,Keyboard Light On/Off,Toggle Key
 _k_friendly_name=Power Management
 
 [plasmashell]
-_k_friendly_name=Activity switching
+_k_friendly_name=Plasma
 activate task manager entry 1=Meta+1,Meta+1,Activate Task Manager Entry 1
 activate task manager entry 10=Meta+0,Meta+0,Activate Task Manager Entry 10
 activate task manager entry 2=Meta+2,Meta+2,Activate Task Manager Entry 2

@@ -1,6 +1,12 @@
+[Compositing]
+OpenGLIsUnsafe=false
+
+[Desktops]
+Number=1
+
 [Layout]
 DisplayNames=,,
-LayoutList=us,ua,ru
+LayoutList=us,ru,ua
 LayoutLoopCount=-1
 Model=pc101
 Options=,grp:alt_shift_toggle
@@ -12,3 +18,10 @@ ShowSingle=false
 SwitchMode=Global
 Use=true
 
+[org.kde.kdecoration2]
+BorderSize=Normal
+ButtonsOnLeft=MS
+ButtonsOnRight=HIAX
+CloseOnDoubleClickOnMenu=false
+library=org.kde.kwin.aurorae
+theme=kwin4_decoration_qml_plastik

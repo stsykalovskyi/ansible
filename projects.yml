@@ -10,9 +10,6 @@
         - nodejs
         - bower
         - nginx-ubuntu
-#        - postgresql
-#        - elasticsearch-ubuntu
-#        - rabbitmq-ubuntu
         - aliases-projects
     tasks:
         -   name: 'TASK: Add color prompt'

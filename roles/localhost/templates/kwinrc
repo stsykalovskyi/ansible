@@ -11,4 +11,3 @@ ButtonsOnRight=HIAX
 CloseOnDoubleClickOnMenu=false
 library=org.kde.kwin.aurorae
 theme=kwin4_decoration_qml_plastik
-

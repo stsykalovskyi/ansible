@@ -15,20 +15,11 @@
                 path: '/home/{{ bash_username }}/.bashrc'
                 regexp: '.force_color_prompt=yes'
                 line: 'force_color_prompt=yes'
-            run_once: true
         -   name: 'TASK: Fix locales'
             command: '{{ item }}'
             with_items:
                 - "sed -i '/^#.* uk_UA.* /s/^#//' /etc/locale.gen"
                 - 'locale-gen'
-            run_once: true;
-#        -   name: 'TASK: set permissions'
-#            file:
-#                path: '{{ item }}'
-#                owner: '{{ bash_username }}'
-#                group: '{{ bash_username }}'
-#                recurse: true
-#            with_items:
     vars:
         bash_username: stsykalovskyi
         git_user_name: '{{ bash_username }}'
@@ -41,7 +32,10 @@
             - { name: perukar.ml, dest: perukar.ml }
             - { name: quizhub.tk, dest: quizhub.tk }
         ssh_files:
-            - { name: 'id_rsa', mode: '0400' }
-            - { name: 'id_rsa.pub', mode: '0644' }
-            - { name: 'config', mode: '0755' }
-            - { name: '{{ bash_username }}.pem', mode: '0755' }
+            - { name: 'id_rsa', mode: '0600', owner: '{{ bash_username }}', group: '{{ bash_username }}' }
+            - { name: 'id_rsa.pub', mode: '0644', owner: '{{ bash_username }}', group: '{{ bash_username }}' }
+            - { name: 'config', mode: '0644', owner: '{{ bash_username }}', group: '{{ bash_username }}' }
+            - { name: '{{ bash_username }}.pem', mode: '0644', owner: '{{ bash_username }}', group: '{{ bash_username }}' }
+        hosts:
+            - { regexp: "192.168.0.100 ", line: "192.168.0.100 rbac.local ipam.local audit.local" }
+            - { regexp: "192.168.0.101 ", line: "192.168.0.101 quizhub.tk.local" }

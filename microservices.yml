@@ -1,4 +1,4 @@
--   hosts: microservices
+c-   hosts: microservices
     sudo: yes
     user: "{{ bash_username }}"
     roles:
