@@ -35,7 +35,7 @@
             - { name: 'id_rsa', mode: '0600', owner: '{{ bash_username }}', group: '{{ bash_username }}' }
             - { name: 'id_rsa.pub', mode: '0644', owner: '{{ bash_username }}', group: '{{ bash_username }}' }
             - { name: 'config', mode: '0644', owner: '{{ bash_username }}', group: '{{ bash_username }}' }
-            - { name: '{{ bash_username }}.pem', mode: '0644', owner: '{{ bash_username }}', group: '{{ bash_username }}' }
+            - { name: '{{ bash_username }}.pem', mode: '0600', owner: '{{ bash_username }}', group: '{{ bash_username }}' }
         hosts:
             - { regexp: "192.168.0.100 ", line: "192.168.0.100 rbac.local ipam.local audit.local" }
             - { regexp: "192.168.0.101 ", line: "192.168.0.101 quizhub.tk.local" }

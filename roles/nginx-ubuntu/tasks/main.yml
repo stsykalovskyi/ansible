@@ -48,29 +48,3 @@
         line: "user  {{ bash_username }};"
     notify:
         - reload nginx
-
--   name: Add microservices config files to sites_available directory
-    become: true
-    template:
-        src: templates/symfony.conf
-        dest: "/etc/nginx/sites-available/{{ item.host }}"
-    with_items: "{{ projects }}"
-
--   name: Create symlinks of microservices hosts configs to sites_enabled directory
-    become: true
-    file:
-        src: "/etc/nginx/sites-available/{{ item.host }}"
-        dest: "/etc/nginx/sites-enabled/{{ item.host }}"
-        state: link
-    with_items: "{{ projects }}"
-
--   name: Add microservices hosts to /etc/hosts
-    become: true
-    lineinfile:
-        dest: /etc/hosts
-        regexp: "{{ item.host }}"
-        line: "127.0.0.1 {{ item.host }} "
-    with_items: "{{ projects }}"
-
-- name: Ensure nginx is started and enabled to start at boot.
-  service: name=nginx state=started enabled=yes

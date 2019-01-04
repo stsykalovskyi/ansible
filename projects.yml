@@ -3,33 +3,35 @@
     sudo: yes
     user: "{{ bash_username }}"
     roles:
-        - git-ubuntu
-        - php71-ubuntu
-        - composer
-        - utils-ubuntu
-        - nodejs
-        - bower
-        - nginx-ubuntu
-        - aliases-projects
-    tasks:
-        -   name: 'TASK: Add color prompt'
-            lineinfile:
-                path: '/home/{{ bash_username }}/.bashrc'
-                regexp: '.force_color_prompt=yes'
-                line: 'force_color_prompt=yes'
-            run_once: true
-        -   name: 'TASK: Fix locales'
-            command: '{{ item }}'
-            with_items:
-                - "sed -i '/^#.* uk_UA.* /s/^#//' /etc/locale.gen"
-                - 'locale-gen'
-            run_once: true
+#        - git-ubuntu
+#        - php71-ubuntu
+#        - composer
+#        - utils-ubuntu
+#        - nodejs
+#        - bower
+#        - nginx-ubuntu
+        - projects
+    tasks: []
+#        -   name: 'TASK: Add color prompt'
+#            lineinfile:
+#                path: '/home/{{ bash_username }}/.bashrc'
+#                regexp: '.force_color_prompt=yes'
+#                line: 'force_color_prompt=yes'
+#            run_once: true
+#        -   name: 'TASK: Fix locales'
+#            command: '{{ item }}'
+#            with_items:
+#                - "sed -i '/^#.* uk_UA.* /s/^#//' /etc/locale.gen"
+#                - 'locale-gen'
+#            run_once: true
     vars:
         projects:
-            -   name: quizhub
+            -   name: quizhub.ml
                 host: quizhub.tk.local
+                provider: symfony
             -   name: perukar.ml
                 host: perukar.ml.local
+                provider: laravel
         ansible_private_key_file: /drives/drive0/vagrant/machines/projects/.vagrant/machines/default/virtualbox/private_key
         bash_username: vagrant
         bash_password: "{{ bash_username }}"
