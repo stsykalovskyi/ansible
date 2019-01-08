@@ -26,8 +26,8 @@
         git_user_email: 'stsykalovskyi@singlehop.com'
         vagrant_version: "2.0.2"
         services_repos:
-            - { name: ai-ipam, dest: ipam }
-            - { name: rbac-beta, dest: rbac }
+            - { name: rbac-beta, dest: rbac.stage.shim.singlehop.net.local }
+            - { name: ai-ipam, dest: ipam.stage.dpc.singlehop.net.local }
         projects_repos:
             - { name: perukar.ml, dest: perukar.ml }
             - { name: quizhub.tk, dest: quizhub.tk }

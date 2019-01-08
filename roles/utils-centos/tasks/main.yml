@@ -7,7 +7,7 @@
 -   name: Install utils
     yum:
         name: "{{ item }}"
-        state: "present"
+        state: "latest"
     with_items: '{{utils}}'
 
 -   name: Configure default editor to nano

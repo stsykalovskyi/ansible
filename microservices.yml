@@ -1,4 +1,5 @@
-c-   hosts: microservices
+---
+-   hosts: microservices
     sudo: yes
     user: "{{ bash_username }}"
     roles:
@@ -8,6 +9,7 @@ c-   hosts: microservices
         -   php71-centos
         -   git-centos
         -   composer
+        -   openssl
         -   nginx-centos
         -   microservices
     tasks:
@@ -19,11 +21,15 @@ c-   hosts: microservices
     vars:
         microservices:
             -   name: rbac
-                host: rbac.local
+                host: rbac.stage.shim.singlehop.net.local
             -   name: ipam
-                host: ipam.local
+                host: ipam.stage.dpc.singlehop.net.local
             -   name: cab
-                host: cab.local
+                host: cab.stage.dpc.singlehop.net.local
+        openssl_self_signed:
+            -   name: rbac.stage.shim.singlehop.net.local
+            -   name: ipam.stage.shim.singlehop.net.local
+            -   name: cab.stage.shim.singlehop.net.local
         utils:
             -   mc
             -   nano
