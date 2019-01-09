@@ -38,6 +38,8 @@
             -   curl
             -   telnet
             -   make
+        hosts:
+            -   esrmq01.shim.stage.chi03.singlehop.local
         pip_package: python-pip
         pip_install_packages:
             -   name: docker-compose
