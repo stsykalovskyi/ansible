@@ -3,14 +3,14 @@
     sudo: yes
     user: "{{ bash_username }}"
     roles:
-#        -   utils-centos
-#        -   pip
-#        -   docker
-#        -   php71-centos
-#        -   git-centos
-#        -   composer
-#        -   openssl
-#        -   nginx-centos
+        -   utils-centos
+        -   pip
+        -   docker
+        -   php71-centos
+        -   git-centos
+        -   composer
+        -   openssl
+        -   nginx-centos
         -   microservices
     tasks:
         -   name: 'colorize prompt'

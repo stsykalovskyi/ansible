@@ -1,12 +1,12 @@
 ---
--   name: " configure servers"
+-   name: "configure servers"
     become: true
     template:
         src: templates/symfony.conf
         dest: '/etc/nginx/sites-available/{{ item.host }}'
     with_items: '{{ microservices }}'
 
--   name: " Create symlinks of microservices hosts configs to sites_enabled directory"
+-   name: "Create symlinks of microservices hosts configs to sites_enabled directory"
     become: true
     file:
         src: "/etc/nginx/sites-available/{{ item.host }}"
@@ -14,7 +14,7 @@
         state: link
     with_items: "{{ microservices }}"
 
--   name: " Add microservices hosts to /etc/hosts"
+-   name: "Add microservices hosts to /etc/hosts"
     become: true
     lineinfile:
         dest: /etc/hosts
@@ -22,8 +22,17 @@
         line: "127.0.0.1 {{ item.host }} "
     with_items: "{{ microservices }}"
 
--   name: " Restart nginx"
+-   name: "Restart nginx"
     service:
         name: nginx
         state: restarted
         enabled: yes
+
+-   name: "disable iptables"
+    service:
+        name: iptables
+        state: disabled
+        enabled: no
+
+-   name: "local time configuration"
+    command: timedatectl set-local-rtc 1
