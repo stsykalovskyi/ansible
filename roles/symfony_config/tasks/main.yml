@@ -1,12 +1,12 @@
 ---
--   name: "Projects: parameters.yml settings"
+-   name: "parameters.yml settings"
     template:
         src: "{{ item.name }}_parameters.yml"
         dest: "{{ projects_web_path }}/{{ item.name }}/app/config/parameters.yml"
     with_items: "{{ projects }}"
 
 
--   name: Projects initial configuration
+-   name: initial configuration
     composer:
         command: update
         working_dir: "{{ projects_web_path }}/{{ item.name }}"

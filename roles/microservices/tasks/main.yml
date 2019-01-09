@@ -23,13 +23,7 @@
     with_items: "{{ microservices }}"
 
 -   name: " Restart nginx"
-    service: name=nginx state=restarted enabled=yes
-
--   name: " install iptables"
-    package:
-        name: iptables
-        state: latest
-
--   name: " Flush iptables rules"
-    iptables:
-        flush: true
+    service:
+        name: nginx
+        state: restarted
+        enabled: yes

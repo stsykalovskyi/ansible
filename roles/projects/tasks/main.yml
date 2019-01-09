@@ -1,46 +1,46 @@
 ---
-#-   name: "Projects: touch .bash_aliases"
-#    file:
-#        path: '/home/{{ bash_username }}/.bash_aliases'
-#        state: touch
-#
-#-   name: "Projects: add aliases"
-#    lineinfile:
-#        dest: "/home/{{ bash_username }}/.bash_aliases"
-#        regexp: "{{ item.regexp }}"
-#        line: "{{ item.line }}"
-#    with_items:
-#        - { regexp: "alias initQuizhub", line: 'alias initQuizhub="cd /var/www/projects/quizhub.tk; git pull origin stage --rebase; sudo docker-compose up -d --build; sh shell/init_db.sh; bin/console doctrine:migrations:migrate --quiet"' }
-#        - { regexp: "alias updateQuizhub", line: 'alias updateQuizhub="cd /var/www/projects/quizhub.tk; git pull origin stage --rebase; bin/console doctrine:migrations:migrate"' }
-#
-#-   name: "Projects: exec_bash"
-#    shell: 'exec bash'
+-   name: "touch .bash_aliases"
+    file:
+        path: '/home/{{ bash_username }}/.bash_aliases'
+        state: touch
 
--   name: "Projects: Create certs path"
+-   name: "add aliases"
+    lineinfile:
+        dest: "/home/{{ bash_username }}/.bash_aliases"
+        regexp: "{{ item.regexp }}"
+        line: "{{ item.line }}"
+    with_items:
+        - { regexp: "alias initQuizhub", line: 'alias initQuizhub="cd /var/www/projects/quizhub.tk; git pull origin stage --rebase; sudo docker-compose up -d --build; sh shell/init_db.sh; bin/console doctrine:migrations:migrate --quiet"' }
+        - { regexp: "alias updateQuizhub", line: 'alias updateQuizhub="cd /var/www/projects/quizhub.tk; git pull origin stage --rebase; bin/console doctrine:migrations:migrate"' }
+
+-   name: "exec_bash"
+    shell: 'exec bash'
+
+-   name: "Create certs path"
     file:
         path: /etc/ssl/crt
         state: directory
         mode: 0600
 
--   name: "Projects: Create csr path"
+-   name: "Create csr path"
     file:
         path: /etc/ssl/csr
         state: directory
         mode: 0600
 
--   name: "Projects: Generate private keys"
+-   name: "Generate private keys"
     openssl_privatekey:
         path: '/etc/ssl/crt/{{ item.host }}.pem'
     with_items: '{{ projects }}'
 
--   name: "Projects: Generate certificate signing requests"
+-   name: "Generate certificate signing requests"
     openssl_csr:
         path: '/etc/ssl/csr/{{ item.host }}.csr'
         privatekey_path: '/etc/ssl/crt/{{ item.host }}.pem'
         common_name: '{{ item.host }}'
     with_items: '{{ projects }}'
 
--   name: "Projects: Generate a Self Signed OpenSSL certificates"
+-   name: "Generate a Self Signed OpenSSL certificates"
     openssl_certificate:
         path: '/etc/ssl/crt/{{ item.host }}.crt'
         privatekey_path: '/etc/ssl/crt/{{ item.host }}.pem'
@@ -48,14 +48,14 @@
         provider: selfsigned
     with_items: '{{ projects }}'
 
--   name: "Projects Add microservices config files to sites_available directory"
+-   name: "Add microservices config files to sites_available directory"
     become: true
     template:
         src: templates/symfony.conf
         dest: "/etc/nginx/sites-available/{{ item.host }}"
     with_items: "{{ projects }}"
 
--   name: "Projects Create symlinks of microservices hosts configs to sites_enabled directory"
+-   name: "Create symlinks of microservices hosts configs to sites_enabled directory"
     become: true
     file:
         src: "/etc/nginx/sites-available/{{ item.host }}"
@@ -63,7 +63,7 @@
         state: link
     with_items: "{{ projects }}"
 
--   name: "Projects Add microservices hosts to /etc/hosts"
+-   name: "Add microservices hosts to /etc/hosts"
     become: true
     lineinfile:
         dest: /etc/hosts
@@ -71,5 +71,17 @@
         line: "127.0.0.1 {{ item.host }} "
     with_items: "{{ projects }}"
 
--   name: "Projects Ensure nginx is started and enabled to start at boot."
-    service: name=nginx state=started enabled=yes
+-   name: "Ensure nginx is started and enabled to start at boot."
+    service:
+        name: nginx
+        state: started
+        enabled: yes
+
+-   name: " install iptables"
+    package:
+        name: iptables
+        state: latest
+
+-   name: " Flush iptables rules"
+    iptables:
+        flush: true

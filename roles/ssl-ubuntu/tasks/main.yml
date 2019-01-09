@@ -1,9 +1,9 @@
 ---
-    -   name: "ssl-ubuntu: Ensure OpenSSL is installed"
+    -   name: "Ensure OpenSSL is installed"
         package: name=openssl state=present
         tags: [ssl-certs,packages]
 
-    -   name: "ssl-ubuntu: Upload certs"
+    -   name: "Upload certs"
         template:
             src: '{{ item }}'
             dest: '/etc/ssl/certs/{{ item }}'

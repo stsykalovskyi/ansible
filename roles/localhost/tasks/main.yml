@@ -1,5 +1,5 @@
 ---
--   name: "Localhost: add hosts file records"
+-   name: "add hosts file records"
     sudo: yes
     lineinfile:
         dest: "/etc/hosts"
@@ -7,12 +7,12 @@
         line: "{{ item.line }}"
     with_items: '{{ hosts }}'
 
--   name: "Localhost: ensure .ssh directory exists"
+-   name: "ensure .ssh directory exists"
     file:
         path: "/home/{{ bash_username }}/.ssh"
         state: directory
 
--   name: "Localhost: ensure repos directories exists"
+-   name: "ensure repos directories exists"
     file:
         path: "/home/{{ bash_username }}/repos/{{ item }}"
         state: directory
@@ -22,7 +22,7 @@
         - services
         - projects
 
--   name: "Localhost: copy ssh files"
+-   name: "copy ssh files"
     template:
         src: '{{ item.name }}'
         dest: '/home/{{ bash_username }}/.ssh/{{ item.name }}'
@@ -31,12 +31,12 @@
         group: '{{ item.group }}'
     with_items: '{{ ssh_files }}'
 
--   name: "Localhost: github config"
+-   name: "github config"
     template:
         src: '.gitconfig'
         dest: '/home/{{ bash_username }}/.gitconfig'
 
--   name: "Localhost: clone services repos"
+-   name: "clone services repos"
     git:
         repo: 'git@github.com:singlehopllc/{{ item.name }}.git'
         dest: '/home/{{ bash_username }}/repos/services/{{ item.dest }}'
@@ -44,7 +44,7 @@
         accept_hostkey: yes
     with_items: '{{ services_repos }}'
 
--   name: "Localhost: set owner to services repos"
+-   name: "set owner to services repos"
     file:
         path: '/home/{{ bash_username }}/repos/services/{{ item.dest }}'
         owner: '{{ bash_username }}'
@@ -52,7 +52,7 @@
         recurse: yes
     with_items: '{{ services_repos }}'
 
--   name: "Localhost: clone projects repos"
+-   name: "clone projects repos"
     git:
         repo: 'git@bitbucket.org:{{ bash_username }}/{{ item.name }}.git'
         dest: '/home/{{ bash_username }}/repos/projects/{{ item.dest }}'
@@ -60,7 +60,7 @@
         accept_hostkey: yes
     with_items: '{{ projects_repos }}'
 
--   name: "Localhost: set owner to projects repos"
+-   name: "set owner to projects repos"
     file:
         path: '/home/{{ bash_username }}/repos/projects/{{ item.dest }}'
         owner: '{{ bash_username }}'
@@ -68,7 +68,7 @@
         recurse: yes
     with_items: '{{ projects_repos }}'
 
--   name: "Localhost: Install utils"
+-   name: "Install utils"
     apt:
         pkg: "{{ item }}"
         state: "present"
@@ -85,14 +85,14 @@
         - blender
         - php-pear
         - goldendict
--   name: "Localhost: Install utils"
+-   name: "Install utils"
     apt:
         pkg: "{{ item }}"
         state: "absent"
     with_items:
         - 'transmission*'
 
--   name: "Localhost: install codeSniffer"
+-   name: "install codeSniffer"
     pear:
         name: 'PHP_CodeSniffer'
         state: present
@@ -106,12 +106,12 @@
         - { regexp: "export VISUAL", line: "export VISUAL=nano" }
         - { regexp: "export EDITOR", line: "export EDITOR=\"$VISUAL\"" }
 
--   name: "Localhost: Create yakuake config file"
+-   name: "Create yakuake config file"
     file:
         path: '/home/{{ bash_username }}/.kde/share/config'
         state: directory
 
--   name: "Localhost: Config yakuake"
+-   name: "Config yakuake"
     template:
         src: 'yakuakerc'
         dest: '/home/{{ bash_username }}/.config/yakuakerc'
@@ -119,7 +119,7 @@
         owner: '{{ bash_username }}'
         group: '{{ bash_username }}'
 
--   name: "Localhost: add aliases"
+-   name: "add aliases"
     template:
         src: templates/.bash_aliases
         dest: '/home/{{ bash_username }}/.bash_aliases'
@@ -127,7 +127,7 @@
         owner: '{{ bash_username }}'
         group: '{{ bash_username }}'
 
--   name: "Localhost: configure shortcuts"
+-   name: "configure shortcuts"
     copy:
         src: templates/kglobalshortcutsrc
         dest: '/home/{{ bash_username }}/.config/kglobalshortcutsrc'
@@ -135,7 +135,7 @@
         owner: '{{ bash_username }}'
         group: '{{ bash_username }}'
 
--   name: "Localhost: configure kwinrc"
+-   name: "configure kwinrc"
     copy:
         src: templates/kwinrc
         dest: '/home/{{ bash_username }}/.config/kwinrc'
@@ -143,7 +143,7 @@
         owner: '{{ bash_username }}'
         group: '{{ bash_username }}'
 
--   name: "Localhost: configure kxkbrc"
+-   name: "configure kxkbrc"
     copy:
         src: templates/kwinrc
         dest: '/home/{{ bash_username }}/.config/kxkbrc'
@@ -151,7 +151,7 @@
         owner: '{{ bash_username }}'
         group: '{{ bash_username }}'
 
--   name: "Localhost: configure khotkeysrc"
+-   name: "configure khotkeysrc"
     copy:
         src: templates/khotkeysrc
         dest: '/home/{{ bash_username }}/.config/khotkeysrc'
@@ -159,7 +159,7 @@
         owner: '{{ bash_username }}'
         group: '{{ bash_username }}'
 
--   name: "Localhost: configure kcmshell5rc"
+-   name: "configure kcmshell5rc"
     copy:
         src: templates/kcmshell5rc
         dest: '/home/{{ bash_username }}/.config/kcmshell5rc'
@@ -167,7 +167,7 @@
         owner: '{{ bash_username }}'
         group: '{{ bash_username }}'
 
--   name: "Localhost: configure kdialogrc"
+-   name: "configure kdialogrc"
     copy:
         src: templates/kdialogrc
         dest: '/home/{{ bash_username }}/.config/kdialogrc'
@@ -175,11 +175,11 @@
         owner: '{{ bash_username }}'
         group: '{{ bash_username }}'
 
--   name: "Localhost: install cisco anyconnect, copy script"
+-   name: "install cisco anyconnect, copy script"
     copy:
         src: templates/gatekeeper.sh
         dest: /tmp/gatekeeper.sh
         mode: 0777
 
--   name: "Localhost: install cisco anyconnect, execute script"
+-   name: "install cisco anyconnect, execute script"
     command: sh /tmp/gatekeeper.sh

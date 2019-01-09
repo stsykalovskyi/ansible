@@ -1,16 +1,16 @@
 ---
--   name: 'Git-centos: Install git'
+-   name: 'Install git'
     yum:
         name: git
         state: present
 
--   name: 'Git-centos: download {{ git_version }} release'
+-   name: 'download {{ git_version }} release'
     unarchive:
         src: "https://github.com/git/git/archive/v{{ git_version }}.tar.gz"
         dest: /tmp
         remote_src: yes
 
--   name: 'Git-centos: install development tools'
+-   name: 'install development tools'
     yum:
         name: "{{ item }}"
         state: "present"
@@ -23,29 +23,29 @@
         - kernel-devel
         - perl-devel
 
--   name: 'Git-centos: Compile git from sources'
+-   name: 'Compile git from sources'
     make:
         chdir: "/tmp/git-{{ git_version }}"
         target: all
         params:
             prefix: /usr/local/git
 
--   name: 'Git-centos: install git'
+-   name: 'install git'
     make:
         chdir: "/tmp/git-{{ git_version }}"
         target: install
         params:
             prefix: /usr/local/git
 
--   name: 'Git-centos: create script file to set path'
+-   name: 'create script file to set path'
     template:
         src: setGitPath.sh
         dest: /etc/profile.d/setGitPath.sh
 
--   name: 'Git-centos: apply changes'
+-   name: 'apply changes'
     shell: 'source  /etc/profile.d/setGitPath.sh'
 
--   name: 'Git-centos: Check file .gitconfig exists'
+-   name: 'Check file .gitconfig exists'
     file:
         dest: "/home/{{ bash_username }}/.gitconfig"
         owner: "{{ bash_username }}"
@@ -53,7 +53,7 @@
         mode: 0755
         state: touch
 
--   name: 'Git-centos: Git user configuration'
+-   name: 'Git user configuration'
     template:
         src: templates/.gitconfig
         dest: "/home/{{ bash_username }}/.gitconfig"

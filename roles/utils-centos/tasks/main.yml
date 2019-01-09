@@ -10,6 +10,12 @@
         state: "latest"
     with_items: '{{utils}}'
 
+-   name: Uninstall utils
+    yum:
+        name: "{{ item }}"
+        state: "latest"
+    with_items: '{{utils_to_uninstall}}'
+
 -   name: Configure default editor to nano
     lineinfile:
         dest: "/home/{{ bash_username }}/.bashrc"
