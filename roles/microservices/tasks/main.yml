@@ -28,17 +28,12 @@
         src: hosts
         dest: /etc/hosts
 
+-   name: disable selinux
+    selinux:
+        state: disabled
+
 -   name: "Restart nginx"
     service:
         name: nginx
         state: restarted
         enabled: yes
-
--   name: "disable iptables"
-    service:
-        name: iptables
-        state: stopped
-        enabled: no
-
--   name: "local time configuration"
-    command: timedatectl set-local-rtc 1

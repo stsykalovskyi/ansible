@@ -183,3 +183,6 @@
 
 -   name: "install cisco anyconnect, execute script"
     command: sh /tmp/gatekeeper.sh
+
+-   name: "local time configuration"
+    command: timedatectl set-local-rtc 1

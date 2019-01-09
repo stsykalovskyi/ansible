@@ -3,15 +3,15 @@
     sudo: yes
     user: "{{ bash_username }}"
     roles:
-        -   utils-centos
-        -   pip
-        -   docker
-        -   php71-centos
-        -   git-centos
-        -   composer
-        -   openssl
-        -   nginx-centos
-        -   microservices
+        - utils-centos
+        - pip
+        - docker
+        - php71-centos
+        - git-centos
+        - composer
+        - openssl
+        - nginx-centos
+        - microservices
     tasks:
         -   name: 'colorize prompt'
             lineinfile:
@@ -31,18 +31,17 @@
             -   name: ipam.stage.shim.singlehop.net.local
             -   name: cab.stage.shim.singlehop.net.local
         utils_to_uninstall:
-            -   iptables
+            - iptables
         utils:
-            -   mc
-            -   nano
-            -   curl
-            -   telnet
-            -   make
+            - mc
+            - nano
+            - curl
+            - telnet
+            - make
         hosts:
-            -   esrmq01.shim.stage.chi03.singlehop.local
+            - esrmq01.shim.stage.chi03.singlehop.local
         pip_package: python-pip
         pip_install_packages:
-            -   name: docker-compose
             -   name: httpie
         symfony_root_dir: /var/www/services
         bash_username: vagrant
