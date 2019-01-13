@@ -8,6 +8,26 @@
     nginx_user: "{{ __nginx_user }}"
   when: nginx_user is not defined
 
+- name: clean sites-enabled folders
+  file:
+    path: /etc/nginx/sites-enalbled
+    state: absent
+
+- name: clean sites-available directory
+  file:
+    path: /etc/nginx/sites-available
+    state: absent
+
+- name: clean sites-enabled folders
+  file:
+    path: /etc/nginx/sites-enalbled
+    state: directory
+
+- name: clean sites-available directory
+  file:
+    path: /etc/nginx/sites-available
+    state: directory
+
 # Setup/install tasks.
 - include: setup-RedHat.yml
   when: ansible_os_family == 'RedHat'

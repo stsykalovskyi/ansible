@@ -14,15 +14,7 @@
         state: link
     with_items: "{{ microservices }}"
 
--   name: "Add microservices hosts to /etc/hosts"
-    become: true
-    lineinfile:
-        dest: /etc/hosts
-        regexp: "{{ item.host }}"
-        line: "127.0.0.1 {{ item.host }} "
-    with_items: "{{ microservices }}"
-
--   name: "Add hosts to /etc/hosts"
+-   name: hosts configuration
     become: true
     template:
         src: hosts

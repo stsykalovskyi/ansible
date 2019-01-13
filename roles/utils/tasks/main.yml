@@ -1,26 +1,24 @@
 ---
--   name: Install epel
-    yum:
-        name: epel-release
-        state: present
+-   name: Install utils
+    apt:
+        pkg: "{{ item }}"
+        state: "present"
+    with_items: '{{ utils }}'
+    when: ansible_os_family == 'Debian'
 
 -   name: Install utils
     yum:
-        name: "{{ item }}"
-        state: "latest"
-    with_items: '{{utils}}'
-
--   name: Uninstall utils
-    yum:
-        name: "{{ item }}"
-        state: "latest"
-    with_items: '{{utils_to_uninstall}}'
+        pkg: "{{ item }}"
+        state: "present"
+    with_items: '{{ utils }}'
+    when: ansible_os_family == 'RedHat'
 
 -   name: Configure default editor to nano
     lineinfile:
         dest: "/home/{{ bash_username }}/.bashrc"
         regexp: "{{ item.regexp }}"
         line: "{{ item.line }}"
+        backup: yes
     with_items:
         - { regexp: "export VISUAL", line: "export VISUAL=nano" }
         - { regexp: "export EDITOR", line: "export EDITOR=\"$VISUAL\"" }

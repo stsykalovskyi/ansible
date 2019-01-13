@@ -43,6 +43,7 @@
     args:
         creates: "{{ openssl_keys_path }}/{{ item.host }}.key"
     with_items: '{{ microservices }}'
+    when: ansible_os_family == 'RedHat'
 
 -   name: Generate CSR
     command: |-
@@ -58,3 +59,29 @@
     args:
         creates: '{{ openssl_certs_path }}/{{ item.host }}.crt'
     with_items: '{{ microservices }}'
+    when: ansible_os_family == 'RedHat'
+
+-   name: Generate RSA Key
+    command: |-
+        openssl genrsa \
+        -out "{{ openssl_keys_path }}/{{ item.host }}.key" 4096
+    args:
+        creates: "{{ openssl_keys_path }}/{{ item.host }}.key"
+    with_items: '{{ projects }}'
+    when: ansible_os_family == 'Debian'
+
+-   name: Generate CSR
+    command: |-
+        openssl req \
+        -newkey rsa:2048 \
+        -sha256
+        -nodes \
+        -keyout "{{ openssl_keys_path }}/{{ item.host }}.key" \
+        -x509
+        -out "{{ openssl_certs_path }}/{{ item.host }}.crt" \
+        -days 365 \
+        -subj '/C=US/ST=IL/L=Chicago/O=Dis/CN=www.inap.com'
+    args:
+        creates: '{{ openssl_certs_path }}/{{ item.host }}.crt'
+    with_items: '{{ projects }}'
+    when: ansible_os_family == 'Debian'

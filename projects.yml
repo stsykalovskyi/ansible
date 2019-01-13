@@ -3,15 +3,23 @@
     sudo: yes
     user: "{{ bash_username }}"
     roles:
+        - utils
+        - docker
         - git-ubuntu
         - php71-ubuntu
         - composer
-        - utils-ubuntu
         - nodejs
         - bower
+        - openssl
         - nginx-ubuntu
         - projects
-    tasks: []
+        - postfix
+        -   role: ansible-dkim
+            vars:
+                domain_name: stsykalovskyi.tk.local
+                dkim_domains: '{{ domain_name }}'
+                dkim_selector: mail
+    tasks:
         -   name: 'TASK: Add color prompt'
             lineinfile:
                 path: '/home/{{ bash_username }}/.bashrc'
@@ -25,12 +33,24 @@
                 - 'locale-gen'
             run_once: true
     vars:
+        utils:
+            - mc
+            - curl
+            - unzip
+            - default-jdk
+            - npm
+            - nodejs-legacy
+            - ruby
+            - zip
         projects:
-            -   name: quizhub.ml
+            -   name: quizhub
                 host: quizhub.tk.local
                 provider: symfony
-            -   name: perukar.ml
+            -   name: perukar
                 host: perukar.ml.local
+                provider: laravel
+            -   name: stsykalovskyi
+                host: stsykalovskyi.tk.local
                 provider: laravel
         ansible_private_key_file: /drives/drive0/vagrant/machines/projects/.vagrant/machines/default/virtualbox/private_key
         bash_username: vagrant

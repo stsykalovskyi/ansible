@@ -3,7 +3,7 @@
     sudo: yes
     user: "{{ bash_username }}"
     roles:
-        - utils-centos
+        - utils
         - pip
         - docker
         - php71-centos
@@ -30,8 +30,6 @@
             -   name: rbac.stage.shim.singlehop.net.local
             -   name: ipam.stage.shim.singlehop.net.local
             -   name: cab.stage.shim.singlehop.net.local
-        utils_to_uninstall:
-            - iptables
         utils:
             - mc
             - nano
@@ -55,4 +53,4 @@
         git_user_name: stsykalovskyi
         git_version: 2.16.2
         composer_github_oauth_token: ebb2353ed432cdd891cde1d2b5fe953d964b39f0
-        ansible_private_key_file: /drives/drive0/vagrant/machines/microservices/.vagrant/machines/default/virtualbox/private_key
+#        ansible_private_key_file: /drives/drive0/vagrant/machines/microservices/.vagrant/machines/default/virtualbox/private_key

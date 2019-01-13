@@ -28,47 +28,19 @@
         state: directory
         mode: 0600
 
--   name: "Generate private keys"
-    openssl_privatekey:
-        path: '/etc/ssl/crt/{{ item.host }}.pem'
-    with_items: '{{ projects }}'
-
--   name: "Generate certificate signing requests"
-    openssl_csr:
-        path: '/etc/ssl/csr/{{ item.host }}.csr'
-        privatekey_path: '/etc/ssl/crt/{{ item.host }}.pem'
-        common_name: '{{ item.host }}'
-    with_items: '{{ projects }}'
-
--   name: "Generate a Self Signed OpenSSL certificates"
-    openssl_certificate:
-        path: '/etc/ssl/crt/{{ item.host }}.crt'
-        privatekey_path: '/etc/ssl/crt/{{ item.host }}.pem'
-        csr_path: '/etc/ssl/csr/{{ item.host }}.csr'
-        provider: selfsigned
-    with_items: '{{ projects }}'
-
--   name: "Add microservices config files to sites_available directory"
+-   name: "Add projects config files to sites_available directory"
     become: true
     template:
         src: templates/symfony.conf
         dest: "/etc/nginx/sites-available/{{ item.host }}"
     with_items: "{{ projects }}"
 
--   name: "Create symlinks of microservices hosts configs to sites_enabled directory"
+-   name: "Create symlinks of projects hosts configs to sites_enabled directory"
     become: true
     file:
         src: "/etc/nginx/sites-available/{{ item.host }}"
         dest: "/etc/nginx/sites-enabled/{{ item.host }}"
         state: link
-    with_items: "{{ projects }}"
-
--   name: "Add microservices hosts to /etc/hosts"
-    become: true
-    lineinfile:
-        dest: /etc/hosts
-        regexp: "{{ item.host }}"
-        line: "127.0.0.1 {{ item.host }} "
     with_items: "{{ projects }}"
 
 -   name: "Ensure nginx is started and enabled to start at boot."
@@ -77,11 +49,14 @@
         state: started
         enabled: yes
 
--   name: " install iptables"
-    package:
-        name: iptables
-        state: latest
+-   name: hosts configuration
+    become: true
+    template:
+        src: hosts
+        dest: /etc/hosts
 
--   name: " Flush iptables rules"
-    iptables:
-        flush: true
+#-   name: "disable iptables"
+#    service:
+#        name: iptables
+#        state: stopped
+#        enabled: no
