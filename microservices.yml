@@ -18,6 +18,8 @@
                 regexp: 'PS1='
                 path: '/home/{{ bash_username }}/.bashrc'
                 line: PS1='\[\033[01;36m\]\u@\h\[\033[00m\]:\[\033[01;32m\]\w\[\033[00m\] '
+        -   name: 'fix locales'
+            command: 'localedef -c -f UTF-8 -i uk_UA uk_UA.UTF-8'
     vars:
         microservices:
             -   name: rbac
