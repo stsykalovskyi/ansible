@@ -3,10 +3,10 @@
     sudo: yes
     user: "{{ bash_username }}"
     roles:
-        - utils
-        - pip
         - docker
+        - utils
         - php71-centos
+        - pip
         - git-centos
         - composer
         - openssl
@@ -38,6 +38,7 @@
             - curl
             - telnet
             - make
+            - docker-compose
         hosts:
             - esrmq01.shim.stage.chi03.singlehop.local
         pip_package: python-pip
