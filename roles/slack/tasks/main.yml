@@ -1,21 +1,21 @@
 ---
 # tasks file for slack
-- name: Include tasks suitable to our OS Family
-  include: "{{ ansible_os_family }}.yml"
+-   name: Include tasks suitable to our OS Family
+    include: "{{ ansible_os_family }}.yml"
 
 -   name: "copy configuration files"
-  copy:
-    src: templates/storage
-    dest: '/home/{{ bash_username }}/.config/Slack'
-    mode: '0755'
-    owner: '{{ bash_username }}'
-    group: '{{ bash_username }}'
+    copy:
+        src: templates/storage
+        dest: '/home/{{ bash_username }}/.config/Slack'
+        mode: '0755'
+        owner: '{{ bash_username }}'
+        group: '{{ bash_username }}'
 
 -   name: "copy configuration files"
-  copy:
-    src: templates/Cookies
-    dest: '/home/{{ bash_username }}/.config/Slack/Cookies'
-    mode: '0755'
-    owner: '{{ bash_username }}'
-    group: '{{ bash_username }}'
+    copy:
+        src: templates/Cookies
+        dest: '/home/{{ bash_username }}/.config/Slack/Cookies'
+        mode: '0755'
+        owner: '{{ bash_username }}'
+        group: '{{ bash_username }}'
 
