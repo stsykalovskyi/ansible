@@ -5,10 +5,10 @@
     roles:
         - localhost
         - chrome
-        - slack
+#        - slack
         - dropbox
-        - vagrant
-        - git-ubuntu
+#        - vagrant
+#        - git-ubuntu
     tasks:
         -   name: 'TASK: Add color prompt'
             lineinfile:
@@ -23,19 +23,19 @@
     vars:
         bash_username: stsykalovskyi
         git_user_name: '{{ bash_username }}'
-        git_user_email: 'stsykalovskyi@singlehop.com'
+        git_user_email: 'stsykalovskyi@gmail.com'
         vagrant_version: "2.0.2"
-        services_repos:
-            - { name: rbac-beta, dest: rbac.stage.shim.singlehop.net.local }
-            - { name: ai-ipam, dest: ipam.stage.dpc.singlehop.net.local }
-        projects_repos:
-            - { name: perukar.ml, dest: perukar.ml }
-            - { name: quizhub.tk, dest: quizhub.tk }
+        services_repos: []
+#            - { name: rbac-beta, dest: rbac.stage.shim.singlehop.net.local }
+#            - { name: ai-ipam, dest: ipam.stage.dpc.singlehop.net.local }
+        projects_repos: []
+#            - { name: perukar.ml, dest: perukar.ml }
+#            - { name: quizhub.tk, dest: quizhub.tk }
         ssh_files:
             - { name: 'id_rsa', mode: '0600', owner: '{{ bash_username }}', group: '{{ bash_username }}' }
             - { name: 'id_rsa.pub', mode: '0644', owner: '{{ bash_username }}', group: '{{ bash_username }}' }
             - { name: 'config', mode: '0644', owner: '{{ bash_username }}', group: '{{ bash_username }}' }
             - { name: '{{ bash_username }}.pem', mode: '0600', owner: '{{ bash_username }}', group: '{{ bash_username }}' }
-        hosts:
-            - { regexp: "192.168.0.100 ", line: "192.168.0.100 rbac.local ipam.local audit.local" }
-            - { regexp: "192.168.0.101 ", line: "192.168.0.101 quizhub.tk.local" }
+        hosts: []
+#            - { regexp: "192.168.0.100 ", line: "192.168.0.100 rbac.local ipam.local audit.local" }
+#            - { regexp: "192.168.0.101 ", line: "192.168.0.101 quizhub.tk.local" }
